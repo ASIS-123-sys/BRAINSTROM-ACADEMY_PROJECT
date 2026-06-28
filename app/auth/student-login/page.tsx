@@ -1,88 +1,126 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { loginStudent, sendOTP, verifyOTPAndReset } from "@/lib/auth";
+import {
+  loginStudent,
+  sendOTP,
+  verifyOTPAndReset,
+  getCurrentUser,
+} from "@/lib/auth";
+import { createClient } from "@/lib/supabase";
+
+// pre-warms the connection before user even clicks anything
+const supabase = createClient();
+supabase.auth.getSession();
 
 export default function StudentLoginPage() {
   const router = useRouter();
+  const [screen, setScreen] = useState<"login" | "forgot" | "otp">("login");
 
-  // which screen to show
-  const [screen, setScreen] = useState<"login" | "forgot" | "otp" | "reset">(
-    "login",
-  );
-
-  // login fields
   const [enrollmentId, setEnrollmentId] = useState("");
   const [password, setPassword] = useState("");
-
-  // forgot password fields
   const [otpEmail, setOtpEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // feedback
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+  const [state, setState] = useState({
+    loading: false,
+    error: "",
+    success: "",
+  });
 
-  // --- LOGIN ---
+  // skip login page if already logged in
+  useEffect(() => {
+    getCurrentUser().then(({ user }) => {
+      if (user) router.push("/student/dashboard");
+    });
+  }, []);
+
   async function handleLogin() {
     if (!enrollmentId || !password) {
-      setError("Please enter your Enrollment ID and password");
+      setState({
+        loading: false,
+        error: "Please enter your Enrollment ID and password",
+        success: "",
+      });
       return;
     }
-    setLoading(true);
-    setError("");
+    setState({ loading: true, error: "", success: "" });
     const { error } = await loginStudent(enrollmentId, password);
-    setLoading(false);
     if (error) {
-      setError("Invalid Enrollment ID or password");
+      setState({
+        loading: false,
+        error: "Invalid Enrollment ID or password",
+        success: "",
+      });
     } else {
       router.push("/student/dashboard");
     }
   }
 
-  // --- SEND OTP ---
   async function handleSendOTP() {
     if (!otpEmail) {
-      setError("Please enter your email");
+      setState({
+        loading: false,
+        error: "Please enter your email",
+        success: "",
+      });
       return;
     }
-    setLoading(true);
-    setError("");
+    setState({ loading: true, error: "", success: "" });
     const { error } = await sendOTP(otpEmail);
-    setLoading(false);
     if (error) {
-      setError("Could not send OTP. Check your email and try again.");
+      setState({
+        loading: false,
+        error: "Could not send OTP. Check your email and try again.",
+        success: "",
+      });
     } else {
-      setSuccess("OTP sent to your email");
+      setState({
+        loading: false,
+        error: "",
+        success: "OTP sent to your email",
+      });
       setScreen("otp");
     }
   }
 
-  // --- VERIFY OTP AND RESET ---
   async function handleReset() {
     if (!otp) {
-      setError("Please enter the OTP");
+      setState({ loading: false, error: "Please enter the OTP", success: "" });
       return;
     }
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+      setState({
+        loading: false,
+        error: "Passwords do not match",
+        success: "",
+      });
       return;
     }
     if (newPassword.length < 6) {
-      setError("Password must be at least 6 characters");
+      setState({
+        loading: false,
+        error: "Password must be at least 6 characters",
+        success: "",
+      });
       return;
     }
-    setLoading(true);
-    setError("");
+    setState({ loading: true, error: "", success: "" });
     const { error } = await verifyOTPAndReset(otpEmail, otp, newPassword);
-    setLoading(false);
     if (error) {
-      setError("Invalid OTP or it has expired. Try again.");
+      setState({
+        loading: false,
+        error: "Invalid OTP or expired. Try again.",
+        success: "",
+      });
     } else {
-      setSuccess("Password reset successfully. Please log in.");
+      setState({
+        loading: false,
+        error: "",
+        success: "Password reset successfully. Please log in.",
+      });
       setScreen("login");
     }
   }
@@ -94,54 +132,49 @@ export default function StudentLoginPage() {
         <div>
           <h1>Student Login</h1>
 
-          <div>
-            <label>Enrollment ID</label>
-            <input
-              type="text"
-              value={enrollmentId}
-              onChange={(e) => setEnrollmentId(e.target.value)}
-              placeholder="Enter your Enrollment ID"
-              style={{
-                display: "block",
-                width: "100%",
-                marginBottom: 12,
-                padding: 8,
-              }}
-            />
-          </div>
+          <input
+            type="text"
+            value={enrollmentId}
+            onChange={(e) => setEnrollmentId(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            placeholder="Enrollment ID"
+            style={{
+              display: "block",
+              width: "100%",
+              marginBottom: 12,
+              padding: 8,
+            }}
+          />
 
-          <div>
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              style={{
-                display: "block",
-                width: "100%",
-                marginBottom: 12,
-                padding: 8,
-              }}
-            />
-          </div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            placeholder="Password"
+            style={{
+              display: "block",
+              width: "100%",
+              marginBottom: 12,
+              padding: 8,
+            }}
+          />
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {success && <p style={{ color: "green" }}>{success}</p>}
+          {state.error && <p style={{ color: "red" }}>{state.error}</p>}
+          {state.success && <p style={{ color: "green" }}>{state.success}</p>}
 
           <button
             onClick={handleLogin}
-            disabled={loading}
+            disabled={state.loading}
             style={{ width: "100%", padding: 10, marginBottom: 12 }}
           >
-            {loading ? "Logging in..." : "Login"}
+            {state.loading ? "Logging in..." : "Login"}
           </button>
 
           <button
             onClick={() => {
               setScreen("forgot");
-              setError("");
-              setSuccess("");
+              setState({ loading: false, error: "", success: "" });
             }}
             style={{
               background: "none",
@@ -165,6 +198,7 @@ export default function StudentLoginPage() {
             type="email"
             value={otpEmail}
             onChange={(e) => setOtpEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSendOTP()}
             placeholder="Enter your email"
             style={{
               display: "block",
@@ -174,20 +208,20 @@ export default function StudentLoginPage() {
             }}
           />
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {state.error && <p style={{ color: "red" }}>{state.error}</p>}
 
           <button
             onClick={handleSendOTP}
-            disabled={loading}
+            disabled={state.loading}
             style={{ width: "100%", padding: 10, marginBottom: 12 }}
           >
-            {loading ? "Sending..." : "Send OTP"}
+            {state.loading ? "Sending..." : "Send OTP"}
           </button>
 
           <button
             onClick={() => {
               setScreen("login");
-              setError("");
+              setState({ loading: false, error: "", success: "" });
             }}
             style={{
               background: "none",
@@ -201,11 +235,11 @@ export default function StudentLoginPage() {
         </div>
       )}
 
-      {/* OTP VERIFICATION SCREEN */}
+      {/* OTP SCREEN */}
       {screen === "otp" && (
         <div>
           <h1>Enter OTP</h1>
-          <p style={{ color: "green" }}>{success}</p>
+          {state.success && <p style={{ color: "green" }}>{state.success}</p>}
 
           <input
             type="text"
@@ -237,6 +271,7 @@ export default function StudentLoginPage() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleReset()}
             placeholder="Confirm new password"
             style={{
               display: "block",
@@ -246,14 +281,14 @@ export default function StudentLoginPage() {
             }}
           />
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {state.error && <p style={{ color: "red" }}>{state.error}</p>}
 
           <button
             onClick={handleReset}
-            disabled={loading}
+            disabled={state.loading}
             style={{ width: "100%", padding: 10 }}
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {state.loading ? "Resetting..." : "Reset Password"}
           </button>
         </div>
       )}
