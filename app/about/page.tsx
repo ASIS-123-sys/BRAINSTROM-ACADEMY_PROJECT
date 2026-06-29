@@ -95,9 +95,8 @@ export default function AboutPage() {
             <div
               key={idx}
               ref={addToRefs}
-              style={glassCardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex flex-col items-center justify-center text-center hover:border-[#06B6D4]/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300"
               style={{ ...glassCardStyle, transitionDelay: `${idx * 100}ms` }}
+              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex flex-col items-center justify-center text-center hover:border-[#06B6D4]/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300"
             >
               <span className="text-3xl md:text-4xl font-extrabold text-[#06B6D4] mb-2">{stat.value}</span>
               <span className="text-xs md:text-sm text-[#94A3B8] font-medium uppercase tracking-wider">{stat.label}</span>
@@ -145,9 +144,8 @@ export default function AboutPage() {
             <div
               key={val.title}
               ref={addToRefs}
-              style={glassCardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 md:p-8 flex gap-6 items-start hover:border-[#06B6D4]/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300"
               style={{ ...glassCardStyle, transitionDelay: `${idx * 100}ms` }}
+              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 md:p-8 flex gap-6 items-start hover:border-[#06B6D4]/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300"
             >
               <span className="text-4xl bg-white/5 p-4 rounded-2xl border border-white/5">{val.icon}</span>
               <div>
@@ -206,9 +204,8 @@ export default function AboutPage() {
             <div
               key={reason.title}
               ref={addToRefs}
-              style={glassCardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex flex-col hover:border-[#06B6D4]/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300"
               style={{ ...glassCardStyle, transitionDelay: `${idx * 50}ms` }}
+              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex flex-col hover:border-[#06B6D4]/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300"
             >
               <div className="text-3xl mb-4 bg-[#06B6D4]/10 w-fit p-3 rounded-xl text-[#06B6D4]">
                 {reason.icon}

@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 import { createClient } from "@/lib/supabase";
-
 import { Student, Faculty, Notice, GalleryImage, Fee, Score } from "@/types";
 
 const poppins = Poppins({
@@ -124,7 +123,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* 6 Sections: Students, Faculty, Notices, Gallery, Fees, Scores */}
-      
+
       {/* 1. Students Section */}
       <section id="students" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
@@ -282,7 +281,7 @@ export default function AdminDashboard() {
             {gallery.map((img) => (
               <div
                 key={img.id}
-                className="relative group overflow-hidden rounded-xl aspect-square border border-white/5 bg-white/5 animate-fade-in"
+                className="relative group overflow-hidden rounded-xl aspect-square border border-white/5 bg-white/5"
               >
                 <img
                   src={img.image_url}
@@ -337,8 +336,8 @@ export default function AdminDashboard() {
                   <tr key={fee.id} className="hover:bg-white/5 transition-colors">
                     <td className="py-3.5 pr-4 font-medium">{fee.students?.name || "N/A"}</td>
                     <td className="py-3.5 px-4 text-[#94A3B8]">{fee.students?.enrollment_id || "N/A"}</td>
-                    <td className="py-3.5 px-4">${fee.total_amount}</td>
-                    <td className="py-3.5 px-4">${fee.paid_amount}</td>
+                    <td className="py-3.5 px-4">₹{fee.total_amount}</td>
+                    <td className="py-3.5 px-4">₹{fee.paid_amount}</td>
                     <td className="py-3.5 px-4 text-[#94A3B8]">
                       {new Date(fee.due_date).toLocaleDateString()}
                     </td>

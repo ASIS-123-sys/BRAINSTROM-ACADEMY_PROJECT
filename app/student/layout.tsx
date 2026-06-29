@@ -1,9 +1,7 @@
-import React from "react";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import AdminSidebar from "@/components/admin/AdminSidebar";
 
-export default async function AdminLayout({
+export default async function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -14,8 +12,8 @@ export default async function AdminLayout({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/admin-login");
+    redirect("/auth/student-login");
   }
 
-  return <AdminSidebar>{children}</AdminSidebar>;
+  return <div>{children}</div>;
 }
