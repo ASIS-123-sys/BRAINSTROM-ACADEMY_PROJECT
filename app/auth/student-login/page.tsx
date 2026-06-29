@@ -1,12 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  loginStudent,
-  sendOTP,
-  verifyOTPAndReset,
-  getCurrentUser,
-} from "@/lib/auth";
+import { loginStudent, sendOTP, verifyOTPAndReset } from "@/lib/auth";
 import { createClient } from "@/lib/supabase";
 
 // pre-warms the connection before user even clicks anything
@@ -29,13 +24,6 @@ export default function StudentLoginPage() {
     error: "",
     success: "",
   });
-
-  // skip login page if already logged in
-  useEffect(() => {
-    getCurrentUser().then(({ user }) => {
-      if (user) router.push("/student/dashboard");
-    });
-  }, []);
 
   async function handleLogin() {
     if (!enrollmentId || !password) {

@@ -1,12 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  loginAdmin,
-  sendOTP,
-  verifyOTPAndReset,
-  getCurrentUser,
-} from "@/lib/auth";
+import { loginAdmin, sendOTP, verifyOTPAndReset } from "@/lib/auth";
 import { createClient } from "@/lib/supabase";
 
 // pre-warms the connection
@@ -29,13 +24,6 @@ export default function AdminLoginPage() {
     error: "",
     success: "",
   });
-
-  // skip login if already logged in
-  useEffect(() => {
-    getCurrentUser().then(({ user }) => {
-      if (user) router.push("/admin/dashboard");
-    });
-  }, []);
 
   async function handleLogin() {
     if (!adminId || !password) {
