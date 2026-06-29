@@ -18,20 +18,44 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: "Overview", href: "/admin/dashboard", icon: "📊" },
-  { label: "Students", href: "/admin/students", icon: "👥" },
-  { label: "Faculty", href: "/admin/faculty", icon: "👨‍🏫" },
-  { label: "Notices", href: "/admin/notices", icon: "📢" },
-  { label: "Gallery", href: "/admin/gallery", icon: "🖼️" },
-  { label: "Fees", href: "/admin/fees", icon: "💰" },
-  { label: "Scores", href: "/admin/scores", icon: "📝" },
+  { label: "Students", href: "/admin/dashboard#students", icon: "👥" },
+  { label: "Faculty", href: "/admin/dashboard#faculty", icon: "👨‍🏫" },
+  { label: "Notices", href: "/admin/dashboard#notices", icon: "📢" },
+  { label: "Gallery", href: "/admin/dashboard#gallery", icon: "🖼️" },
+  { label: "Fees", href: "/admin/dashboard#fees", icon: "💰" },
+  { label: "Scores", href: "/admin/dashboard#scores", icon: "📝" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [currentHash, setCurrentHash] = React.useState("");
 
-  // Determine current page name for top bar based on pathname
-  const currentItem = navItems.find((item) => item.href === pathname);
+  React.useEffect(() => {
+    // Set initial hash asynchronously to avoid cascading renders warning
+    const timer = setTimeout(() => {
+      setCurrentHash(window.location.hash);
+    }, 0);
+
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
+  // Determine current page name for top bar based on pathname and hash
+  const currentItem = navItems.find((item) => {
+    if (item.href.includes("#")) {
+      const [path, hash] = item.href.split("#");
+      return pathname === path && currentHash === `#${hash}`;
+    }
+    return pathname === item.href && (currentHash === "" || currentHash === "#");
+  });
   const pageTitle = currentItem ? currentItem.label : "Admin Panel";
 
   const sidebarGlassStyle = {
@@ -58,7 +82,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Navigation Links */}
           <nav className="flex flex-col gap-2">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = (() => {
+                if (item.href.includes("#")) {
+                  const [path, hash] = item.href.split("#");
+                  return pathname === path && currentHash === `#${hash}`;
+                }
+                return pathname === item.href && (currentHash === "" || currentHash === "#");
+              })();
               return (
                 <Link
                   key={item.href}
