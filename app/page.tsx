@@ -1,10 +1,82 @@
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
-import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
-import Card, { CardHeader, CardDivider, CardFooter } from "@/components/ui/Card";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+});
 
 export default function Home() {
-  // 5 performers placeholder data
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, observerOptions);
+
+    const animatedElements = document.querySelectorAll(".section-animate");
+    animatedElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      animatedElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
+  // Card hover animation events
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.transform = "perspective(1000px) rotateX(4deg) rotateY(4deg) scale(1.02)";
+    e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+    e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)";
+    e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+  };
+
+  // Card glassmorphism style object
+  const glassCardStyle: React.CSSProperties = {
+    background: "rgba(255,255,255,0.05)",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "16px",
+    transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+    transformStyle: "preserve-3d",
+  };
+
+  const glassCardCyanStyle: React.CSSProperties = {
+    ...glassCardStyle,
+    borderTop: "4px solid #06B6D4",
+  };
+
+  const glassCardAmberStyle: React.CSSProperties = {
+    ...glassCardStyle,
+    borderTop: "4px solid #F59E0B",
+  };
+
+  const notices = [
+    "Monthly Test — June 30",
+    "Sunday Special Class",
+    "ADCA Admission Open",
+    "Fee Reminder — June",
+    "Holiday Notice",
+  ];
+
   const performers = [
     {
       name: "Aditya Patra",
@@ -44,475 +116,602 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950 font-sans">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/50 via-white to-white dark:from-blue-950/20 dark:via-zinc-950 dark:to-zinc-950 py-20 md:py-32">
-        {/* Ambient background decoration */}
-        <div className="absolute top-0 right-0 -z-10 h-[300px] w-[300px] md:h-[400px] md:w-[400px] rounded-full bg-blue-400/10 blur-3xl dark:bg-blue-600/5"></div>
-        <div className="absolute top-20 left-10 -z-10 h-[250px] w-[250px] md:h-[300px] md:w-[300px] rounded-full bg-orange-400/10 blur-3xl dark:bg-orange-600/5"></div>
+    <div
+      className={`${poppins.variable} bg-[#0F172A] text-[#F8FAFC] overflow-hidden min-h-screen relative w-full`}
+      style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+    >
+      {/* ─── INJECTED KEYFRAME & TRANSITION CSS ─────────────────── */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .ticker-container {
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          width: 100%;
+        }
+        .ticker {
+          display: flex;
+          gap: 3rem;
+          white-space: nowrap;
+          animation: ticker-scroll 25s linear infinite;
+        }
+        @keyframes ticker-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .section-animate {
+          opacity: 0;
+          transform: translateY(50px);
+          transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .section-animate.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `}} />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start">
-              <Badge variant="info" className="mb-4 shadow-sm">
-                Leading Coaching Institute in Odisha
-              </Badge>
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-700 dark:from-blue-400 dark:to-indigo-400">
-                  Brainstorm
-                </span>{" "}
-                <span className="text-orange-500">Academy</span>
+      {/* SECTION 1 — HERO */}
+      <section className="relative min-h-[92vh] lg:min-h-[85vh] flex items-center py-12 lg:py-16 overflow-hidden section-animate">
+        {/* Large Decorative Blurred Circles */}
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full bg-[#06B6D4] opacity-15 blur-[80px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full bg-[#3B82F6] opacity-15 blur-[80px] pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
+            {/* Left Column: Text content + stats pills */}
+            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+              {/* Cyan Border pill badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full text-xs font-semibold tracking-wider text-[#06B6D4] border border-[#06B6D4] bg-[#06B6D4]/10 uppercase mb-5 shadow-inner">
+                ISO 9001:2015 Certified • Berhampur, Odisha
+              </div>
+
+              {/* Main Tagline Heading - Fixed font size and fit in 2 lines on desktop */}
+              <h1
+                className="font-bold tracking-tight mb-4 select-none leading-tight"
+                style={{
+                  fontFamily: "var(--font-poppins), sans-serif",
+                  fontSize: "clamp(32px, 4.5vw, 52px)", // 32px on mobile, max 52px on desktop
+                  lineHeight: "1.2",
+                }}
+              >
+                Empowering Every Student to Achieve <span className="text-[#06B6D4]">Excellence</span>
               </h1>
-              <p className="mt-4 text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200">
-                Empowering Students Since Day One
+
+              {/* Subtext */}
+              <p className="text-sm sm:text-base text-[#94A3B8] max-w-2xl leading-relaxed mb-6">
+                Comprehensive coaching for Computer Courses, 12th Grade and Class 5–10 in Berhampur, Odisha. Expert faculty. Proven results.
               </p>
-              <p className="mt-4 text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed">
-                Discover a legacy of academic brilliance in Berhampur, Odisha. At Brainstorm Academy, we provide quality education, robust conceptual clarity, and comprehensive guidance for board prep, secondary school, and skill-oriented computer courses.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 w-full sm:w-auto">
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 w-full sm:w-auto mb-8">
                 <Link href="/course" className="w-full sm:w-auto">
-                  <Button variant="primary" size="lg" className="w-full">
+                  <button className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#F59E0B] text-[#0F172A] font-bold text-sm tracking-wider uppercase transition-all duration-300 hover:bg-[#d98c0b] hover:scale-105 active:scale-98 shadow-lg shadow-[#F59E0B]/20 cursor-pointer">
                     Explore Courses
-                  </Button>
+                  </button>
                 </Link>
                 <Link href="/auth/student-login" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full">
+                  <button className="w-full sm:w-auto px-8 py-3 rounded-full border border-white/20 hover:bg-white/5 text-[#F8FAFC] font-bold text-sm tracking-wider uppercase transition-all duration-300 hover:scale-105 active:scale-98 cursor-pointer">
                     Student Login
-                  </Button>
+                  </button>
                 </Link>
+              </div>
+
+              {/* Stats Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl">
+                {[
+                  { val: "10+", label: "Years Experience" },
+                  { val: "1500+", label: "Alumni" },
+                  { val: "98%", label: "Pass Rate" },
+                  { val: "ISO", label: "9001:2015" },
+                ].map((stat, i) => (
+                  <div
+                    key={i}
+                    style={glassCardStyle}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    className="text-center py-2 px-2 hover:border-[#06B6D4]/30"
+                  >
+                    <span className="block text-xl font-bold text-[#F59E0B]">
+                      {stat.val}
+                    </span>
+                    <span className="text-[10px] sm:text-xs text-[#94A3B8] font-medium tracking-wide block mt-0.5">
+                      {stat.label}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right Decorative Section (Stats / Highlights) */}
-            <div className="lg:col-span-5 flex flex-col gap-6 w-full max-w-md mx-auto lg:max-w-none">
-              <Card accent="blue" className="shadow-lg">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                  Why Choose Brainstorm?
-                </h3>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="p-3 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg">
-                    <span className="block text-2xl font-extrabold text-blue-700 dark:text-blue-400">
-                      10+
-                    </span>
-                    <span className="text-[10px] text-gray-500 font-medium">Years Exp</span>
-                  </div>
-                  <div className="p-3 bg-orange-50/50 dark:bg-orange-950/20 rounded-lg">
-                    <span className="block text-2xl font-extrabold text-orange-500">
-                      1.5k+
-                    </span>
-                    <span className="text-[10px] text-gray-500 font-medium">Alumni</span>
-                  </div>
-                  <div className="p-3 bg-green-50/50 dark:bg-green-950/20 rounded-lg">
-                    <span className="block text-2xl font-extrabold text-green-700 dark:text-green-400">
-                      98%
-                    </span>
-                    <span className="text-[10px] text-gray-500 font-medium">Pass Rate</span>
-                  </div>
-                </div>
-                <CardDivider />
-                <ul className="space-y-3">
-                  {[
-                    "Experienced and supportive mentors",
-                    "Well-structured study materials",
-                    "Regular mock tests and reviews",
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                      <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
+            {/* Right Column: Students Studying Image */}
+            <div className="lg:col-span-5 flex justify-center w-full">
+              <img
+                src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600"
+                alt="Students Studying at Brainstorm Academy"
+                style={{
+                  borderRadius: "16px",
+                  boxShadow: "0 0 40px rgba(6,182,212,0.2)",
+                }}
+                className="w-full max-w-md h-auto aspect-[4/3] object-cover border border-white/10"
+              />
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* 2. COURSE SECTION */}
-      <section className="py-20 bg-gray-50/30 dark:bg-zinc-900/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="warning" className="mb-3">
-              Academic & Professional Programs
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              Our Comprehensive Courses
-            </h2>
-            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-              Unlock your potential with our meticulously structured curricula tailored for all academic and vocational levels.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Column 1: Computer Courses */}
-            <Card accent="blue" className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <rect x="2" y="3" width="20" height="14" rx="2" strokeWidth={2} />
-                    <path d="M8 21h8" strokeWidth={2} strokeLinecap="round" />
-                    <path d="M12 17v4" strokeWidth={2} strokeLinecap="round" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Computer Courses</h3>
-                  <p className="text-xs text-gray-500">Skill Development</p>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-1.5 mb-6">
-                {["ADCA", "CCA", "DCA", "PGDCA", "Tally ERP 9", "Spoken English"].map((course) => (
-                  <Badge key={course} variant="info">
-                    {course}
-                  </Badge>
-                ))}
-              </div>
-
-              <CardDivider />
-
-              <div className="flex-1 space-y-3">
-                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Campus Facilities
-                </h4>
-                <ul className="space-y-2">
-                  {["Seminars", "Exam", "Syllabus Material", "Kit Bag", "ID Card", "AC Class Room"].map((facility) => (
-                    <li key={facility} className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                      <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {facility}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <CardFooter className="pt-4 mt-6">
-                <Link href="/course" className="w-full">
-                  <Button variant="ghost" fullWidth>
-                    Program Details &rarr;
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-
-            {/* Column 2: 12th Grade */}
-            <Card accent="orange" className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M12 14l9-5-9-5-9 5 9 5z" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" strokeWidth={2} />
-                    <path d="M3 14v7a1 1 0 001 1h2a1 1 0 001-1v-7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">12th Grade</h3>
-                  <p className="text-xs text-gray-500">Board Preparation</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 mb-6">
-                {["Science", "Commerce", "Arts"].map((stream) => (
-                  <Badge key={stream} variant="warning">
-                    {stream}
-                  </Badge>
-                ))}
-              </div>
-
-              <CardDivider />
-
-              <div className="flex-1 space-y-3">
-                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Coaching Features
-                </h4>
-                <ul className="space-y-2">
-                  {[
-                    "Experienced Faculty",
-                    "Fundamental Clearing Classes",
-                    "Doubt Clearing",
-                    "Monthly Test",
-                    "Class Examination Test",
-                    "Crash Course",
-                  ].map((facility) => (
-                    <li key={facility} className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                      <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {facility}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <CardFooter className="pt-4 mt-6">
-                <Link href="/course" className="w-full">
-                  <Button variant="ghost" fullWidth>
-                    Program Details &rarr;
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-
-            {/* Column 3: 5th to 10th Grade */}
-            <Card accent="blue" className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">5th to 10th Grade</h3>
-                  <p className="text-xs text-gray-500">School Foundation</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 mb-6">
-                <Badge variant="success">All Subjects</Badge>
-              </div>
-
-              <CardDivider />
-
-              <div className="flex-1 space-y-3">
-                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                  Academic Framework
-                </h4>
-                <ul className="space-y-2">
-                  {[
-                    "Monthly Test",
-                    "Sunday Special Classes",
-                    "Weekly Test",
-                    "Surprise Test",
-                    "Doubt Session",
-                    "Board Exam Preparation",
-                  ].map((facility) => (
-                    <li key={facility} className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                      <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {facility}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <CardFooter className="pt-4 mt-6">
-                <Link href="/course" className="w-full">
-                  <Button variant="ghost" fullWidth>
-                    Program Details &rarr;
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          </div>
+      {/* SECTION 2 — NOTICE TICKER */}
+      <section className="bg-[#0F172A] py-4 flex items-center overflow-hidden z-20 relative border-t border-[#06B6D4]">
+        <div className="pl-6 pr-4 border-r border-white/10 flex-shrink-0 z-10 bg-[#0F172A]">
+          <span className="text-[#06B6D4] font-bold text-xs sm:text-sm tracking-widest uppercase flex items-center gap-1.5">
+            <span>📢</span>
+            <span>Notices:</span>
+          </span>
         </div>
-      </section>
-
-      {/* 3. STUDENT EXCELLENCE SECTION */}
-      <section className="py-20 bg-white dark:bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="success" className="mb-3">
-              Wall of Fame
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              Our Top Performers
-            </h2>
-            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-              Celebrating our students who demonstrated commitment and reached new levels of academic distinction.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {performers.map((student) => (
-              <Card key={student.name} className="flex flex-col items-center text-center hover:scale-105 hover:shadow-lg transition-all duration-300 border-t-4 border-t-blue-600 dark:border-t-blue-500">
-                {/* Grey circle for pic */}
-                <div className="w-20 h-20 bg-gray-200 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4 border-4 border-gray-100 dark:border-zinc-900 shadow-inner">
-                  <span className="text-gray-500 dark:text-gray-400 font-bold text-lg">
-                    {student.initials}
-                  </span>
-                </div>
-                
-                <h4 className="font-bold text-gray-900 dark:text-white text-base leading-tight">
-                  {student.name}
-                </h4>
-                <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-semibold">
-                  {student.batch}
-                </p>
-                
-                <CardDivider />
-                
-                <div className="text-2xl font-black text-blue-700 dark:text-blue-400">
-                  {student.percentage}
-                </div>
-                <div className="mt-2">
-                  <Badge variant={student.rank.includes("1") || student.rank.includes("2") ? "success" : "info"}>
-                    {student.rank}
-                  </Badge>
-                </div>
-              </Card>
+        <div className="flex-1 ticker-container py-1">
+          <div className="ticker">
+            {/* Set 1 */}
+            {notices.map((n, i) => (
+              <span key={i} className="flex items-center gap-4 text-[#F8FAFC]/90 font-medium text-xs sm:text-sm">
+                <span>{n}</span>
+                <span className="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+              </span>
+            ))}
+            {/* Set 2 */}
+            {notices.map((n, i) => (
+              <span key={`dup-${i}`} className="flex items-center gap-4 text-[#F8FAFC]/90 font-medium text-xs sm:text-sm">
+                <span>{n}</span>
+                <span className="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. ABOUT SECTION */}
-      <section className="py-20 bg-gray-50/30 dark:bg-zinc-900/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7">
-              <Badge variant="neutral" className="mb-3">
-                Our Legacy
-              </Badge>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6">
-                About Us
-              </h2>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                Founded with a strong commitment to educational enrichment, Brainstorm Academy has grown to become Berhampur's trusted coaching institute. We believe that conceptual foundations and persistent efforts pave the way for success. 
-              </p>
-              <p className="mt-4 text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                Our curriculum bridges the gap between text books and practical learning. By integrating periodic examinations, experienced faculties, and modern classrooms with custom study packages, we prepare our students to excel under pressure while maintaining a deep love for active learning.
-              </p>
-              <div className="mt-8 flex gap-6">
-                <div className="flex flex-col">
-                  <span className="text-3xl font-extrabold text-orange-500">100%</span>
-                  <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider mt-1">Syllabus Covered</span>
+      {/* SECTION 3 — COURSES */}
+      <section className="py-24 bg-[#111827] relative overflow-hidden section-animate">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-left mb-16">
+            <h2
+              className="text-3xl md:text-5xl font-bold text-[#F8FAFC]"
+              style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+            >
+              Our Programs
+            </h2>
+            <p className="mt-2 text-sm sm:text-base text-[#94A3B8]">
+              Structured learning paths for every stage
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Card 1 — Computer Courses */}
+            <div
+              style={glassCardCyanStyle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="p-6 flex flex-col h-full hover:border-[#06B6D4]/40"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#06B6D4] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <rect x="2" y="3" width="20" height="14" rx="2" strokeWidth={1.5} />
+                    <path d="M8 21h8" strokeWidth={1.5} strokeLinecap="round" />
+                    <path d="M12 17v4" strokeWidth={1.5} strokeLinecap="round" />
+                  </svg>
                 </div>
-                <div className="border-l border-gray-200 dark:border-zinc-800"></div>
-                <div className="flex flex-col">
-                  <span className="text-3xl font-extrabold text-blue-700 dark:text-blue-400">1-on-1</span>
-                  <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider mt-1">Doubt Clearing</span>
+                <div>
+                  <h3 className="text-xl font-bold text-[#F8FAFC] leading-tight">Computer Courses 💻</h3>
+                  <p className="text-xs text-[#94A3B8]">Vocational Tech</p>
                 </div>
+              </div>
+
+              {/* Badges list */}
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                {["ADCA", "CCA", "DCA", "PGDCA", "Tally ERP 9", "Spoken English"].map((c) => (
+                  <span
+                    key={c}
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20"
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+
+              {/* Note details */}
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-[#94A3B8] text-center mb-6 shadow-inner">
+                ISO 9001:2015 Certified • As. 250
+              </div>
+
+              <div className="border-t border-white/10 pt-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3">Facilities:</h4>
+                  <ul className="space-y-2.5 mb-8">
+                    {["Seminars Exam", "Syllabus Material", "KIT Bag", "ID Card", "AC Class Room"].map((fac) => (
+                      <li key={fac} className="flex items-center gap-2.5 text-sm text-[#F8FAFC]/80">
+                        <svg className="w-4 h-4 text-[#06B6D4] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {fac}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Link href="/course" className="w-full">
+                  <button className="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 text-[#F8FAFC]/90 text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer">
+                    Learn More &rarr;
+                  </button>
+                </Link>
               </div>
             </div>
 
-            {/* Right Card: Owner details placeholder */}
-            <div className="lg:col-span-5 w-full max-w-md mx-auto lg:max-w-none">
-              <Card accent="orange" className="shadow-lg relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-orange-100/50 dark:bg-orange-950/10 rounded-full blur-2xl -z-10"></div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                  Founder's Message
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 italic leading-relaxed mb-6">
-                  "At Brainstorm Academy, our core philosophy is simple: empower the student from day one. We ensure that our training goes beyond memorization to instil analytical thinking and lifelong values. Our success is measured by the progress and smiles of our learners."
-                </p>
-                <CardDivider />
-                <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-950/30 text-orange-500 flex items-center justify-center font-bold text-sm border border-orange-200 dark:border-orange-900/40">
-                    AK
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-gray-950 dark:text-white text-sm">
-                      Mr. Asis Kumar
-                    </h5>
-                    <p className="text-xs text-gray-500">
-                      Founder & Director, Brainstorm Academy
-                    </p>
-                  </div>
+            {/* Card 2 — 12th Grade */}
+            <div
+              style={glassCardCyanStyle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="p-6 flex flex-col h-full hover:border-[#06B6D4]/40"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#06B6D4] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 14v7a1 1 0 001 1h2a1 1 0 001-1v-7" />
+                  </svg>
                 </div>
-              </Card>
+                <div>
+                  <h3 className="text-xl font-bold text-[#F8FAFC] leading-tight">12th Grade 📚</h3>
+                  <p className="text-xs text-[#94A3B8]">Higher Secondary</p>
+                </div>
+              </div>
+
+              {/* Streams details */}
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                {[
+                  "Science (Caring Soul)",
+                  "Commerce (All Subjects)",
+                  "Arts (All Subjects)",
+                ].map((s) => (
+                  <span
+                    key={s}
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/10 text-white/90 border border-white/15"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+
+              {/* Placeholder gap for alignment */}
+              <div className="h-[46px] mb-6"></div>
+
+              <div className="border-t border-white/10 pt-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3">Facilities:</h4>
+                  <ul className="space-y-2.5 mb-8">
+                    {[
+                      "Experienced Faculty",
+                      "Fundamental Clearing Classes",
+                      "Doubt Clearing Class",
+                      "Monthly Test",
+                      "Class Examination Test",
+                      "Crash Course with Exam",
+                    ].map((fac) => (
+                      <li key={fac} className="flex items-center gap-2.5 text-sm text-[#F8FAFC]/80">
+                        <svg className="w-4 h-4 text-[#06B6D4] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {fac}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Link href="/course" className="w-full">
+                  <button className="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 text-[#F8FAFC]/90 text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer">
+                    Learn More &rarr;
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Card 3 — 5th to 10th Grade */}
+            <div
+              style={glassCardCyanStyle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="p-6 flex flex-col h-full hover:border-[#06B6D4]/40"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#06B6D4] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-[#F8FAFC] leading-tight">5th to 10th Grade ✏️</h3>
+                  <p className="text-xs text-[#94A3B8]">Secondary Foundation</p>
+                </div>
+              </div>
+
+              {/* Subject details */}
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/10 text-white/90 border border-white/15">
+                  All Subjects
+                </span>
+              </div>
+
+              {/* Placeholder gap for alignment */}
+              <div className="h-[46px] mb-6"></div>
+
+              <div className="border-t border-white/10 pt-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h4 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3">Facilities:</h4>
+                  <ul className="space-y-2.5 mb-8">
+                    {[
+                      "Monthly Test",
+                      "Sunday Special Classes",
+                      "Weekly Test",
+                      "Surprise Test",
+                      "Doubt Session",
+                      "Board Exam Preparation",
+                    ].map((fac) => (
+                      <li key={fac} className="flex items-center gap-2.5 text-sm text-[#F8FAFC]/80">
+                        <svg className="w-4 h-4 text-[#06B6D4] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {fac}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Link href="/course" className="w-full">
+                  <button className="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 text-[#F8FAFC]/90 text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer">
+                    Learn More &rarr;
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. CONTACT SECTION */}
-      <section className="py-20 bg-white dark:bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* SECTION 4 — STUDENT EXCELLENCE */}
+      <section className="py-24 bg-[#0F172A] relative overflow-hidden section-animate">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="info" className="mb-3">
-              Reach Out
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              Get in Touch
+            <h2
+              className="text-3xl md:text-5xl font-bold text-[#F8FAFC]"
+              style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+            >
+              Our Top Performers
             </h2>
-            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-              Have questions about admissions, fees, or course structures? We are here to help.
+            <p className="mt-4 text-[#94A3B8] text-sm sm:text-base">
+              Celebrating conceptual mastery and exemplary results.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {performers.map((student) => (
+              <div
+                key={student.name}
+                style={glassCardStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="p-6 flex flex-col items-center text-center hover:border-white/20"
+              >
+                {/* Initials circle in cyan */}
+                <div className="w-16 h-16 rounded-full bg-[#06B6D4]/10 border border-[#06B6D4]/20 text-[#06B6D4] flex items-center justify-center mb-4 font-bold text-lg">
+                  {student.initials}
+                </div>
+
+                <h4 className="font-bold text-white text-base leading-tight mb-1">{student.name}</h4>
+                <p className="text-[10px] text-[#94A3B8] uppercase font-semibold tracking-wider mb-4">
+                  {student.batch}
+                </p>
+
+                <div className="border-t border-white/10 w-full my-3"></div>
+
+                {/* Big amber percentage - maximum font-weight 700 */}
+                <div className="text-3xl font-bold text-[#F59E0B] tracking-tight my-2">
+                  {student.percentage}
+                </div>
+
+                {/* Cyan rank badge */}
+                <div className="mt-2">
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#06B6D4]/15 text-[#06B6D4] border border-[#06B6D4]/30 tracking-wider">
+                    {student.rank}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5 — ABOUT */}
+      <section className="py-24 bg-[#111827] relative overflow-hidden section-animate">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7">
+              <h2
+                className="text-3xl md:text-5xl font-bold text-[#F8FAFC] mb-6"
+                style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+              >
+                About Brainstorm Academy
+              </h2>
+              <p className="text-base text-[#94A3B8] leading-relaxed mb-6">
+                At Brainstorm Academy, we are dedicated to transforming learning into a journey of discovery and success. Strategically situated in Berhampur, Odisha, our academy has been a trusted guide for academic success since 2010. We specialize in building robust concepts, sharpening technical expertise, and equipping students with the confidence to excel in high school, higher secondary, and IT skill sets.
+              </p>
+              <p className="text-base text-[#94A3B8] leading-relaxed">
+                We advocate for concept-driven pacing rather than mechanical memorization. By pairing highly specialized faculty mentors with routine test reviews and smart air-conditioned classrooms, we ensure our students remain highly prepared and inspired to succeed.
+              </p>
+            </div>
+
+            {/* Right Desk Card + Added Classroom Image */}
+            <div className="lg:col-span-5 flex flex-col gap-6 w-full max-w-md mx-auto lg:max-w-none">
+              {/* Founder desk card */}
+              <div
+                style={glassCardAmberStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="p-6 relative overflow-hidden hover:border-[#F59E0B]/40"
+              >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#F59E0B]/5 rounded-full blur-2xl -z-10"></div>
+                <h3 className="text-lg font-bold text-white mb-2">Director's Desk</h3>
+                <p className="text-sm text-white/80 italic leading-relaxed mb-6">
+                  "At Brainstorm Academy, our core philosophy is simple: empower the student from day one. We ensure that our training goes beyond memorization to instil analytical thinking and lifelong values. Our success is measured by the progress and smiles of our learners."
+                </p>
+                <div className="border-t border-white/10 w-full my-4"></div>
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-full bg-white/10 text-[#F59E0B] flex items-center justify-center font-bold text-sm border border-white/10">
+                    AK
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-white text-sm">Mr. Asis Kumar</h5>
+                    <p className="text-xs text-[#94A3B8]">Founder and Director</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Classroom Image - border radius 16px and cyan glow */}
+              <img
+                src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600"
+                alt="Brainstorm Academy Classroom Study Hall"
+                style={{
+                  borderRadius: "16px",
+                  boxShadow: "0 0 40px rgba(6,182,212,0.2)",
+                }}
+                className="w-full h-48 sm:h-60 object-cover border border-white/10"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 6 — CONTACT */}
+      <section className="py-24 bg-[#0F172A] relative overflow-hidden section-animate">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2
+              className="text-3xl md:text-5xl font-bold text-[#F8FAFC]"
+              style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+            >
+              Get In Touch
+            </h2>
+            <p className="mt-4 text-[#94A3B8] text-sm sm:text-base">
+              Reach out to our team or navigate directly to our office campus.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left Columns: Contact cards */}
-            <div className="lg:col-span-6 flex flex-col gap-6 justify-between">
-              {/* Phones Card */}
-              <Card className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 rounded-lg bg-orange-50 dark:bg-orange-950/20 text-orange-500 flex items-center justify-center flex-shrink-0 border border-orange-100 dark:border-orange-900/30">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            {/* Left Column — 3 stacked cards */}
+            <div className="lg:col-span-6 flex flex-col gap-6">
+              {/* Phone card */}
+              <div
+                style={glassCardStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="p-6 flex items-start gap-4 flex-1 hover:border-white/20"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#06B6D4] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
-                <div className="space-y-1">
-                  <h4 className="font-bold text-gray-900 dark:text-white text-base">Phone Numbers</h4>
-                  <p className="text-sm text-gray-500">Call us for immediate assistance:</p>
-                  <div className="flex flex-col gap-1 pt-1.5">
-                    <a href="tel:+910093582535" className="text-blue-700 dark:text-blue-400 font-semibold hover:underline text-sm sm:text-base">
-                      +91 00935 82535
+                <div>
+                  <h4 className="font-bold text-white text-base mb-1">Phone Numbers</h4>
+                  <div className="flex flex-col gap-1">
+                    <a href="tel:+919933825835" className="text-[#06B6D4] hover:underline font-semibold text-sm sm:text-base">
+                      +91 99338 25835
                     </a>
-                    <a href="tel:+912008548156" className="text-blue-700 dark:text-blue-400 font-semibold hover:underline text-sm sm:text-base">
+                    <a href="tel:+912008548156" className="text-[#06B6D4] hover:underline font-semibold text-sm sm:text-base">
                       +91 20085 48156
                     </a>
                   </div>
                 </div>
-              </Card>
+              </div>
 
-              {/* Emails Card */}
-              <Card className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 flex items-center justify-center flex-shrink-0 border border-blue-100 dark:border-blue-900/30">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              {/* Email card */}
+              <div
+                style={glassCardStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="p-6 flex items-start gap-4 flex-1 hover:border-white/20"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#06B6D4] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <div className="space-y-1">
-                  <h4 className="font-bold text-gray-900 dark:text-white text-base">Email Addresses</h4>
-                  <p className="text-sm text-gray-500">Send us your queries anytime:</p>
-                  <div className="flex flex-col gap-1 pt-1.5">
-                    <a href="mailto:asissanoy4@gmail.com" className="text-blue-700 dark:text-blue-400 font-semibold hover:underline text-sm sm:text-base break-all">
-                      asissanoy4@gmail.com
+                <div>
+                  <h4 className="font-bold text-white text-base mb-1">Email Addresses</h4>
+                  <div className="flex flex-col gap-1">
+                    <a href="mailto:avisdasw4@gmail.com" className="text-[#06B6D4] hover:underline font-semibold text-sm sm:text-base break-all">
+                      avisdasw4@gmail.com
                     </a>
-                    <a href="mailto:brainstromacademy@gmail.com" className="text-blue-700 dark:text-blue-400 font-semibold hover:underline text-sm sm:text-base break-all">
-                      brainstromacademy@gmail.com
+                    <a href="mailto:brainstormdplusacademy@gmail.com" className="text-[#06B6D4] hover:underline font-semibold text-sm sm:text-base break-all">
+                      brainstormdplusacademy@gmail.com
                     </a>
                   </div>
                 </div>
-              </Card>
+              </div>
+
+              {/* Location card */}
+              <div
+                style={glassCardStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="p-6 flex items-start gap-4 flex-1 hover:border-white/20"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#06B6D4] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-base mb-1">Location</h4>
+                  <span className="text-sm text-[#94A3B8] font-semibold">
+                    Near Radio Station, Berhampur, Odisha
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {/* Right Column: Google Map Placeholder */}
-            <div className="lg:col-span-6">
-              <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/50 h-full min-h-[320px] flex flex-col items-center justify-center p-8 text-center group">
-                {/* Grid Overlay background */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:16px_28px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_80%,transparent_100%)]"></div>
-                
+            {/* Right Column — Large glass box with location pin and button */}
+            <div className="lg:col-span-6 flex">
+              <div
+                style={glassCardStyle}
+                className="p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group w-full min-h-[350px]"
+              >
+                {/* Visual grid overlay */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:16px_28px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_80%,transparent_100%)] pointer-events-none"></div>
+
                 <div className="relative z-10 flex flex-col items-center">
-                  {/* Location Icon pin circle */}
-                  <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform duration-300 border border-blue-100 dark:border-blue-900/20">
+                  <div className="w-16 h-16 rounded-full bg-[#06B6D4]/10 border border-[#06B6D4]/20 text-[#06B6D4] flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 transition-transform duration-300">
                     <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z" />
                     </svg>
                   </div>
-                  
-                  <h4 className="font-extrabold text-gray-900 dark:text-white text-lg">
-                    Interactive Google Map
-                  </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-sm">
-                    Brainstorm Academy Campus, Berhampur, Odisha, India
+
+                  <h4 className="font-extrabold text-white text-lg tracking-wide">Interactive Campus Map</h4>
+                  <p className="text-sm text-[#94A3B8] mt-2 max-w-xs leading-relaxed">
+                    Brainstorm Academy, Radio Station Road, Berhampur, Odisha, India
                   </p>
-                  
-                  <div className="mt-6">
+
+                  <div className="mt-8">
                     <a
-                      href="https://maps.google.com/?q=Brainstorm+Academy+Berhampur+Odisha"
+                      href="https://maps.google.com/?q=Brainstorm+Academy+Radio+Station+Berhampur+Odisha"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block"
                     >
-                      <Button variant="outline" size="md">
-                        Get Directions on Google Maps
-                      </Button>
+                      <button className="px-6 py-3 rounded-xl bg-[#F59E0B] text-[#0F172A] font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:bg-[#d98c0b] hover:scale-105 active:scale-98 shadow-md shadow-[#F59E0B]/10 cursor-pointer">
+                        GET DIRECTIONS
+                      </button>
                     </a>
                   </div>
                 </div>
