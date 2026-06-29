@@ -1,0 +1,471 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Poppins } from "next/font/google";
+import { createClient } from "@/lib/supabase";
+import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+type StudentReference = {
+  id: string;
+  name: string;
+  enrollment_id: string;
+};
+
+// Local row type matching DB schema + joined student
+type FeeRow = {
+  id: string;
+  student_id: string;
+  total_amount: number;
+  paid_amount: number;
+  due_date: string;
+  status: "paid" | "due" | "partial";
+  last_reminder_sent: string | null;
+  created_at: string;
+  students: {
+    name: string;
+    enrollment_id: string;
+  } | null;
+};
+
+const defaultForm = {
+  student_id: "",
+  total_amount: "",
+  paid_amount: "0",
+  due_date: "",
+};
+
+export default function AdminFeesPage() {
+  const [fees, setFees] = useState<FeeRow[]>([]);
+  const [studentsList, setStudentsList] = useState<StudentReference[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form, setForm] = useState(defaultForm);
+  const [submitting, setSubmitting] = useState(false);
+  const [actionId, setActionId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // ─── Fetch data ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const supabase = createClient();
+
+      const [feesRes, studentsRes] = await Promise.all([
+        supabase
+          .from("fees")
+          .select("*, students(name, enrollment_id)")
+          .order("due_date", { ascending: true }),
+        supabase
+          .from("students")
+          .select("id, name, enrollment_id")
+          .order("name"),
+      ]);
+
+      if (!feesRes.error && feesRes.data) setFees(feesRes.data as FeeRow[]);
+      if (!studentsRes.error && studentsRes.data)
+        setStudentsList(studentsRes.data as StudentReference[]);
+
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  // ─── Add fee record ───────────────────────────────────────────────────────
+  async function handleAdd(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (!form.student_id || !form.total_amount || !form.due_date) {
+      setError("Please fill all required fields.");
+      return;
+    }
+
+    const total = parseFloat(form.total_amount);
+    const paid = parseFloat(form.paid_amount || "0");
+    const status = paid >= total ? "paid" : paid > 0 ? "partial" : "due";
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/admin/fees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          student_id: form.student_id,
+          total_amount: total,
+          paid_amount: paid,
+          due_date: form.due_date,
+          status,
+        }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        setError(json.error);
+        return;
+      }
+
+      // We need to attach the student data manually for the UI since the POST
+      // response doesn't run the JOIN.
+      const selectedStudent = studentsList.find((s) => s.id === form.student_id);
+      const newRecord = {
+        ...json.data,
+        students: selectedStudent
+          ? { name: selectedStudent.name, enrollment_id: selectedStudent.enrollment_id }
+          : null,
+      } as FeeRow;
+
+      setFees((prev) =>
+        [...prev, newRecord].sort(
+          (a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+        )
+      );
+      setForm(defaultForm);
+      setIsModalOpen(false);
+    } catch {
+      setError("Unexpected error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // ─── Mark as Paid ─────────────────────────────────────────────────────────
+  async function handleMarkPaid(id: string, totalAmount: number) {
+    setActionId(id);
+    try {
+      const res = await fetch("/api/admin/fees", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          paid_amount: totalAmount,
+          total_amount: totalAmount,
+        }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        alert("Error updating fee: " + json.error);
+      } else {
+        setFees((prev) =>
+          prev.map((fee) =>
+            fee.id === id
+              ? { ...fee, paid_amount: totalAmount, status: "paid" }
+              : fee
+          )
+        );
+      }
+    } catch {
+      alert("Unexpected error. Please try again.");
+    } finally {
+      setActionId(null);
+    }
+  }
+
+  // ─── Delete fee record ────────────────────────────────────────────────────
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this fee record? This action cannot be undone.")) return;
+    setActionId(id);
+    try {
+      const res = await fetch("/api/admin/fees", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        alert("Error deleting record: " + json.error);
+      } else {
+        setFees((prev) => prev.filter((f) => f.id !== id));
+      }
+    } catch {
+      alert("Unexpected error. Please try again.");
+    } finally {
+      setActionId(null);
+    }
+  }
+
+  // ─── Shared styles ────────────────────────────────────────────────────────
+  const tableContainerStyle: React.CSSProperties = {
+    background: "rgba(255,255,255,0.02)",
+    backdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "16px",
+  };
+
+  const labelClass =
+    "block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5";
+  const inputClass =
+    "w-full border border-white/10 rounded-xl px-4 py-2.5 bg-white/5 text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/50 focus:border-[#06B6D4]/50 text-sm transition";
+
+  // ─── Render ───────────────────────────────────────────────────────────────
+  return (
+    <div className={`space-y-8 ${poppins.className}`}>
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">
+            Manage Fees
+          </h1>
+          <p className="text-sm text-[#94A3B8] mt-1">
+            {loading
+              ? "Loading…"
+              : `${fees.length} fee record${fees.length !== 1 ? "s" : ""}`}
+          </p>
+        </div>
+        <Button
+          onClick={() => {
+            setError(null);
+            setIsModalOpen(true);
+          }}
+          className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
+        >
+          + Add Fee Record
+        </Button>
+      </div>
+
+      {/* ─── Loading state ─── */}
+      {loading && (
+        <div className="flex items-center justify-center min-h-[300px]">
+          <div className="text-center space-y-3">
+            <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-[#94A3B8] animate-pulse">
+              Fetching records…
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Empty state ─── */}
+      {!loading && fees.length === 0 && (
+        <div
+          style={tableContainerStyle}
+          className="flex flex-col items-center justify-center py-20 gap-4 text-center"
+        >
+          <span className="text-5xl">💰</span>
+          <p className="text-[#F8FAFC] font-semibold text-lg">
+            No fee records found
+          </p>
+          <p className="text-[#94A3B8] text-sm">
+            Add a new fee record to get started.
+          </p>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none mt-2"
+          >
+            + Add Fee Record
+          </Button>
+        </div>
+      )}
+
+      {/* ─── Table ─── */}
+      {!loading && fees.length > 0 && (
+        <div style={tableContainerStyle} className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-sm text-[#F8FAFC]">
+            <thead>
+              <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-[#06B6D4] font-semibold">
+                <th className="px-5 py-4">Student</th>
+                <th className="px-5 py-4">Total</th>
+                <th className="px-5 py-4">Paid</th>
+                <th className="px-5 py-4">Due Date</th>
+                <th className="px-5 py-4 text-center">Status</th>
+                <th className="px-5 py-4 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {fees.map((fee) => {
+                const isPaid = fee.status === "paid";
+                return (
+                  <tr
+                    key={fee.id}
+                    className="hover:bg-white/5 transition-colors duration-150"
+                  >
+                    <td className="px-5 py-4 font-medium">
+                      <div className="flex flex-col">
+                        <span>{fee.students?.name || "N/A"}</span>
+                        <span className="text-xs text-[#06B6D4] font-mono mt-0.5">
+                          {fee.students?.enrollment_id || ""}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 text-[#94A3B8]">
+                      ₹{fee.total_amount}
+                    </td>
+                    <td className="px-5 py-4 text-[#94A3B8]">
+                      ₹{fee.paid_amount}
+                    </td>
+                    <td className="px-5 py-4 text-[#94A3B8]">
+                      {new Date(fee.due_date).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-5 py-4 text-center">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-bold border tracking-wide uppercase ${
+                          fee.status === "paid"
+                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            : fee.status === "partial"
+                            ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20"
+                            : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                        }`}
+                      >
+                        {fee.status}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 text-center space-x-2">
+                      {!isPaid ? (
+                        <button
+                          onClick={() => handleMarkPaid(fee.id, fee.total_amount)}
+                          disabled={actionId === fee.id}
+                          className="font-semibold text-xs px-3 py-1.5 rounded-lg bg-[#06B6D4]/10 text-[#06B6D4] hover:bg-[#06B6D4]/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Mark Paid
+                        </button>
+                      ) : (
+                        <span className="text-xs text-emerald-400/50 font-semibold px-3 py-1.5 inline-block cursor-default">
+                          Cleared
+                        </span>
+                      )}
+
+                      <button
+                        onClick={() => handleDelete(fee.id)}
+                        disabled={actionId === fee.id}
+                        className="text-rose-400 hover:text-rose-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-400/10 hover:bg-rose-400/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Delete fee record"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* ─── Add Fee Modal ─── */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setError(null);
+          setForm(defaultForm);
+        }}
+        title="Add Fee Record"
+        size="md"
+        footer={
+          <div className="flex gap-3 w-full justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setIsModalOpen(false);
+                setError(null);
+                setForm(defaultForm);
+              }}
+              disabled={submitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="add-fee-form"
+              isLoading={submitting}
+              className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none"
+            >
+              Add Record
+            </Button>
+          </div>
+        }
+      >
+        <form id="add-fee-form" onSubmit={handleAdd} className="space-y-4">
+          {error && (
+            <div className="rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-rose-700 text-sm font-medium">
+              {error}
+            </div>
+          )}
+
+          {/* Student Dropdown */}
+          <div>
+            <label htmlFor="fee-student" className={labelClass}>
+              Student <span className="text-rose-400">*</span>
+            </label>
+            <select
+              id="fee-student"
+              required
+              value={form.student_id}
+              onChange={(e) => setForm({ ...form, student_id: e.target.value })}
+              className={inputClass}
+            >
+              <option value="" disabled className="bg-[#0F172A] text-[#94A3B8]">
+                -- Select a student --
+              </option>
+              {studentsList.map((s) => (
+                <option key={s.id} value={s.id} className="bg-[#0F172A] text-[#F8FAFC]">
+                  {s.name} ({s.enrollment_id})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* Total Amount */}
+            <div>
+              <label htmlFor="fee-total" className={labelClass}>
+                Total Amount <span className="text-rose-400">*</span>
+              </label>
+              <input
+                id="fee-total"
+                type="number"
+                min="0"
+                step="0.01"
+                required
+                placeholder="0.00"
+                value={form.total_amount}
+                onChange={(e) => setForm({ ...form, total_amount: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+
+            {/* Paid Amount */}
+            <div>
+              <label htmlFor="fee-paid" className={labelClass}>
+                Paid Amount
+              </label>
+              <input
+                id="fee-paid"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value={form.paid_amount}
+                onChange={(e) => setForm({ ...form, paid_amount: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <label htmlFor="fee-due" className={labelClass}>
+              Due Date <span className="text-rose-400">*</span>
+            </label>
+            <input
+              id="fee-due"
+              type="date"
+              required
+              value={form.due_date}
+              onChange={(e) => setForm({ ...form, due_date: e.target.value })}
+              className={`${inputClass} !appearance-none`}
+            />
+          </div>
+        </form>
+      </Modal>
+    </div>
+  );
+}
