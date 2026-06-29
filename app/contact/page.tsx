@@ -1,0 +1,227 @@
+"use client";
+
+import React, { useEffect, useRef } from "react";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+export default function ContactPage() {
+  const scrollRef = useRef<(HTMLDivElement | HTMLElement | HTMLHeadingElement)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("opacity-100", "translate-y-0");
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    scrollRef.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const addToRefs = (el: HTMLDivElement | HTMLElement | HTMLHeadingElement | null) => {
+    if (el && !scrollRef.current.includes(el)) {
+      scrollRef.current.push(el);
+    }
+  };
+
+  const glassCardStyle = {
+    background: "rgba(255,255,255,0.05)",
+    backdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "16px",
+  };
+
+  return (
+    <div className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] overflow-x-hidden pb-24 ${poppins.className}`}>
+      
+      {/* Section 1 — Hero */}
+      <section className="pt-24 pb-12 px-6 flex flex-col items-center justify-center text-center max-w-6xl mx-auto">
+        <div
+          ref={addToRefs}
+          className="opacity-0 translate-y-10 transition-all duration-700 ease-out mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#06B6D4] bg-[#06B6D4]/10 border border-[#06B6D4]/20"
+        >
+          REACH OUT
+        </div>
+        <h1
+          ref={addToRefs}
+          className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-4xl md:text-5xl font-bold mb-4 tracking-tight"
+        >
+          Get In Touch
+        </h1>
+        <p
+          ref={addToRefs}
+          className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-lg text-[#94A3B8] max-w-xl mx-auto"
+        >
+          We are here to answer your questions and help you get started
+        </p>
+      </section>
+
+      {/* Section 2 — Contact Grid */}
+      <section className="max-w-6xl mx-auto px-6 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          
+          {/* Left Column — 3 Stacked Cards */}
+          <div className="space-y-6 flex flex-col justify-between">
+            
+            {/* Phone Card */}
+            <div
+              ref={addToRefs}
+              style={glassCardStyle}
+              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex items-start gap-4 hover:border-[#06B6D4]/35 transition-colors duration-300"
+            >
+              <div className="text-2xl text-[#06B6D4] bg-[#06B6D4]/10 p-3 rounded-xl">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-[#F8FAFC]">Phone Numbers</h3>
+                <p className="text-xs text-[#94A3B8] font-medium">Call us directly during office hours</p>
+                <div className="flex flex-col gap-1 pt-2">
+                  <a href="tel:+919933825835" className="text-[#F59E0B] font-semibold hover:underline w-fit">
+                    +91 99338 25835
+                  </a>
+                  <a href="tel:+912008548156" className="text-[#F59E0B] font-semibold hover:underline w-fit">
+                    +91 20085 48156
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Card */}
+            <div
+              ref={addToRefs}
+              style={glassCardStyle}
+              className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out p-6 flex items-start gap-4 hover:border-[#06B6D4]/35 transition-colors duration-300"
+            >
+              <div className="text-2xl text-[#06B6D4] bg-[#06B6D4]/10 p-3 rounded-xl">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-[#F8FAFC]">Email Addresses</h3>
+                <p className="text-xs text-[#94A3B8] font-medium">Send us your queries anytime</p>
+                <div className="flex flex-col gap-1 pt-2">
+                  <a href="mailto:avisdasw4@gmail.com" className="text-[#F59E0B] font-semibold hover:underline w-fit break-all">
+                    avisdasw4@gmail.com
+                  </a>
+                  <a href="mailto:brainstormdplusacademy@gmail.com" className="text-[#F59E0B] font-semibold hover:underline w-fit break-all">
+                    brainstormdplusacademy@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Location Card */}
+            <div
+              ref={addToRefs}
+              style={glassCardStyle}
+              className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out p-6 flex items-start gap-4 hover:border-[#06B6D4]/35 transition-colors duration-300"
+            >
+              <div className="text-2xl text-[#06B6D4] bg-[#06B6D4]/10 p-3 rounded-xl">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-[#F8FAFC]">Institute Location</h3>
+                <p className="text-xs text-[#94A3B8] font-medium">Come visit us</p>
+                <p className="text-[#F8FAFC] font-semibold pt-2 text-sm leading-relaxed">
+                  Near Radio Station, Berhampur,<br />Odisha, India
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column — Map Card */}
+          <div
+            ref={addToRefs}
+            style={glassCardStyle}
+            className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out p-6 md:p-8 flex flex-col justify-between hover:border-[#06B6D4]/35 transition-colors duration-300 h-full"
+          >
+            <div className="flex flex-col items-center text-center mb-6">
+              <div className="text-3xl text-[#06B6D4] bg-[#06B6D4]/10 p-4 rounded-full mb-3 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-[#F8FAFC]">Brainstorm Academy</h3>
+              <p className="text-sm text-[#94A3B8] mt-1">Near Radio Station, Berhampur, Odisha, India</p>
+              
+              <a 
+                href="https://maps.google.com/?q=Brainstorm+Academy+Radio+Station+Berhampur+Odisha"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 px-6 py-2.5 bg-[#F59E0B] text-[#0F172A] font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-[#F59E0B]/90 shadow-[0_0_15px_rgba(245,158,11,0.2)] transition-all duration-300"
+              >
+                Get Directions
+              </a>
+            </div>
+
+            <div className="w-full relative overflow-hidden rounded-xl border border-white/10 flex-grow min-h-[250px] lg:min-h-0 flex items-stretch">
+              <iframe
+                src="https://maps.google.com/maps?q=Radio+Station+Berhampur+Odisha&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, borderRadius: "12px", minHeight: "300px" }}
+                allowFullScreen
+                loading="lazy"
+                title="Brainstorm Academy Map Location"
+              />
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Section 3 — Office Hours */}
+      <section className="max-w-6xl mx-auto px-6">
+        <h2 
+          ref={addToRefs}
+          className="opacity-0 translate-y-10 transition-all duration-700 ease-out text-3xl font-bold text-center mb-10"
+        >
+          Office Hours
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { day: "Monday to Friday", hours: "7:00 AM — 8:00 PM", active: true },
+            { day: "Saturday", hours: "7:00 AM — 6:00 PM", active: false },
+            { day: "Sunday", hours: "Special Classes Only", active: false }
+          ].map((item, index) => (
+            <div
+              key={item.day}
+              ref={addToRefs}
+              style={glassCardStyle}
+              className={`opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 text-center flex flex-col justify-center items-center hover:border-[#06B6D4]/30 transition-all duration-300 ${
+                item.active ? "border-l-4 border-l-[#06B6D4]" : ""
+              }`}
+              style={{ ...glassCardStyle, transitionDelay: `${index * 100}ms` }}
+            >
+              <span className="text-xs uppercase tracking-wider text-[#06B6D4] font-semibold mb-2">{item.day}</span>
+              <span className="text-lg font-bold text-[#F8FAFC]">{item.hours}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
+  );
+}
