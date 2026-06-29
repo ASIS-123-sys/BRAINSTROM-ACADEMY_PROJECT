@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Poppins } from "next/font/google";
 import Modal from "@/components/ui/Modal";
@@ -13,14 +13,15 @@ const poppins = Poppins({
 });
 
 type Student = {
-  enrollmentId: string;
+  id: string;
+  enrollment_id: string;
   name: string;
   course: string;
   batch: string;
 };
 
 type Faculty = {
-  id: number;
+  id: string;
   name: string;
   subject: string;
   position: string;
@@ -28,32 +29,35 @@ type Faculty = {
 };
 
 type Notice = {
-  id: number;
+  id: string;
   title: string;
-  date: string;
+  content: string;
+  created_at: string;
 };
 
 type GalleryImage = {
-  id: number;
-  title: string;
-  url: string;
+  id: string;
+  event_name: string;
+  image_url: string;
 };
 
 type FeeRecord = {
-  id: number;
-  studentName: string;
-  totalFee: string;
-  paid: string;
-  due: string;
-  status: "paid" | "due";
+  id: string;
+  student_id: string;
+  total_amount: number;
+  paid_amount: number;
+  due_date: string;
+  status: "paid" | "due" | "partial";
+  students?: { name: string; enrollment_id: string };
 };
 
 type ScoreRecord = {
-  id: number;
-  studentName: string;
+  id: string;
+  student_id: string;
   subject: string;
-  score: string;
-  examDate: string;
+  score: number;
+  total: number;
+  test_date: string;
 };
 
 export default function AdminDashboard() {
@@ -75,193 +79,55 @@ export default function AdminDashboard() {
   };
 
   // --- DUMMY DATA STATES ---
-  const [students, setStudents] = useState<Student[]>([
-    {
-      enrollmentId: "BS2025-001",
-      name: "Rahul Patnaik",
-      course: "ADCA",
-      batch: "July 2025",
-    },
-    {
-      enrollmentId: "BS2025-002",
-      name: "Subhasmita Sahu",
-      course: "PGDCA",
-      batch: "July 2025",
-    },
-    {
-      enrollmentId: "BS2025-003",
-      name: "Priya Ranjan Panda",
-      course: "Tally ERP 9",
-      batch: "July 2025",
-    },
-    {
-      enrollmentId: "BS2025-004",
-      name: "Amit Kumar Nayak",
-      course: "DCA",
-      batch: "July 2025",
-    },
-    {
-      enrollmentId: "BS2025-005",
-      name: "Swagatika Jena",
-      course: "Spoken English",
-      batch: "July 2025",
-    },
-  ]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [faculty, setFaculty] = useState<Faculty[]>([]);
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [gallery, setGallery] = useState<GalleryImage[]>([]);
+  const [fees, setFees] = useState<FeeRecord[]>([]);
+  const [scores, setScores] = useState<ScoreRecord[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [faculty, setFaculty] = useState<Faculty[]>([
-    {
-      id: 1,
-      name: "Dr. Alok Mohapatra",
-      subject: "Physics",
-      position: "Senior Lecturer",
-      experience: "12 Years",
-    },
-    {
-      id: 2,
-      name: "Mrs. Minati Dash",
-      subject: "Mathematics",
-      position: "Lecturer",
-      experience: "8 Years",
-    },
-    {
-      id: 3,
-      name: "Mr. Biswajit Sahu",
-      subject: "Computer Science",
-      position: "Lab Instructor",
-      experience: "5 Years",
-    },
-    {
-      id: 4,
-      name: "Ms. Sipra Rout",
-      subject: "English",
-      position: "Communication Coach",
-      experience: "6 Years",
-    },
-    {
-      id: 5,
-      name: "Mr. Rakesh Behera",
-      subject: "Social Studies",
-      position: "Tutor",
-      experience: "4 Years",
-    },
-  ]);
+  useEffect(() => {
+    async function loadData() {
+      const supabase = createClient();
+      setLoading(true);
 
-  const [notices, setNotices] = useState<Notice[]>([
-    {
-      id: 1,
-      title: "Monthly Test scheduled for June 30",
-      date: "June 28, 2025",
-    },
-    {
-      id: 2,
-      title: "Sunday Special Class this weekend",
-      date: "June 25, 2025",
-    },
-    {
-      id: 3,
-      title: "ADCA Admission Open for new batch",
-      date: "June 22, 2025",
-    },
-    { id: 4, title: "Fee Reminder for June month", date: "June 20, 2025" },
-    {
-      id: 5,
-      title: "Holiday Notice for Local Festival",
-      date: "June 18, 2025",
-    },
-  ]);
+      const [
+        { data: studentsData },
+        { data: facultyData },
+        { data: noticesData },
+        { data: galleryData },
+        { data: feesData },
+        { data: scoresData },
+      ] = await Promise.all([
+        supabase.from("students").select("*").order("name"),
+        supabase.from("faculty").select("*").order("name"),
+        supabase
+          .from("notices")
+          .select("*")
+          .order("created_at", { ascending: false }),
+        supabase.from("gallery").select("*").order("event_name"),
+        supabase
+          .from("fees")
+          .select("*, students(name, enrollment_id)")
+          .order("due_date"),
+        supabase
+          .from("scores")
+          .select("*")
+          .order("created_at", { ascending: false }),
+      ]);
 
-  const [gallery, setGallery] = useState<GalleryImage[]>([
-    {
-      id: 1,
-      title: "Annual Function",
-      url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600",
-    },
-    {
-      id: 2,
-      title: "Sports Day",
-      url: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600",
-    },
-    {
-      id: 3,
-      title: "Science Exhibition",
-      url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600",
-    },
-    {
-      id: 4,
-      title: "Computer Lab",
-      url: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600",
-    },
-    {
-      id: 5,
-      title: "Maths Class",
-      url: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600",
-    },
-    {
-      id: 6,
-      title: "Study Session",
-      url: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600",
-    },
-  ]);
+      if (studentsData) setStudents(studentsData as any);
+      if (facultyData) setFaculty(facultyData as any);
+      if (noticesData) setNotices(noticesData as any);
+      if (galleryData) setGallery(galleryData as any);
+      if (feesData) setFees(feesData as any);
+      if (scoresData) setScores(scoresData as any);
 
-  const [fees, setFees] = useState<FeeRecord[]>([
-    {
-      id: 1,
-      studentName: "Rahul Patnaik",
-      totalFee: "3000",
-      paid: "3000",
-      due: "0",
-      status: "paid",
-    },
-    {
-      id: 2,
-      studentName: "Subhasmita Sahu",
-      totalFee: "3000",
-      paid: "1500",
-      due: "1500",
-      status: "due",
-    },
-    {
-      id: 3,
-      studentName: "Priya Ranjan Panda",
-      totalFee: "2500",
-      paid: "2500",
-      due: "0",
-      status: "paid",
-    },
-    {
-      id: 4,
-      studentName: "Amit Kumar Nayak",
-      totalFee: "3000",
-      paid: "1000",
-      due: "2000",
-      status: "due",
-    },
-    {
-      id: 5,
-      studentName: "Swagatika Jena",
-      totalFee: "2500",
-      paid: "2500",
-      due: "0",
-      status: "paid",
-    },
-  ]);
-
-  const [scores, setScores] = useState<ScoreRecord[]>([
-    {
-      id: 1,
-      studentName: "Rahul Patnaik",
-      subject: "Computer Basics",
-      score: "85/100",
-      examDate: "2026-06-15",
-    },
-    {
-      id: 2,
-      studentName: "Subhasmita Sahu",
-      subject: "Tally ERP",
-      score: "92/100",
-      examDate: "2026-06-18",
-    },
-  ]);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
 
   // --- MODAL STATES ---
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
@@ -293,47 +159,59 @@ export default function AdminDashboard() {
   });
 
   // --- MUTATION HANDLERS ---
-  const handleAddStudent = (e: React.FormEvent) => {
+  const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentForm.name) return;
-    const nextIdNum = students.length + 1;
-    const newStudent: Student = {
-      enrollmentId: `BS2025-00${nextIdNum}`,
-      name: studentForm.name,
-      course: studentForm.course,
-      batch: studentForm.batch,
-    };
-    setStudents([...students, newStudent]);
-
-    const newFee: FeeRecord = {
-      id: Date.now(),
-      studentName: studentForm.name,
-      totalFee: "3000",
-      paid: "0",
-      due: "3000",
-      status: "due",
-    };
-    setFees([...fees, newFee]);
-
+    const enrollment_id = `BS${Date.now()}`;
+    const res = await fetch("/api/admin/students", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: studentForm.name,
+        phone: studentForm.phone,
+        batch: studentForm.batch,
+        course: studentForm.course,
+        enrollment_id,
+      }),
+    });
+    const { data, error } = await res.json();
+    if (error) {
+      alert("Error adding student: " + error);
+      return;
+    }
+    setStudents([...students, data]);
     setStudentForm({ name: "", phone: "", course: "ADCA", batch: "July 2025" });
     setIsStudentModalOpen(false);
   };
 
-  const handleDeleteStudent = (enrollmentId: string) => {
-    setStudents(students.filter((s) => s.enrollmentId !== enrollmentId));
+  const handleDeleteStudent = async (id: string) => {
+    const res = await fetch("/api/admin/students", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const { error } = await res.json();
+    if (error) {
+      alert("Error deleting student: " + error);
+      return;
+    }
+    setStudents(students.filter((s) => s.id !== id));
   };
 
-  const handleAddFaculty = (e: React.FormEvent) => {
+  const handleAddFaculty = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!facultyForm.name || !facultyForm.subject) return;
-    const newFac: Faculty = {
-      id: Date.now(),
-      name: facultyForm.name,
-      subject: facultyForm.subject,
-      position: facultyForm.position || "Tutor",
-      experience: facultyForm.experience || "1 Year",
-    };
-    setFaculty([...faculty, newFac]);
+    const res = await fetch("/api/admin/faculty", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(facultyForm),
+    });
+    const { data, error } = await res.json();
+    if (error) {
+      alert("Error adding faculty: " + error);
+      return;
+    }
+    setFaculty([...faculty, data]);
     setFacultyForm({
       name: "",
       phone: "",
@@ -344,80 +222,128 @@ export default function AdminDashboard() {
     setIsFacultyModalOpen(false);
   };
 
-  const handleDeleteFaculty = (id: number) => {
+  const handleDeleteFaculty = async (id: string) => {
+    const res = await fetch("/api/admin/faculty", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const { error } = await res.json();
+    if (error) {
+      alert("Error deleting faculty: " + error);
+      return;
+    }
     setFaculty(faculty.filter((f) => f.id !== id));
   };
 
-  const handleAddNotice = (e: React.FormEvent) => {
+  const handleAddNotice = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!noticeForm.title) return;
-
-    const formattedDate = new Date().toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+    const res = await fetch("/api/admin/notices", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: noticeForm.title,
+        content: noticeForm.title,
+      }),
     });
-
-    const newNotice: Notice = {
-      id: Date.now(),
-      title: noticeForm.title,
-      date: formattedDate,
-    };
-
-    const updatedNotices = [newNotice, ...notices];
-    if (updatedNotices.length > 5) {
-      updatedNotices.pop();
+    const { data, error } = await res.json();
+    if (error) {
+      alert("Error adding notice: " + error);
+      return;
     }
-
+    const updatedNotices = [data, ...notices];
+    if (updatedNotices.length > 5) updatedNotices.pop();
     setNotices(updatedNotices);
     setNoticeForm({ title: "" });
     setIsNoticeModalOpen(false);
   };
 
-  const handleDeleteNotice = (id: number) => {
+  const handleDeleteNotice = async (id: string) => {
+    const res = await fetch("/api/admin/notices", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    const { error } = await res.json();
+    if (error) {
+      alert("Error deleting notice: " + error);
+      return;
+    }
     setNotices(notices.filter((n) => n.id !== id));
   };
 
-  const handleAddImage = (e: React.FormEvent) => {
+  const handleAddImage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!galleryForm.title || !galleryForm.url) return;
-    const newImg: GalleryImage = {
-      id: Date.now(),
-      title: galleryForm.title,
-      url: galleryForm.url,
-    };
-    setGallery([...gallery, newImg]);
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("gallery")
+      .insert({ event_name: galleryForm.title, image_url: galleryForm.url })
+      .select()
+      .single();
+    if (error) {
+      alert("Error adding image: " + (error.message || error));
+      return;
+    }
+    setGallery([...gallery, data]);
     setGalleryForm({ title: "", url: "" });
     setIsGalleryModalOpen(false);
   };
 
-  const handleDeleteImage = (id: number) => {
+  const handleDeleteImage = async (id: string) => {
+    const supabase = createClient();
+    const { error } = await supabase.from("gallery").delete().eq("id", id);
+    if (error) {
+      alert("Error deleting image: " + (error.message || error));
+      return;
+    }
     setGallery(gallery.filter((g) => g.id !== id));
   };
 
-  const handleMarkAsPaid = (id: number) => {
-    setFees(
-      fees.map((f) => {
-        if (f.id === id) {
-          return { ...f, paid: f.totalFee, due: "0", status: "paid" };
-        }
-        return f;
+  const handleMarkAsPaid = async (id: string, totalAmount: number) => {
+    const res = await fetch("/api/admin/fees", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id,
+        paid_amount: totalAmount,
+        total_amount: totalAmount,
       }),
+    });
+    const { error } = await res.json();
+    if (error) {
+      alert("Error updating fee: " + error);
+      return;
+    }
+    setFees(
+      fees.map((f) =>
+        f.id === id ? { ...f, status: "paid", paid_amount: totalAmount } : f,
+      ),
     );
   };
 
-  const handleAddScore = (e: React.FormEvent) => {
+  const handleAddScore = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!scoreForm.studentName || !scoreForm.subject || !scoreForm.score)
       return;
-    const newScore: ScoreRecord = {
-      id: Date.now(),
-      studentName: scoreForm.studentName,
-      subject: scoreForm.subject,
-      score: scoreForm.score,
-      examDate: scoreForm.examDate || new Date().toISOString().split("T")[0],
-    };
-    setScores([newScore, ...scores]);
+    const res = await fetch("/api/admin/scores", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: scoreForm.studentName,
+        subject: scoreForm.subject,
+        score: Number(scoreForm.score),
+        total: 100,
+        test_date: scoreForm.examDate || new Date().toISOString().split("T")[0],
+      }),
+    });
+    const { data, error } = await res.json();
+    if (error) {
+      alert("Error adding score: " + error);
+      return;
+    }
+    setScores([data, ...scores]);
     setScoreForm({ studentName: "", subject: "", score: "", examDate: "" });
   };
 
@@ -433,6 +359,19 @@ export default function AdminDashboard() {
     "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1";
   const modalInputClass =
     "w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm";
+
+  if (loading) {
+    return (
+      <div
+        className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] flex items-center justify-center ${poppins.className}`}
+      >
+        <div className="text-center">
+          <div className="text-2xl font-bold">Loading dashboard...</div>
+          <div className="text-sm text-[#94A3B8] mt-2">Fetching data...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -541,20 +480,18 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-white/5 text-sm text-[#F8FAFC]">
                 {students.map((student) => (
                   <tr
-                    key={student.enrollmentId}
+                    key={student.id}
                     className="hover:bg-white/5 transition-colors"
                   >
                     <td className="p-4 font-mono text-[#06B6D4]">
-                      {student.enrollmentId}
+                      {student.enrollment_id}
                     </td>
                     <td className="p-4 font-medium">{student.name}</td>
                     <td className="p-4 text-[#94A3B8]">{student.course}</td>
                     <td className="p-4 text-[#94A3B8]">{student.batch}</td>
                     <td className="p-4 text-center">
                       <button
-                        onClick={() =>
-                          handleDeleteStudent(student.enrollmentId)
-                        }
+                        onClick={() => handleDeleteStudent(student.id)}
                         className="text-red-400 hover:text-red-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-red-400/10 hover:bg-red-400/20 transition-all duration-200"
                       >
                         Delete
@@ -659,7 +596,11 @@ export default function AdminDashboard() {
                     {notice.title}
                   </h3>
                   <span className="text-xs text-[#94A3B8] font-medium">
-                    {notice.date}
+                    {new Date(notice.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                 </div>
                 <button
@@ -700,14 +641,14 @@ export default function AdminDashboard() {
                 className="overflow-hidden relative group aspect-video sm:aspect-square flex flex-col justify-end"
               >
                 <img
-                  src={img.url}
-                  alt={img.title}
+                  src={img.image_url}
+                  alt={img.event_name}
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent z-10" />
                 <div className="p-4 z-20 flex justify-between items-end gap-3 w-full">
                   <h4 className="font-bold text-sm text-[#F8FAFC]">
-                    {img.title}
+                    {img.event_name}
                   </h4>
                   <button
                     onClick={() => handleDeleteImage(img.id)}
@@ -751,15 +692,17 @@ export default function AdminDashboard() {
                     key={record.id}
                     className="hover:bg-white/5 transition-colors"
                   >
-                    <td className="p-4 font-medium">{record.studentName}</td>
+                    <td className="p-4 font-medium">
+                      {record.students?.name || "Unknown"}
+                    </td>
                     <td className="p-4 font-mono text-[#94A3B8]">
-                      Rs. {record.totalFee}
+                      Rs. {record.total_amount}
                     </td>
                     <td className="p-4 font-mono text-green-400">
-                      Rs. {record.paid}
+                      Rs. {record.paid_amount}
                     </td>
                     <td className="p-4 font-mono text-red-400">
-                      Rs. {record.due}
+                      Rs. {record.total_amount - record.paid_amount}
                     </td>
                     <td className="p-4">
                       <span
@@ -771,7 +714,9 @@ export default function AdminDashboard() {
                     <td className="p-4 text-center">
                       {record.status === "due" ? (
                         <button
-                          onClick={() => handleMarkAsPaid(record.id)}
+                          onClick={() =>
+                            handleMarkAsPaid(record.id, record.total_amount)
+                          }
                           className="text-[#06B6D4] hover:text-[#06B6D4]/80 hover:bg-[#06B6D4]/10 font-bold text-xs px-3 py-1.5 rounded-lg border border-[#06B6D4]/30 transition-all duration-200"
                         >
                           Mark as Paid
@@ -814,8 +759,8 @@ export default function AdminDashboard() {
                 >
                   <option value="">-- Choose Student --</option>
                   {students.map((student) => (
-                    <option key={student.enrollmentId} value={student.name}>
-                      {student.name} ({student.enrollmentId})
+                    <option key={student.id} value={student.id}>
+                      {student.name} ({student.enrollment_id})
                     </option>
                   ))}
                 </select>
@@ -903,13 +848,13 @@ export default function AdminDashboard() {
                       key={rec.id}
                       className="hover:bg-white/5 transition-colors"
                     >
-                      <td className="p-4 font-medium">{rec.studentName}</td>
+                      <td className="p-4 font-medium">{rec.student_id}</td>
                       <td className="p-4 text-[#94A3B8]">{rec.subject}</td>
                       <td className="p-4 text-center font-mono font-bold text-[#F59E0B]">
-                        {rec.score}
+                        {rec.score}/{rec.total}
                       </td>
                       <td className="p-4 text-right text-[#94A3B8]">
-                        {rec.examDate}
+                        {rec.test_date}
                       </td>
                     </tr>
                   ))}
