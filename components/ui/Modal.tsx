@@ -73,7 +73,7 @@ export default function Modal({
       {/* Modal Dialog Content Container */}
       <div
         className={[
-          "relative bg-white rounded-xl shadow-xl w-full z-10",
+          "relative bg-white rounded-xl shadow-xl w-full z-10 text-gray-900",
           "transform transition-all duration-300 scale-100",
           "border border-gray-100 flex flex-col max-h-[90vh]",
           sizeClasses[size],

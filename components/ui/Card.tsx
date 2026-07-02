@@ -25,7 +25,7 @@ export default function Card({
   };
 
   const baseClasses = [
-    "bg-white rounded-xl shadow-md border border-gray-100",
+    "bg-white rounded-xl shadow-md border border-gray-100 text-gray-900",
     accentClasses[accent],
     noPadding ? "" : "p-6",
     onClick
@@ -38,8 +38,14 @@ export default function Card({
 
   if (onClick) {
     return (
-      <div role="button" tabIndex={0} onClick={onClick} className={baseClasses}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClick(); }}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        className={baseClasses}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") onClick();
+        }}
       >
         {children}
       </div>
@@ -64,9 +70,7 @@ export function CardHeader({ title, subtitle, action }: CardHeaderProps) {
         <h3 className="text-lg font-semibold text-gray-900 leading-snug">
           {title}
         </h3>
-        {subtitle && (
-          <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
-        )}
+        {subtitle && <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>}
       </div>
       {action && <div className="flex-shrink-0">{action}</div>}
     </div>
@@ -85,7 +89,9 @@ export function CardFooter({
   className?: string;
 }) {
   return (
-    <div className={`mt-4 pt-4 border-t border-gray-100 flex items-center gap-3 ${className}`}>
+    <div
+      className={`mt-4 pt-4 border-t border-gray-100 flex items-center gap-3 ${className}`}
+    >
       {children}
     </div>
   );

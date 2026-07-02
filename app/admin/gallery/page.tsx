@@ -70,8 +70,8 @@ export default function AdminGalleryPage() {
       }
       setImages((prev) =>
         [...prev, json.data as GalleryRow].sort((a, b) =>
-          a.event_name.localeCompare(b.event_name)
-        )
+          a.event_name.localeCompare(b.event_name),
+        ),
       );
       setForm(defaultForm);
       setIsModalOpen(false);
@@ -114,9 +114,9 @@ export default function AdminGalleryPage() {
   };
 
   const labelClass =
-    "block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5";
+    "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5";
   const inputClass =
-    "w-full border border-white/10 rounded-xl px-4 py-2.5 bg-white/5 text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/50 focus:border-[#06B6D4]/50 text-sm transition";
+    "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (

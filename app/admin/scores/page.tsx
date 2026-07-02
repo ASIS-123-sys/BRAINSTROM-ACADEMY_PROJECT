@@ -125,7 +125,7 @@ export default function AdminScoresPage() {
       // We need to attach the student data manually for the UI since the POST
       // response doesn't run the JOIN.
       const selectedStudent = studentsList.find(
-        (s) => s.id === form.student_id
+        (s) => s.id === form.student_id,
       );
       const newRecord = {
         ...json.data,
@@ -140,8 +140,8 @@ export default function AdminScoresPage() {
       setScores((prev) =>
         [...prev, newRecord].sort(
           (a, b) =>
-            new Date(b.test_date).getTime() - new Date(a.test_date).getTime()
-        )
+            new Date(b.test_date).getTime() - new Date(a.test_date).getTime(),
+        ),
       );
       setForm(defaultForm);
       setIsModalOpen(false);
@@ -185,9 +185,9 @@ export default function AdminScoresPage() {
   };
 
   const labelClass =
-    "block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5";
+    "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5";
   const inputClass =
-    "w-full border border-white/10 rounded-xl px-4 py-2.5 bg-white/5 text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/50 focus:border-[#06B6D4]/50 text-sm transition";
+    "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
@@ -363,9 +363,7 @@ export default function AdminScoresPage() {
               id="score-student"
               required
               value={form.student_id}
-              onChange={(e) =>
-                setForm({ ...form, student_id: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, student_id: e.target.value })}
               className={inputClass}
             >
               <option value="" disabled className="bg-[#0F172A] text-[#94A3B8]">
@@ -447,9 +445,7 @@ export default function AdminScoresPage() {
               type="date"
               required
               value={form.test_date}
-              onChange={(e) =>
-                setForm({ ...form, test_date: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, test_date: e.target.value })}
               className={`${inputClass} !appearance-none`}
             />
           </div>

@@ -110,18 +110,24 @@ export default function AdminFeesPage() {
 
       // We need to attach the student data manually for the UI since the POST
       // response doesn't run the JOIN.
-      const selectedStudent = studentsList.find((s) => s.id === form.student_id);
+      const selectedStudent = studentsList.find(
+        (s) => s.id === form.student_id,
+      );
       const newRecord = {
         ...json.data,
         students: selectedStudent
-          ? { name: selectedStudent.name, enrollment_id: selectedStudent.enrollment_id }
+          ? {
+              name: selectedStudent.name,
+              enrollment_id: selectedStudent.enrollment_id,
+            }
           : null,
       } as FeeRow;
 
       setFees((prev) =>
         [...prev, newRecord].sort(
-          (a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-        )
+          (a, b) =>
+            new Date(a.due_date).getTime() - new Date(b.due_date).getTime(),
+        ),
       );
       setForm(defaultForm);
       setIsModalOpen(false);
@@ -153,8 +159,8 @@ export default function AdminFeesPage() {
           prev.map((fee) =>
             fee.id === id
               ? { ...fee, paid_amount: totalAmount, status: "paid" }
-              : fee
-          )
+              : fee,
+          ),
         );
       }
     } catch {
@@ -166,7 +172,8 @@ export default function AdminFeesPage() {
 
   // ─── Delete fee record ────────────────────────────────────────────────────
   async function handleDelete(id: string) {
-    if (!confirm("Delete this fee record? This action cannot be undone.")) return;
+    if (!confirm("Delete this fee record? This action cannot be undone."))
+      return;
     setActionId(id);
     try {
       const res = await fetch("/api/admin/fees", {
@@ -196,9 +203,9 @@ export default function AdminFeesPage() {
   };
 
   const labelClass =
-    "block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5";
+    "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5";
   const inputClass =
-    "w-full border border-white/10 rounded-xl px-4 py-2.5 bg-white/5 text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/50 focus:border-[#06B6D4]/50 text-sm transition";
+    "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
@@ -309,8 +316,8 @@ export default function AdminFeesPage() {
                           fee.status === "paid"
                             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                             : fee.status === "partial"
-                            ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20"
-                            : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20"
+                              : "bg-rose-500/10 text-rose-400 border-rose-500/20"
                         }`}
                       >
                         {fee.status}
@@ -319,7 +326,9 @@ export default function AdminFeesPage() {
                     <td className="px-5 py-4 text-center space-x-2">
                       {!isPaid ? (
                         <button
-                          onClick={() => handleMarkPaid(fee.id, fee.total_amount)}
+                          onClick={() =>
+                            handleMarkPaid(fee.id, fee.total_amount)
+                          }
                           disabled={actionId === fee.id}
                           className="font-semibold text-xs px-3 py-1.5 rounded-lg bg-[#06B6D4]/10 text-[#06B6D4] hover:bg-[#06B6D4]/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -406,7 +415,11 @@ export default function AdminFeesPage() {
                 -- Select a student --
               </option>
               {studentsList.map((s) => (
-                <option key={s.id} value={s.id} className="bg-[#0F172A] text-[#F8FAFC]">
+                <option
+                  key={s.id}
+                  value={s.id}
+                  className="bg-[#0F172A] text-[#F8FAFC]"
+                >
                   {s.name} ({s.enrollment_id})
                 </option>
               ))}
@@ -427,7 +440,9 @@ export default function AdminFeesPage() {
                 required
                 placeholder="0.00"
                 value={form.total_amount}
-                onChange={(e) => setForm({ ...form, total_amount: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, total_amount: e.target.value })
+                }
                 className={inputClass}
               />
             </div>
@@ -444,7 +459,9 @@ export default function AdminFeesPage() {
                 step="0.01"
                 placeholder="0.00"
                 value={form.paid_amount}
-                onChange={(e) => setForm({ ...form, paid_amount: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, paid_amount: e.target.value })
+                }
                 className={inputClass}
               />
             </div>

@@ -50,6 +50,8 @@ export default function StudentLoginPage() {
         success: "",
       });
     } else {
+      // small delay to let session cookie set properly
+      await new Promise((resolve) => setTimeout(resolve, 500));
       router.push("/student/dashboard");
     }
   }
@@ -127,7 +129,9 @@ export default function StudentLoginPage() {
     "w-full bg-[#06B6D4] hover:bg-[#06B6D4]/90 text-[#0F172A] font-bold rounded-xl px-4 py-3 text-sm transition disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
-    <div className={`min-h-screen bg-[#0F172A] flex flex-col justify-center relative overflow-hidden ${poppins.className}`}>
+    <div
+      className={`min-h-screen bg-[#0F172A] flex flex-col justify-center relative overflow-hidden ${poppins.className}`}
+    >
       {/* Decorative blurs */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#06B6D4] rounded-full blur-[120px] opacity-15 pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500 rounded-full blur-[120px] opacity-15 pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
@@ -135,7 +139,6 @@ export default function StudentLoginPage() {
       <div className="relative z-10 w-full max-w-[420px] mx-auto p-4">
         {/* Glassmorphism Card */}
         <div className="bg-white/5 backdrop-blur-[20px] border border-white/10 rounded-2xl p-10 shadow-2xl">
-          
           {/* LOGIN SCREEN */}
           {screen === "login" && (
             <div className="space-y-6">
@@ -143,8 +146,12 @@ export default function StudentLoginPage() {
                 <div className="w-16 h-16 bg-[#06B6D4]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#06B6D4]/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
                   <span className="text-3xl">👨‍🎓</span>
                 </div>
-                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">Student Login</h1>
-                <p className="text-sm text-[#94A3B8]">Access your academic portal</p>
+                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">
+                  Student Login
+                </h1>
+                <p className="text-sm text-[#94A3B8]">
+                  Access your academic portal
+                </p>
               </div>
 
               <div className="space-y-4">
@@ -208,8 +215,12 @@ export default function StudentLoginPage() {
                 <div className="w-16 h-16 bg-[#F59E0B]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#F59E0B]/20">
                   <span className="text-3xl">🔑</span>
                 </div>
-                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">Reset Password</h1>
-                <p className="text-sm text-[#94A3B8]">Enter your registered email to receive an OTP</p>
+                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">
+                  Reset Password
+                </h1>
+                <p className="text-sm text-[#94A3B8]">
+                  Enter your registered email to receive an OTP
+                </p>
               </div>
 
               <div className="space-y-4">
@@ -257,8 +268,12 @@ export default function StudentLoginPage() {
           {screen === "otp" && (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">Create Password</h1>
-                <p className="text-sm text-[#94A3B8]">Enter the OTP sent to your email</p>
+                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">
+                  Create Password
+                </h1>
+                <p className="text-sm text-[#94A3B8]">
+                  Enter the OTP sent to your email
+                </p>
               </div>
 
               {state.success && (
@@ -306,7 +321,7 @@ export default function StudentLoginPage() {
                 >
                   {state.loading ? "Resetting..." : "Reset Password"}
                 </button>
-                
+
                 <div className="text-center">
                   <button
                     onClick={() => {
@@ -325,8 +340,8 @@ export default function StudentLoginPage() {
 
         {/* Bottom Text */}
         <div className="mt-8 text-center">
-          <Link 
-            href="/auth/admin-login" 
+          <Link
+            href="/auth/admin-login"
             className="text-sm font-medium text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
           >
             Admin? Login here

@@ -130,14 +130,13 @@ export default function AdminNoticesPage() {
   };
 
   const labelClass =
-    "block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5";
+    "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5";
   const inputClass =
-    "w-full border border-white/10 rounded-xl px-4 py-2.5 bg-white/5 text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/50 focus:border-[#06B6D4]/50 text-sm transition";
+    "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className={`space-y-8 ${poppins.className}`}>
-
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
@@ -150,11 +149,15 @@ export default function AdminNoticesPage() {
               : `${notices.length} / ${MAX_NOTICES} notices`}
           </p>
           <p className="text-xs text-[#F59E0B]/80 mt-1 font-medium">
-            Max {MAX_NOTICES} notices — oldest is auto-removed when a new one is added.
+            Max {MAX_NOTICES} notices — oldest is auto-removed when a new one is
+            added.
           </p>
         </div>
         <Button
-          onClick={() => { setError(null); setIsModalOpen(true); }}
+          onClick={() => {
+            setError(null);
+            setIsModalOpen(true);
+          }}
           className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
         >
           + Add Notice
@@ -166,7 +169,9 @@ export default function AdminNoticesPage() {
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
             <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-[#94A3B8] animate-pulse">Fetching notices…</p>
+            <p className="text-sm text-[#94A3B8] animate-pulse">
+              Fetching notices…
+            </p>
           </div>
         </div>
       )}
@@ -178,7 +183,9 @@ export default function AdminNoticesPage() {
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
           <span className="text-5xl">📢</span>
-          <p className="text-[#F8FAFC] font-semibold text-lg">No notices found</p>
+          <p className="text-[#F8FAFC] font-semibold text-lg">
+            No notices found
+          </p>
           <p className="text-[#94A3B8] text-sm">
             Add your first notice to display it on the student portal.
           </p>
@@ -239,7 +246,11 @@ export default function AdminNoticesPage() {
       {/* ─── Add Notice Modal ─── */}
       <Modal
         isOpen={isModalOpen}
-        onClose={() => { setIsModalOpen(false); setError(null); setForm(defaultForm); }}
+        onClose={() => {
+          setIsModalOpen(false);
+          setError(null);
+          setForm(defaultForm);
+        }}
         title="Add New Notice"
         size="md"
         footer={
@@ -247,7 +258,11 @@ export default function AdminNoticesPage() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => { setIsModalOpen(false); setError(null); setForm(defaultForm); }}
+              onClick={() => {
+                setIsModalOpen(false);
+                setError(null);
+                setForm(defaultForm);
+              }}
               disabled={submitting}
             >
               Cancel
@@ -304,7 +319,8 @@ export default function AdminNoticesPage() {
 
           {notices.length >= MAX_NOTICES && (
             <p className="text-xs text-[#F59E0B] font-medium bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-xl px-4 py-2.5">
-              ⚠️ You currently have {MAX_NOTICES} notices. Adding this will automatically delete the oldest one.
+              ⚠️ You currently have {MAX_NOTICES} notices. Adding this will
+              automatically delete the oldest one.
             </p>
           )}
         </form>

@@ -76,8 +76,8 @@ export default function AdminFacultyPage() {
       } else {
         setFaculty((prev) =>
           [...prev, json.data as FacultyRow].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          )
+            a.name.localeCompare(b.name),
+          ),
         );
         setForm(defaultForm);
         setIsModalOpen(false);
@@ -91,7 +91,8 @@ export default function AdminFacultyPage() {
 
   // ─── Delete faculty ───────────────────────────────────────────────────────
   async function handleDelete(id: string) {
-    if (!confirm("Delete this faculty member? This action cannot be undone.")) return;
+    if (!confirm("Delete this faculty member? This action cannot be undone."))
+      return;
     setDeletingId(id);
     try {
       const res = await fetch("/api/admin/faculty", {
@@ -121,14 +122,13 @@ export default function AdminFacultyPage() {
   };
 
   const labelClass =
-    "block text-xs font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5";
+    "block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5";
   const inputClass =
-    "w-full border border-white/10 rounded-xl px-4 py-2.5 bg-white/5 text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/50 focus:border-[#06B6D4]/50 text-sm transition";
+    "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className={`space-y-8 ${poppins.className}`}>
-
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -142,7 +142,10 @@ export default function AdminFacultyPage() {
           </p>
         </div>
         <Button
-          onClick={() => { setError(null); setIsModalOpen(true); }}
+          onClick={() => {
+            setError(null);
+            setIsModalOpen(true);
+          }}
           className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
         >
           + Add Faculty
@@ -154,7 +157,9 @@ export default function AdminFacultyPage() {
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
             <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-[#94A3B8] animate-pulse">Fetching faculty…</p>
+            <p className="text-sm text-[#94A3B8] animate-pulse">
+              Fetching faculty…
+            </p>
           </div>
         </div>
       )}
@@ -166,8 +171,12 @@ export default function AdminFacultyPage() {
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
           <span className="text-5xl">👨‍🏫</span>
-          <p className="text-[#F8FAFC] font-semibold text-lg">No faculty found</p>
-          <p className="text-[#94A3B8] text-sm">Add your first faculty member to get started.</p>
+          <p className="text-[#F8FAFC] font-semibold text-lg">
+            No faculty found
+          </p>
+          <p className="text-[#94A3B8] text-sm">
+            Add your first faculty member to get started.
+          </p>
           <Button
             onClick={() => setIsModalOpen(true)}
             className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none mt-2"
@@ -221,10 +230,16 @@ export default function AdminFacultyPage() {
                   </td>
                   <td className="px-5 py-4 text-[#94A3B8]">{member.subject}</td>
                   <td className="px-5 py-4">
-                    {member.position || <span className="italic opacity-40 text-[#94A3B8]">—</span>}
+                    {member.position || (
+                      <span className="italic opacity-40 text-[#94A3B8]">
+                        —
+                      </span>
+                    )}
                   </td>
                   <td className="px-5 py-4 text-[#94A3B8]">
-                    {member.experience || <span className="italic opacity-40">—</span>}
+                    {member.experience || (
+                      <span className="italic opacity-40">—</span>
+                    )}
                   </td>
                   <td className="px-5 py-4 text-center">
                     <button
@@ -245,7 +260,11 @@ export default function AdminFacultyPage() {
       {/* ─── Add Faculty Modal ─── */}
       <Modal
         isOpen={isModalOpen}
-        onClose={() => { setIsModalOpen(false); setError(null); setForm(defaultForm); }}
+        onClose={() => {
+          setIsModalOpen(false);
+          setError(null);
+          setForm(defaultForm);
+        }}
         title="Add New Faculty Member"
         size="md"
         footer={
@@ -253,7 +272,11 @@ export default function AdminFacultyPage() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => { setIsModalOpen(false); setError(null); setForm(defaultForm); }}
+              onClick={() => {
+                setIsModalOpen(false);
+                setError(null);
+                setForm(defaultForm);
+              }}
               disabled={submitting}
             >
               Cancel

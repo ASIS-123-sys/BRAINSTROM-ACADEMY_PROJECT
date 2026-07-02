@@ -20,8 +20,8 @@ export default function LoadingSkeleton({
     variant === "circle"
       ? "rounded-full"
       : variant === "text"
-      ? "rounded-sm h-4"
-      : "rounded-lg";
+        ? "rounded-sm h-4"
+        : "rounded-lg";
 
   const items = Array.from({ length: count });
 
@@ -30,11 +30,7 @@ export default function LoadingSkeleton({
       {items.map((_, index) => (
         <div
           key={index}
-          className={[
-            "animate-pulse bg-gray-200",
-            shapeClass,
-            className,
-          ]
+          className={["animate-pulse bg-gray-200", shapeClass, className]
             .filter(Boolean)
             .join(" ")}
           style={{
@@ -52,7 +48,7 @@ export default function LoadingSkeleton({
 /** A skeleton layout representing a Card component */
 export function SkeletonCard() {
   return (
-    <div className="border border-gray-100 rounded-xl p-6 bg-white shadow-sm flex flex-col gap-4">
+    <div className="border border-gray-100 rounded-xl p-6 bg-white shadow-sm flex flex-col gap-4 text-gray-900">
       <div className="flex items-center gap-3">
         <LoadingSkeleton variant="circle" width={40} height={40} />
         <div className="flex-1 flex flex-col gap-2">
@@ -75,7 +71,10 @@ export function SkeletonList({ rows = 4 }: { rows?: number }) {
   return (
     <div className="flex flex-col gap-4 w-full">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg bg-white">
+        <div
+          key={i}
+          className="flex items-center justify-between p-4 border border-gray-100 rounded-lg bg-white text-gray-900"
+        >
           <div className="flex items-center gap-3 w-2/3">
             <LoadingSkeleton variant="circle" width={32} height={32} />
             <div className="flex-1 flex flex-col gap-1.5">
@@ -83,7 +82,12 @@ export function SkeletonList({ rows = 4 }: { rows?: number }) {
               <LoadingSkeleton variant="text" width="20%" />
             </div>
           </div>
-          <LoadingSkeleton variant="rect" width={80} height={28} className="rounded-full" />
+          <LoadingSkeleton
+            variant="rect"
+            width={80}
+            height={28}
+            className="rounded-full"
+          />
         </div>
       ))}
     </div>
