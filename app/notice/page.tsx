@@ -75,10 +75,9 @@ export default function NoticeBoard() {
     }
   };
 
-  const glassCardStyle = {
-    background: "rgba(255,255,255,0.05)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.08)",
+  const cardStyle = {
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
@@ -96,26 +95,26 @@ export default function NoticeBoard() {
   `;
 
   return (
-    <div className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] overflow-x-hidden ${poppins.className}`}>
+    <div className={`min-h-screen bg-[#F7FAFD] text-[#42576E] overflow-x-hidden ${poppins.className}`}>
       <style>{tickerAnimation}</style>
       
       {/* Top Section */}
       <section className="pt-24 pb-12 px-6 flex flex-col items-center justify-center text-center">
         <div
           ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 ease-out mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#06B6D4] bg-[#06B6D4]/10 border border-[#06B6D4]/20"
+          className="opacity-0 translate-y-10 transition-all duration-700 ease-out mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8]"
         >
           STAY UPDATED
         </div>
         <h1
           ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-4xl md:text-5xl font-bold mb-4 tracking-tight"
+          className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-4xl md:text-5xl font-bold mb-4 tracking-tight text-[#003358]"
         >
           Notice Board
         </h1>
         <p
           ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-lg text-[#94A3B8] max-w-xl mx-auto"
+          className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-lg text-[#42576E] max-w-xl mx-auto"
         >
           Latest announcements and updates from Brainstorm Academy
         </p>
@@ -124,14 +123,14 @@ export default function NoticeBoard() {
       {/* Notice Ticker Strip */}
       <div 
         ref={addToRefs}
-        className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full border-l-4 border-[#06B6D4] bg-white/5 backdrop-blur-sm overflow-hidden py-3 mb-16 relative flex"
+        className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full border-l-4 border-[#2dbcfe] bg-[#F2F7FC] border-y border-y-[#7FB3E8] overflow-hidden py-3 mb-16 relative flex"
       >
         <div className="flex animate-ticker whitespace-nowrap min-w-max hover:cursor-pointer">
           {[...notices, ...notices].map((notice, i) => (
             <div key={i} className="flex items-center px-8">
-               <span className="text-[#F59E0B] font-semibold text-sm mr-3">[{notice.date}]</span>
-               <span className="text-[#F8FAFC]">{notice.title} - {notice.description}</span>
-               <span className="mx-8 text-[#06B6D4]">|</span>
+               <span className="text-[#00658d] font-semibold text-sm mr-3">[{notice.date}]</span>
+               <span className="text-[#003358]">{notice.title} - {notice.description}</span>
+               <span className="mx-8 text-[#7FB3E8]">|</span>
             </div>
           ))}
         </div>
@@ -146,39 +145,39 @@ export default function NoticeBoard() {
               <div
                 key={notice.id}
                 ref={addToRefs}
-                className={`opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 md:p-8 flex flex-col ${
-                  isFirst ? "md:col-span-2 border-l-4 border-l-[#06B6D4]" : ""
+                className={`opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 md:p-8 flex flex-col hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300 ${
+                  isFirst ? "md:col-span-2 border-l-4 border-l-[#2dbcfe]" : ""
                 }`}
                 style={{
-                   ...glassCardStyle,
+                   ...cardStyle,
                    transitionDelay: `${index * 100}ms`
                 }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    className={`text-xs font-bold px-3 py-1 rounded-full border border-[#7FB3E8] ${
                       notice.isLatest
-                        ? "bg-[#F59E0B]/20 text-[#F59E0B]"
-                        : "bg-white/10 text-[#94A3B8]"
+                        ? "bg-[#2dbcfe] text-[#003358]"
+                        : "bg-[#9FC7F0] text-[#003358]"
                     }`}
                   >
                     {notice.isLatest ? "LATEST" : "NOTICE"}
                   </span>
-                  <span className="text-sm font-medium text-[#94A3B8]">{notice.date}</span>
+                  <span className="text-sm font-medium text-[#42576E]">{notice.date}</span>
                 </div>
                 
-                <h3 className={`font-semibold text-[#F8FAFC] mb-3 ${isFirst ? 'text-2xl' : 'text-xl'}`}>
+                <h3 className={`font-semibold text-[#003358] mb-3 ${isFirst ? 'text-2xl' : 'text-xl'}`}>
                   {notice.title}
                 </h3>
                 
-                <p className="text-[#94A3B8] mb-6 flex-grow leading-relaxed">
+                <p className="text-[#42576E] mb-6 flex-grow leading-relaxed">
                   {notice.description}
                 </p>
                 
                 <div className="mt-auto">
                   <a
                     href="#"
-                    className="inline-flex items-center text-[#06B6D4] font-medium text-sm hover:text-white transition-colors group"
+                    className="inline-flex items-center text-[#00658d] font-bold text-sm hover:text-[#2dbcfe] transition-colors group"
                   >
                     Read More 
                     <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

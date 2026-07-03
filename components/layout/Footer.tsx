@@ -1,4 +1,7 @@
+"use client";
 import Link from "next/link";
+import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -18,6 +21,25 @@ const contactInfo = {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const router = useRouter();
+  const clickCount = useRef(0);
+  const clickTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleCopyrightClick = () => {
+    clickCount.current += 1;
+
+    if (clickCount.current >= 3) {
+      router.push("/auth/admin-login");
+      clickCount.current = 0;
+      if (clickTimer.current) clearTimeout(clickTimer.current);
+      return;
+    }
+
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    clickTimer.current = setTimeout(() => {
+      clickCount.current = 0;
+    }, 1500);
+  };
 
   return (
     <footer className="bg-gray-900 text-gray-300">
@@ -193,7 +215,10 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-gray-500 text-center sm:text-left">
+          <p 
+            onClick={handleCopyrightClick}
+            className="text-xs text-gray-500 text-center sm:text-left select-none"
+          >
             &copy; {currentYear} Brainstorm Academy. All rights reserved.
           </p>
           <p className="text-xs text-gray-600">

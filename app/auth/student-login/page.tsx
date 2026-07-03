@@ -162,6 +162,7 @@ export default function StudentLoginPage() {
                   onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                   placeholder="Enrollment ID"
                   className={inputClass}
+                  autoComplete="off"
                 />
                 <input
                   type="password"
@@ -170,6 +171,7 @@ export default function StudentLoginPage() {
                   onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                   placeholder="Password"
                   className={inputClass}
+                  autoComplete="new-password"
                 />
               </div>
 

@@ -64,10 +64,9 @@ export default function PhotoGallery() {
     ? galleryItems
     : galleryItems.filter(item => item.category === activeFilter);
 
-  const glassCardStyle = {
-    background: "rgba(255,255,255,0.05)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.08)",
+  const cardStyle = {
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
   };
 
   // Close lightbox on escape key
@@ -90,25 +89,25 @@ export default function PhotoGallery() {
   }, [selectedImage]);
 
   return (
-    <div className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] overflow-x-hidden ${poppins.className}`}>
+    <div className={`min-h-screen bg-[#F7FAFD] text-[#42576E] overflow-x-hidden ${poppins.className}`}>
       
       {/* Top Section */}
       <section className="pt-24 pb-12 px-6 flex flex-col items-center justify-center text-center">
         <div
           ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 ease-out mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#06B6D4] bg-[#06B6D4]/10 border border-[#06B6D4]/20"
+          className="opacity-0 translate-y-10 transition-all duration-700 ease-out mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8]"
         >
           OUR MEMORIES
         </div>
         <h1
           ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-4xl md:text-5xl font-bold mb-4 tracking-tight"
+          className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-4xl md:text-5xl font-bold mb-4 tracking-tight text-[#003358]"
         >
           Photo Gallery
         </h1>
         <p
           ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-lg text-[#94A3B8] max-w-xl mx-auto"
+          className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-lg text-[#42576E] max-w-xl mx-auto"
         >
           Moments from our events, classes and achievements
         </p>
@@ -116,7 +115,7 @@ export default function PhotoGallery() {
 
       {/* Filter Buttons Row */}
       <section className="max-w-6xl mx-auto px-6 mb-12" ref={addToRefs}>
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out" style={glassCardStyle as React.CSSProperties & { opacity: number; transform: string; transitionDelay: string; transitionDuration: string; transitionProperty: string; transitionTimingFunction: string; borderRadius: string; padding: string; width: string; margin: string; display: string; justifyContent: string; gap: string; }}>
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out" style={cardStyle as React.CSSProperties & { opacity: number; transform: string; transitionDelay: string; transitionDuration: string; transitionProperty: string; transitionTimingFunction: string; borderRadius: string; padding: string; width: string; margin: string; display: string; justifyContent: string; gap: string; }}>
           <div className="flex flex-wrap justify-center gap-3 w-full p-2 rounded-[16px]">
             {categories.map((category) => (
               <button
@@ -128,10 +127,10 @@ export default function PhotoGallery() {
                 }}
                 className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                   activeFilter === category
-                    ? "bg-[#06B6D4] text-[#0F172A] shadow-[0_0_15px_rgba(6,182,212,0.5)]"
-                    : "text-[#F8FAFC] hover:bg-white/10"
+                    ? "bg-[#2dbcfe] text-[#003358] shadow-[0_0_15px_rgba(45,188,254,0.3)]"
+                    : "text-[#003358] hover:bg-[#9FC7F0]"
                 }`}
-                style={activeFilter !== category ? { ...glassCardStyle, borderRadius: "9999px" } : {}}
+                style={activeFilter !== category ? { borderRadius: "9999px" } : {}}
               >
                 {category}
               </button>
@@ -147,7 +146,7 @@ export default function PhotoGallery() {
             <div
               key={`${item.id}-${activeFilter}`} // Force re-render/re-animate on filter change
               ref={addToRefs}
-              className="opacity-0 translate-y-10 transition-all duration-700 ease-out relative rounded-2xl overflow-hidden group cursor-pointer aspect-video sm:aspect-square md:aspect-[4/3]"
+              className="opacity-0 translate-y-10 transition-all duration-700 ease-out relative rounded-2xl overflow-hidden group cursor-pointer aspect-video sm:aspect-square md:aspect-[4/3] border border-[#7FB3E8]"
               style={{ transitionDelay: `${index * 100}ms` }}
               onClick={() => setSelectedImage(item.src)}
             >
@@ -160,19 +159,19 @@ export default function PhotoGallery() {
               />
               
               {/* Hover Glow Effect Layer */}
-              <div className="absolute inset-0 bg-[#06B6D4]/0 group-hover:bg-[#06B6D4]/20 transition-colors duration-500 pointer-events-none" />
+              <div className="absolute inset-0 bg-[#2dbcfe]/0 group-hover:bg-[#2dbcfe]/20 transition-colors duration-500 pointer-events-none" />
 
               {/* Gradient Overlay for bottom text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#003358]/90 via-[#003358]/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
               
               {/* Category Badge Top Right */}
-              <div className="absolute top-4 right-4 bg-[#06B6D4] text-[#0F172A] text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10 transform -translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+              <div className="absolute top-4 right-4 bg-[#2dbcfe] text-[#003358] text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10 transform -translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 border border-[#003358]">
                 {item.category}
               </div>
 
               {/* Event Name Bottom */}
               <div className="absolute bottom-0 left-0 w-full p-6 z-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                <h3 className="text-xl font-bold text-[#F8FAFC] shadow-sm">
+                <h3 className="text-xl font-bold text-white shadow-sm">
                   {item.title}
                 </h3>
               </div>
@@ -181,7 +180,7 @@ export default function PhotoGallery() {
         </div>
         
         {filteredItems.length === 0 && (
-           <div className="text-center text-[#94A3B8] py-12 w-full">
+           <div className="text-center text-[#42576E] py-12 w-full">
               No images found for this category.
            </div>
         )}
@@ -191,12 +190,12 @@ export default function PhotoGallery() {
       {selectedImage && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
-          style={{ backgroundColor: "rgba(15, 23, 42, 0.95)" }}
+          style={{ backgroundColor: "rgba(0, 51, 88, 0.9)" }}
           onClick={() => setSelectedImage(null)}
         >
           {/* Close Button */}
           <button 
-            className="absolute top-6 right-6 text-white hover:text-[#06B6D4] transition-colors p-2 z-[60]"
+            className="absolute top-6 right-6 text-white hover:text-[#2dbcfe] transition-colors p-2 z-[60]"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedImage(null);
@@ -216,7 +215,7 @@ export default function PhotoGallery() {
             <img
               src={selectedImage}
               alt="Fullscreen view"
-              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/10"
+              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/20"
             />
           </div>
         </div>
