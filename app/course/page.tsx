@@ -221,9 +221,6 @@ export default function CoursesPage() {
                     <span className="text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-2.5 rounded-xl">
                       💻
                     </span>
-                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#9FC7F0] border border-[#7FB3E8] text-[#003358]">
-                      {course.fee}
-                    </span>
                   </div>
                   <h3 className="text-2xl font-bold text-[#003358] mb-1">
                     {course.shortName}
@@ -446,12 +443,6 @@ export default function CoursesPage() {
               className="px-8 py-4 rounded-full font-bold bg-[#2dbcfe] text-[#003358] hover:opacity-90 transition-opacity duration-300 text-center shadow-md"
             >
               Contact Us
-            </Link>
-            <Link
-              href="/notice"
-              className="px-8 py-4 rounded-full font-bold border border-[#003358] text-[#003358] hover:bg-[#9FC7F0] transition-colors duration-300 text-center"
-            >
-              View Notice Board
             </Link>
           </div>
         </div>

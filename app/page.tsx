@@ -189,10 +189,9 @@ export default function Home() {
               </div>
 
               {/* Stats Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-2xl">
                 {[
                   { val: "10+", label: "Years Experience" },
-                  { val: "1500+", label: "Alumni" },
                   { val: "98%", label: "Pass Rate" },
                   { val: "ISO", label: "9001:2015" },
                 ].map((stat, i) => (
@@ -338,7 +337,7 @@ export default function Home() {
 
               {/* Note details */}
               <div className="p-3 rounded-xl bg-[#9FC7F0] border border-[#7FB3E8] text-xs text-[#003358] text-center mb-6">
-                ISO 9001:2015 Certified • As. 250
+                ISO 9001:2015 Certified
               </div>
 
               <div className="border-t border-[#7FB3E8] pt-6 flex-1 flex flex-col justify-between">
@@ -588,7 +587,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-[#003358]">
-              Our Top Performers
+              Best Scorers of All Time
             </h2>
             <p className="mt-4 text-[#111c2d]/80 text-sm sm:text-base font-medium">
               Celebrating conceptual mastery and exemplary results.
