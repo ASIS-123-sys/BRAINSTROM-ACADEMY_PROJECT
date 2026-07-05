@@ -213,7 +213,7 @@ export default function AdminDashboard() {
                   </td>
                   <td className="p-4 font-medium">{student.name}</td>
                   <td className="p-4 text-[#94A3B8]">
-                    {(student as any).course}
+                    {(student as Student & { course?: string }).course ?? "-"}
                   </td>
                   <td className="p-4 text-[#94A3B8]">{student.batch}</td>
                   <td className="p-4 text-center">

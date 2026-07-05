@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -44,13 +43,15 @@ export default function AdminFacultyPage() {
   useEffect(() => {
     async function fetchFaculty() {
       setLoading(true);
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("faculty")
-        .select("*")
-        .order("name");
-      if (!error && data) setFaculty(data as FacultyRow[]);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/admin/faculty");
+        const json = await res.json();
+        if (json.data) setFaculty(json.data as FacultyRow[]);
+      } catch {
+        setError("Failed to load faculty");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchFaculty();
   }, []);

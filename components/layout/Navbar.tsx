@@ -17,7 +17,11 @@ const navLinks = [
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  type SupabaseUser = {
+    user_metadata?: { full_name?: string; role?: string } | null;
+    email?: string | null;
+  };
+  const [user, setUser] = useState<SupabaseUser | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -41,7 +45,9 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  const isAdmin = user?.user_metadata?.role === "admin" || user?.email?.endsWith("@brainstorm-admin.local");
+  const isAdmin =
+    user?.user_metadata?.role === "admin" ||
+    user?.email?.endsWith("@brainstorm-admin.local");
   const dashboardHref = isAdmin ? "/admin/dashboard" : "/student/dashboard";
 
   return (
@@ -95,7 +101,9 @@ export default function Navbar() {
                 className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#2dbcfe] text-[#003358] text-sm font-bold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-sm border border-[#003358]"
               >
                 <div className="w-6 h-6 rounded-full bg-[#003358] text-white flex items-center justify-center text-xs uppercase">
-                  {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || "S"}
+                  {user.user_metadata?.full_name?.charAt(0) ||
+                    user.email?.charAt(0) ||
+                    "S"}
                 </div>
                 Dashboard
               </Link>
@@ -194,7 +202,9 @@ export default function Navbar() {
                     className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-full bg-[#2dbcfe] text-[#003358] text-sm font-bold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-sm border border-[#003358]"
                   >
                     <div className="w-5 h-5 rounded-full bg-[#003358] text-white flex items-center justify-center text-xs uppercase">
-                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || "S"}
+                      {user.user_metadata?.full_name?.charAt(0) ||
+                        user.email?.charAt(0) ||
+                        "S"}
                     </div>
                     Dashboard
                   </Link>

@@ -20,37 +20,43 @@ const computerCourses: ComputerCourse[] = [
   {
     shortName: "ADCA",
     fullName: "Advanced Diploma in Computer Application",
-    description: "In-depth training covering office automation, database systems, web design, and advanced software tools.",
+    description:
+      "In-depth training covering office automation, database systems, web design, and advanced software tools.",
     fee: "Rs. 250",
   },
   {
     shortName: "CCA",
     fullName: "Certificate in Computer Application",
-    description: "Fundamental course introducing computer basics, operating systems, and essential internet applications.",
+    description:
+      "Fundamental course introducing computer basics, operating systems, and essential internet applications.",
     fee: "Rs. 250",
   },
   {
     shortName: "DCA",
     fullName: "Diploma in Computer Application",
-    description: "Comprehensive program covering MS Office, database management, and programming foundations.",
+    description:
+      "Comprehensive program covering MS Office, database management, and programming foundations.",
     fee: "Rs. 250",
   },
   {
     shortName: "PGDCA",
     fullName: "Post Graduate Diploma in Computer Application",
-    description: "Advanced post-graduate program specializing in system analysis, programming language structures, and IT applications.",
+    description:
+      "Advanced post-graduate program specializing in system analysis, programming language structures, and IT applications.",
     fee: "Rs. 250",
   },
   {
     shortName: "Tally ERP 9",
     fullName: "Accounting and Finance Software",
-    description: "Practical accounting module focusing on inventory management, GST computation, billing, and financial reports.",
+    description:
+      "Practical accounting module focusing on inventory management, GST computation, billing, and financial reports.",
     fee: "Rs. 250",
   },
   {
     shortName: "Spoken English",
     fullName: "Communication and Language Skills",
-    description: "Personality development, vocabulary enrichment, active listening, and fluent conversational practice.",
+    description:
+      "Personality development, vocabulary enrichment, active listening, and fluent conversational practice.",
     fee: "Rs. 250",
   },
 ];
@@ -80,7 +86,9 @@ const streams: StreamCard[] = [
 ];
 
 export default function CoursesPage() {
-  const [activeTab, setActiveTab] = useState<"computer" | "grade12" | "school">("computer");
+  const [activeTab, setActiveTab] = useState<"computer" | "grade12" | "school">(
+    "computer",
+  );
   const scrollRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -93,7 +101,7 @@ export default function CoursesPage() {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     scrollRef.current.forEach((el) => {
@@ -116,8 +124,9 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#F7FAFD] text-[#42576E] overflow-x-hidden pb-12 ${poppins.className}`}>
-      
+    <div
+      className={`min-h-screen bg-[#F7FAFD] text-[#42576E] overflow-x-hidden pb-12 ${poppins.className}`}
+    >
       {/* Top Section */}
       <section className="pt-24 pb-12 px-6 flex flex-col items-center justify-center text-center">
         <div
@@ -142,7 +151,7 @@ export default function CoursesPage() {
 
       {/* Tab Buttons Row */}
       <section className="max-w-4xl mx-auto px-6 mb-12 flex justify-center">
-        <div 
+        <div
           ref={addToRefs}
           className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out flex flex-col sm:flex-row gap-3 w-full p-2"
           style={cardStyle}
@@ -191,7 +200,6 @@ export default function CoursesPage() {
 
       {/* Tab Contents */}
       <section className="max-w-6xl mx-auto px-6 mb-24">
-        
         {/* Tab 1 — Computer Courses */}
         {activeTab === "computer" && (
           <div className="space-y-12">
@@ -210,25 +218,42 @@ export default function CoursesPage() {
                   style={{ ...cardStyle, transitionDelay: `${idx * 50}ms` }}
                 >
                   <div className="text-2xl mb-4 flex items-center justify-between">
-                    <span className="text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-2.5 rounded-xl">💻</span>
+                    <span className="text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-2.5 rounded-xl">
+                      💻
+                    </span>
                     <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#9FC7F0] border border-[#7FB3E8] text-[#003358]">
                       {course.fee}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-bold text-[#003358] mb-1">{course.shortName}</h3>
-                  <h4 className="text-md font-semibold text-[#00658d] mb-3">{course.fullName}</h4>
-                  <p className="text-[#42576E] text-sm leading-relaxed flex-grow">{course.description}</p>
+                  <h3 className="text-2xl font-bold text-[#003358] mb-1">
+                    {course.shortName}
+                  </h3>
+                  <h4 className="text-md font-semibold text-[#00658d] mb-3">
+                    {course.fullName}
+                  </h4>
+                  <p className="text-[#42576E] text-sm leading-relaxed flex-grow">
+                    {course.description}
+                  </p>
                 </div>
               ))}
             </div>
 
             {/* Computer Facilities */}
-            <div className="space-y-6 pt-8 border-t border-[#7FB3E8]" ref={addToRefs}>
+            <div
+              className="space-y-6 pt-8 border-t border-[#7FB3E8]"
+              ref={addToRefs}
+            >
               <h3 className="opacity-0 translate-y-10 transition-all duration-700 ease-out text-center text-xl font-bold text-[#003358]">
-                What's Included
+                What&apos;s Included
               </h3>
               <div className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out flex flex-wrap justify-center gap-3">
-                {["Seminars Exam", "Syllabus Material", "KIT Bag", "ID Card", "AC Class Room"].map((facility) => (
+                {[
+                  "Seminars Exam",
+                  "Syllabus Material",
+                  "KIT Bag",
+                  "ID Card",
+                  "AC Class Room",
+                ].map((facility) => (
                   <span
                     key={facility}
                     style={cardStyle}
@@ -253,15 +278,26 @@ export default function CoursesPage() {
                   className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 md:p-8 flex flex-col hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300"
                   style={{ ...cardStyle, transitionDelay: `${idx * 100}ms` }}
                 >
-                  <span className="text-xs font-bold text-[#00658d] uppercase tracking-wider mb-2">Stream</span>
-                  <h3 className="text-3xl font-bold text-[#003358] mb-1">{item.stream}</h3>
-                  <p className="text-sm italic text-[#42576E] mb-6">{item.tagline}</p>
-                  
+                  <span className="text-xs font-bold text-[#00658d] uppercase tracking-wider mb-2">
+                    Stream
+                  </span>
+                  <h3 className="text-3xl font-bold text-[#003358] mb-1">
+                    {item.stream}
+                  </h3>
+                  <p className="text-sm italic text-[#42576E] mb-6">
+                    {item.tagline}
+                  </p>
+
                   <div className="space-y-3 flex-grow">
-                    <h4 className="text-xs font-bold text-[#003358] tracking-wider uppercase">Subjects covered:</h4>
+                    <h4 className="text-xs font-bold text-[#003358] tracking-wider uppercase">
+                      Subjects covered:
+                    </h4>
                     <ul className="space-y-2">
                       {item.subjects.map((sub) => (
-                        <li key={sub} className="flex items-center text-sm text-[#42576E]">
+                        <li
+                          key={sub}
+                          className="flex items-center text-sm text-[#42576E]"
+                        >
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2dbcfe] mr-2"></span>
                           {sub}
                         </li>
@@ -273,9 +309,12 @@ export default function CoursesPage() {
             </div>
 
             {/* 12th Facilities */}
-            <div className="space-y-6 pt-8 border-t border-[#7FB3E8]" ref={addToRefs}>
+            <div
+              className="space-y-6 pt-8 border-t border-[#7FB3E8]"
+              ref={addToRefs}
+            >
               <h3 className="opacity-0 translate-y-10 transition-all duration-700 ease-out text-center text-xl font-bold text-[#003358]">
-                What's Included
+                What&apos;s Included
               </h3>
               <div className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out flex flex-wrap justify-center gap-3">
                 {[
@@ -284,7 +323,7 @@ export default function CoursesPage() {
                   "Doubt Clearing Class",
                   "Monthly Test",
                   "Class Examination Test",
-                  "Crash Course with Exam"
+                  "Crash Course with Exam",
                 ].map((facility) => (
                   <span
                     key={facility}
@@ -302,33 +341,54 @@ export default function CoursesPage() {
         {/* Tab 3 — 5th to 10th Grade */}
         {activeTab === "school" && (
           <div className="space-y-12">
-            <div 
+            <div
               ref={addToRefs}
               style={cardStyle}
               className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-8 md:p-12 hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-8 border-b border-[#7FB3E8]">
                 <div>
-                  <span className="text-xs font-bold text-[#00658d] uppercase tracking-wider mb-2 block">Comprehensive School Program</span>
-                  <h3 className="text-3xl md:text-4xl font-bold text-[#003358]">Class 5th to 10th</h3>
-                  <p className="text-[#42576E] mt-2">All school subjects covered under expert guidance.</p>
+                  <span className="text-xs font-bold text-[#00658d] uppercase tracking-wider mb-2 block">
+                    Comprehensive School Program
+                  </span>
+                  <h3 className="text-3xl md:text-4xl font-bold text-[#003358]">
+                    Class 5th to 10th
+                  </h3>
+                  <p className="text-[#42576E] mt-2">
+                    All school subjects covered under expert guidance.
+                  </p>
                 </div>
-                
+
                 {/* Highlighted Note */}
                 <div className="bg-[#9FC7F0] border border-[#7FB3E8] rounded-2xl p-4 max-w-sm">
                   <p className="text-sm font-semibold text-[#003358] flex items-start gap-2">
                     <span className="text-lg">📢</span>
-                    <span>Special focus on Board Exam preparation with intensive test series.</span>
+                    <span>
+                      Special focus on Board Exam preparation with intensive
+                      test series.
+                    </span>
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h4 className="text-xs font-bold text-[#003358] tracking-wider uppercase mb-4">Subjects:</h4>
+                  <h4 className="text-xs font-bold text-[#003358] tracking-wider uppercase mb-4">
+                    Subjects:
+                  </h4>
                   <div className="grid grid-cols-2 gap-3">
-                    {["Mathematics", "Science", "Social Studies", "English", "Odia", "Sanskrit"].map((sub) => (
-                      <div key={sub} className="flex items-center text-sm text-[#42576E]">
+                    {[
+                      "Mathematics",
+                      "Science",
+                      "Social Studies",
+                      "English",
+                      "Odia",
+                      "Sanskrit",
+                    ].map((sub) => (
+                      <div
+                        key={sub}
+                        className="flex items-center text-sm text-[#42576E]"
+                      >
                         <span className="w-1.5 h-1.5 rounded-full bg-[#2dbcfe] mr-2"></span>
                         {sub}
                       </div>
@@ -337,7 +397,9 @@ export default function CoursesPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-[#003358] tracking-wider uppercase mb-4">Facilities:</h4>
+                  <h4 className="text-xs font-bold text-[#003358] tracking-wider uppercase mb-4">
+                    Facilities:
+                  </h4>
                   <div className="grid grid-cols-2 gap-3">
                     {[
                       "Monthly Test",
@@ -345,9 +407,12 @@ export default function CoursesPage() {
                       "Weekly Test",
                       "Surprise Test",
                       "Doubt Session",
-                      "Board Exam Preparation"
+                      "Board Exam Preparation",
                     ].map((facility) => (
-                      <div key={facility} className="flex items-center text-sm text-[#42576E]">
+                      <div
+                        key={facility}
+                        className="flex items-center text-sm text-[#42576E]"
+                      >
                         <span className="text-[#2dbcfe] mr-2">✓</span>
                         {facility}
                       </div>
@@ -358,29 +423,31 @@ export default function CoursesPage() {
             </div>
           </div>
         )}
-
       </section>
 
       {/* Bottom CTA Section */}
       <section className="max-w-4xl mx-auto px-6 mb-16">
-        <div 
+        <div
           ref={addToRefs}
           style={cardStyle}
           className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-8 md:p-12 text-center flex flex-col items-center justify-center border-l-4 border-l-[#003358]"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-[#003358] mb-4">Ready to Enroll?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#003358] mb-4">
+            Ready to Enroll?
+          </h2>
           <p className="text-[#42576E] mb-8 max-w-lg">
-            Contact us today to join the next batch. Start your journey with Brainstorm Academy.
+            Contact us today to join the next batch. Start your journey with
+            Brainstorm Academy.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Link 
+            <Link
               href="/contact"
               className="px-8 py-4 rounded-full font-bold bg-[#2dbcfe] text-[#003358] hover:opacity-90 transition-opacity duration-300 text-center shadow-md"
             >
               Contact Us
             </Link>
-            <Link 
+            <Link
               href="/notice"
               className="px-8 py-4 rounded-full font-bold border border-[#003358] text-[#003358] hover:bg-[#9FC7F0] transition-colors duration-300 text-center"
             >
@@ -389,7 +456,6 @@ export default function CoursesPage() {
           </div>
         </div>
       </section>
-      
     </div>
   );
 }
