@@ -54,24 +54,22 @@ export default function AdminFeesPage() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const supabase = createClient();
+      try {
+        const [feesRes, studentsRes] = await Promise.all([
+          fetch("/api/admin/fees"),
+          fetch("/api/admin/students"),
+        ]);
 
-      const [feesRes, studentsRes] = await Promise.all([
-        supabase
-          .from("fees")
-          .select("*, students(name, enrollment_id)")
-          .order("due_date", { ascending: true }),
-        supabase
-          .from("students")
-          .select("id, name, enrollment_id")
-          .order("name"),
-      ]);
+        const feesJson = await feesRes.json();
+        const studentsJson = await studentsRes.json();
 
-      if (!feesRes.error && feesRes.data) setFees(feesRes.data as FeeRow[]);
-      if (!studentsRes.error && studentsRes.data)
-        setStudentsList(studentsRes.data as StudentReference[]);
-
-      setLoading(false);
+        if (feesJson.data) setFees(feesJson.data);
+        if (studentsJson.data) setStudentsList(studentsJson.data);
+      } catch {
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);

@@ -1,6 +1,17 @@
 import { createAdminClient } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
+export async function GET() {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("scores")
+    .select("*, students(name, enrollment_id)")
+    .order("test_date", { ascending: false });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ data });
+}
+
 // ADD score
 export async function POST(request: Request) {
   const supabase = createAdminClient();

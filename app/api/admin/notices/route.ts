@@ -1,6 +1,17 @@
 import { createAdminClient } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
+export async function GET() {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("notices")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ data });
+}
+
 // ADD notice
 export async function POST(request: Request) {
   const supabase = createAdminClient();

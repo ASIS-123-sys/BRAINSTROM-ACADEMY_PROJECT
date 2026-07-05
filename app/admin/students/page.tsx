@@ -57,13 +57,15 @@ export default function AdminStudentsPage() {
   useEffect(() => {
     async function fetchStudents() {
       setLoading(true);
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("students")
-        .select("*")
-        .order("name");
-      if (!error && data) setStudents(data as StudentRow[]);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/admin/students");
+        const json = await res.json();
+        if (json.data) setStudents(json.data);
+      } catch {
+        setError("Failed to load students");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchStudents();
   }, []);
@@ -71,33 +73,37 @@ export default function AdminStudentsPage() {
   // ─── Add student ─────────────────────────────────────────────────────────
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
-    if (!form.name.trim() || !form.batch.trim()) {
-      setError("Name and Batch are required.");
-      return;
-    }
-    setSubmitting(true);
+    if (!form.name) return;
+
     const enrollment_id = `BS${Date.now()}`;
+    setSubmitting(true);
+    setError(null);
+
     try {
       const res = await fetch("/api/admin/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, enrollment_id }),
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          batch: form.batch,
+          course: form.course,
+          enrollment_id,
+        }),
       });
+
       const json = await res.json();
+
       if (json.error) {
         setError(json.error);
-      } else {
-        setStudents((prev) =>
-          [...prev, json.data as StudentRow].sort((a, b) =>
-            a.name.localeCompare(b.name),
-          ),
-        );
-        setForm(defaultForm);
-        setIsModalOpen(false);
+        return;
       }
-    } catch {
-      setError("Unexpected error. Please try again.");
+
+      setStudents([...students, json.data]);
+      setForm(defaultForm);
+      setIsModalOpen(false);
+    } catch (err) {
+      setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);
     }
