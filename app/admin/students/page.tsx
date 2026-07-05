@@ -134,9 +134,8 @@ export default function AdminStudentsPage() {
 
   // ─── Shared styles ────────────────────────────────────────────────────────
   const tableContainerStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.02)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
@@ -151,10 +150,10 @@ export default function AdminStudentsPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">
+          <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
             Manage Students
           </h1>
-          <p className="text-sm text-[#94A3B8] mt-1">
+          <p className="text-sm text-[#42576E] mt-1">
             {loading
               ? "Loading…"
               : `${students.length} student${students.length !== 1 ? "s" : ""} enrolled`}
@@ -165,7 +164,7 @@ export default function AdminStudentsPage() {
             setError(null);
             setIsModalOpen(true);
           }}
-          className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
+          className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none shrink-0"
         >
           + Add Student
         </Button>
@@ -175,8 +174,8 @@ export default function AdminStudentsPage() {
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-[#94A3B8] animate-pulse">
+            <div className="w-10 h-10 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-[#42576E] animate-pulse">
               Fetching students…
             </p>
           </div>
@@ -190,15 +189,15 @@ export default function AdminStudentsPage() {
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
           <span className="text-5xl">👥</span>
-          <p className="text-[#F8FAFC] font-semibold text-lg">
+          <p className="text-[#003358] font-semibold text-lg">
             No students found
           </p>
-          <p className="text-[#94A3B8] text-sm">
+          <p className="text-[#42576E] text-sm">
             Add your first student to get started.
           </p>
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none mt-2"
+            className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
           >
             + Add Student
           </Button>
@@ -208,9 +207,9 @@ export default function AdminStudentsPage() {
       {/* ─── Table ─── */}
       {!loading && students.length > 0 && (
         <div style={tableContainerStyle} className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-sm text-[#F8FAFC]">
+          <table className="w-full text-left border-collapse text-sm text-[#1E3A52]">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-[#06B6D4] font-semibold">
+              <tr className="border-b border-[#7FB3E8] bg-[#9FC7F0]/30 text-xs uppercase tracking-wider text-[#003358] font-semibold">
                 <th className="px-5 py-4">Enrollment ID</th>
                 <th className="px-5 py-4">Name</th>
                 <th className="px-5 py-4">Course</th>
@@ -218,42 +217,42 @@ export default function AdminStudentsPage() {
                 <th className="px-5 py-4 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#7FB3E8]/50">
               {students.map((student) => (
                 <tr
                   key={student.id}
-                  className="hover:bg-white/5 transition-colors duration-150"
+                  className="hover:bg-[#9FC7F0]/20 transition-colors duration-150"
                 >
-                  <td className="px-5 py-4 font-mono text-[#06B6D4] text-xs">
+                  <td className="px-5 py-4 font-mono text-[#003358] text-xs">
                     {student.enrollment_id}
                   </td>
-                  <td className="px-5 py-4 font-medium">
+                  <td className="px-5 py-4 font-medium text-[#1E3A52]">
                     <div className="flex items-center gap-3">
                       {student.profile_pic_url ? (
                         <img
                           src={student.profile_pic_url}
                           alt={student.name}
-                          className="w-8 h-8 rounded-full object-cover border border-white/10 shrink-0"
+                          className="w-8 h-8 rounded-full object-cover border border-[#7FB3E8] shrink-0"
                         />
                       ) : (
-                        <span className="w-8 h-8 rounded-full bg-[#06B6D4]/10 text-[#06B6D4] flex items-center justify-center font-bold text-xs shrink-0">
+                        <span className="w-8 h-8 rounded-full bg-[#9FC7F0] text-[#003358] border border-[#7FB3E8] flex items-center justify-center font-bold text-xs shrink-0">
                           {student.name[0]?.toUpperCase()}
                         </span>
                       )}
                       <span>{student.name}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-[#94A3B8]">
+                  <td className="px-5 py-4 text-[#42576E]">
                     {student.course || (
                       <span className="italic opacity-50">—</span>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-[#94A3B8]">{student.batch}</td>
+                  <td className="px-5 py-4 text-[#42576E]">{student.batch}</td>
                   <td className="px-5 py-4 text-center">
                     <button
                       onClick={() => handleDelete(student.id)}
                       disabled={deletingId === student.id}
-                      className="text-rose-400 hover:text-rose-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-400/10 hover:bg-rose-400/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="text-rose-700 hover:text-rose-600 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       {deletingId === student.id ? "Deleting…" : "Delete"}
                     </button>
@@ -293,7 +292,7 @@ export default function AdminStudentsPage() {
               type="submit"
               form="add-student-form"
               isLoading={submitting}
-              className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none"
+              className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none"
             >
               Add Student
             </Button>
@@ -354,7 +353,7 @@ export default function AdminStudentsPage() {
                 <option
                   key={c}
                   value={c}
-                  className="bg-[#0F172A] text-[#F8FAFC]"
+                  className="bg-[#B8D9F5] text-[#003358]"
                 >
                   {c}
                 </option>

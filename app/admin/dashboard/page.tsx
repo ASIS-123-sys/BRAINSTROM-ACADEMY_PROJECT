@@ -12,9 +12,8 @@ const poppins = Poppins({
 
 export default function AdminDashboard() {
   const glassCardStyle = {
-    background: "rgba(255,255,255,0.05)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
@@ -133,8 +132,8 @@ export default function AdminDashboard() {
         className={`flex items-center justify-center min-h-[300px] ${poppins.className}`}
       >
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto"></div>
-          <p className="text-sm text-[#94A3B8] font-medium animate-pulse">
+          <div className="w-12 h-12 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto"></div>
+          <p className="text-sm text-[#42576E] font-medium animate-pulse">
             Loading dashboard data...
           </p>
         </div>
@@ -147,10 +146,10 @@ export default function AdminDashboard() {
       {/* Stats Cards Section */}
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">
+          <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
             Dashboard Overview
           </h1>
-          <p className="text-sm text-[#94A3B8] mt-1">
+          <p className="text-sm text-[#42576E] mt-1">
             Quick statistics for Brainstorm Academy
           </p>
         </div>
@@ -160,12 +159,12 @@ export default function AdminDashboard() {
             <div
               key={i}
               style={glassCardStyle}
-              className="p-8 flex flex-col items-center justify-center text-center hover:border-white/15 transition-all duration-300"
+              className="p-8 flex flex-col items-center justify-center text-center hover:border-[#2dbcfe] transition-all duration-300"
             >
-              <span className="text-5xl font-extrabold text-[#06B6D4] mb-3">
+              <span className="text-5xl font-extrabold text-[#003358] mb-3">
                 {stat.value}
               </span>
-              <span className="text-xs md:text-sm text-[#94A3B8] uppercase tracking-wider font-semibold">
+              <span className="text-xs md:text-sm text-[#42576E] uppercase tracking-wider font-semibold">
                 {stat.label}
               </span>
             </div>
@@ -178,23 +177,23 @@ export default function AdminDashboard() {
       {/* 1. Students Section */}
       <section id="students" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold tracking-tight text-[#F8FAFC]">
+          <h2 className="text-xl font-bold tracking-tight text-[#003358]">
             Students
           </h2>
           <Link
             href="/admin/students"
-            className="text-sm font-semibold text-[#06B6D4] hover:text-[#06B6D4]/80 flex items-center gap-1 transition-colors"
+            className="text-sm font-semibold text-[#2dbcfe] hover:text-[#2dbcfe]/80 flex items-center gap-1 transition-colors"
           >
             Manage Students →
           </Link>
         </div>
         <div
           style={glassCardStyle}
-          className="p-6 overflow-x-auto hover:border-white/12 transition-all duration-300"
+          className="p-6 overflow-x-auto hover:border-[#2dbcfe] transition-all duration-300"
         >
-          <table className="w-full border-collapse text-left text-sm text-[#F8FAFC]">
+          <table className="w-full border-collapse text-left text-sm text-[#1E3A52]">
             <thead>
-              <tr className="border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+              <tr className="border-b border-[#7FB3E8] text-xs font-semibold uppercase tracking-wider text-[#42576E]">
                 <th className="pb-3 pr-4">Enrollment ID</th>
                 <th className="pb-3 px-4">Name</th>
                 <th className="pb-3 px-4">Course</th>
@@ -202,24 +201,24 @@ export default function AdminDashboard() {
                 <th className="pb-3 pl-4">&nbsp;</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#7FB3E8]/50">
               {students.map((student) => (
                 <tr
                   key={student.id}
-                  className="hover:bg-white/5 transition-colors"
+                  className="hover:bg-[#9FC7F0]/20 transition-colors"
                 >
-                  <td className="p-4 font-mono text-[#06B6D4]">
+                  <td className="p-4 font-mono text-[#003358]">
                     {student.enrollment_id}
                   </td>
-                  <td className="p-4 font-medium">{student.name}</td>
-                  <td className="p-4 text-[#94A3B8]">
+                  <td className="p-4 font-medium text-[#1E3A52]">{student.name}</td>
+                  <td className="p-4 text-[#42576E]">
                     {(student as Student & { course?: string }).course ?? "-"}
                   </td>
-                  <td className="p-4 text-[#94A3B8]">{student.batch}</td>
+                  <td className="p-4 text-[#42576E]">{student.batch}</td>
                   <td className="p-4 text-center">
                     <button
                       onClick={() => handleDeleteStudent(student.id)}
-                      className="text-red-400 hover:text-red-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-red-400/10 hover:bg-red-400/20 transition-all duration-200"
+                      className="text-red-700 hover:text-red-600 font-semibold text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition-all duration-200 cursor-pointer"
                     >
                       Delete
                     </button>
@@ -228,7 +227,7 @@ export default function AdminDashboard() {
               ))}
               {students.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-[#94A3B8]">
+                  <td colSpan={4} className="py-4 text-center text-[#42576E]">
                     No students found.
                   </td>
                 </tr>
@@ -241,56 +240,56 @@ export default function AdminDashboard() {
       {/* 2. Faculty Section */}
       <section id="faculty" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold tracking-tight text-[#F8FAFC]">
+          <h2 className="text-xl font-bold tracking-tight text-[#003358]">
             Faculty
           </h2>
           <Link
             href="/admin/faculty"
-            className="text-sm font-semibold text-[#06B6D4] hover:text-[#06B6D4]/80 flex items-center gap-1 transition-colors"
+            className="text-sm font-semibold text-[#2dbcfe] hover:text-[#2dbcfe]/80 flex items-center gap-1 transition-colors"
           >
             Manage Faculty →
           </Link>
         </div>
         <div
           style={glassCardStyle}
-          className="p-6 overflow-x-auto hover:border-white/12 transition-all duration-300"
+          className="p-6 overflow-x-auto hover:border-[#2dbcfe] transition-all duration-300"
         >
-          <table className="w-full border-collapse text-left text-sm text-[#F8FAFC]">
+          <table className="w-full border-collapse text-left text-sm text-[#1E3A52]">
             <thead>
-              <tr className="border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+              <tr className="border-b border-[#7FB3E8] text-xs font-semibold uppercase tracking-wider text-[#42576E]">
                 <th className="pb-3 pr-4">Name</th>
                 <th className="pb-3 px-4">Subject</th>
                 <th className="pb-3 px-4">Position</th>
                 <th className="pb-3 pl-4">Experience</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#7FB3E8]/50">
               {faculty.map((fac) => (
-                <tr key={fac.id} className="hover:bg-white/5 transition-colors">
+                <tr key={fac.id} className="hover:bg-[#9FC7F0]/20 transition-colors">
                   <td className="py-3.5 pr-4 font-medium flex items-center gap-2">
                     {fac.pic_url ? (
                       <img
                         src={fac.pic_url}
                         alt={fac.name}
-                        className="w-8 h-8 rounded-full object-cover border border-white/10"
+                        className="w-8 h-8 rounded-full object-cover border border-[#7FB3E8]"
                       />
                     ) : (
-                      <span className="w-8 h-8 rounded-full bg-[#06B6D4]/10 text-[#06B6D4] flex items-center justify-center font-bold text-xs">
+                      <span className="w-8 h-8 rounded-full bg-[#9FC7F0] text-[#003358] border border-[#7FB3E8] flex items-center justify-center font-bold text-xs">
                         {fac.name[0]}
                       </span>
                     )}
                     {fac.name}
                   </td>
-                  <td className="py-3.5 px-4 text-[#94A3B8]">{fac.subject}</td>
+                  <td className="py-3.5 px-4 text-[#42576E]">{fac.subject}</td>
                   <td className="py-3.5 px-4">{fac.position}</td>
-                  <td className="py-3.5 pl-4 text-[#94A3B8]">
+                  <td className="py-3.5 pl-4 text-[#42576E]">
                     {fac.experience}
                   </td>
                 </tr>
               ))}
               {faculty.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-[#94A3B8]">
+                  <td colSpan={4} className="py-4 text-center text-[#42576E]">
                     No faculty found.
                   </td>
                 </tr>
@@ -303,41 +302,41 @@ export default function AdminDashboard() {
       {/* 3. Notices Section */}
       <section id="notices" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold tracking-tight text-[#F8FAFC]">
+          <h2 className="text-xl font-bold tracking-tight text-[#003358]">
             Notices
           </h2>
           <Link
             href="/admin/notices"
-            className="text-sm font-semibold text-[#06B6D4] hover:text-[#06B6D4]/80 flex items-center gap-1 transition-colors"
+            className="text-sm font-semibold text-[#2dbcfe] hover:text-[#2dbcfe]/80 flex items-center gap-1 transition-colors"
           >
             Manage Notices →
           </Link>
         </div>
         <div
           style={glassCardStyle}
-          className="p-6 hover:border-white/12 transition-all duration-300"
+          className="p-6 hover:border-[#2dbcfe] transition-all duration-300"
         >
           <div className="space-y-4">
             {notices.map((notice) => (
               <div
                 key={notice.id}
-                className="border-b border-white/5 last:border-0 pb-4 last:pb-0"
+                className="border-b border-[#7FB3E8]/50 last:border-0 pb-4 last:pb-0"
               >
                 <div className="flex items-center justify-between gap-4">
-                  <h3 className="font-semibold text-[#F8FAFC]">
+                  <h3 className="font-semibold text-[#003358]">
                     {notice.title}
                   </h3>
-                  <span className="text-xs text-[#94A3B8]">
+                  <span className="text-xs text-[#42576E]">
                     {new Date(notice.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-sm text-[#94A3B8] mt-1 line-clamp-2">
+                <p className="text-sm text-[#42576E] mt-1 line-clamp-2">
                   {notice.content}
                 </p>
               </div>
             ))}
             {notices.length === 0 && (
-              <p className="text-center text-[#94A3B8] py-2">
+              <p className="text-center text-[#42576E] py-2">
                 No notices found.
               </p>
             )}
@@ -348,25 +347,25 @@ export default function AdminDashboard() {
       {/* 4. Gallery Section */}
       <section id="gallery" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold tracking-tight text-[#F8FAFC]">
+          <h2 className="text-xl font-bold tracking-tight text-[#003358]">
             Gallery
           </h2>
           <Link
             href="/admin/gallery"
-            className="text-sm font-semibold text-[#06B6D4] hover:text-[#06B6D4]/80 flex items-center gap-1 transition-colors"
+            className="text-sm font-semibold text-[#2dbcfe] hover:text-[#2dbcfe]/80 flex items-center gap-1 transition-colors"
           >
             Manage Gallery →
           </Link>
         </div>
         <div
           style={glassCardStyle}
-          className="p-6 hover:border-white/12 transition-all duration-300"
+          className="p-6 hover:border-[#2dbcfe] transition-all duration-300"
         >
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {gallery.map((img) => (
               <div
                 key={img.id}
-                className="relative group overflow-hidden rounded-xl aspect-square border border-white/5 bg-white/5"
+                className="relative group overflow-hidden rounded-xl aspect-square border border-[#7FB3E8] bg-[#9FC7F0]/30"
               >
                 <img
                   src={img.image_url}
@@ -381,7 +380,7 @@ export default function AdminDashboard() {
               </div>
             ))}
             {gallery.length === 0 && (
-              <div className="col-span-full py-6 text-center text-[#94A3B8]">
+              <div className="col-span-full py-6 text-center text-[#42576E]">
                 No gallery images found.
               </div>
             )}
@@ -392,23 +391,23 @@ export default function AdminDashboard() {
       {/* 5. Fees Section */}
       <section id="fees" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold tracking-tight text-[#F8FAFC]">
+          <h2 className="text-xl font-bold tracking-tight text-[#003358]">
             Fees
           </h2>
           <Link
             href="/admin/fees"
-            className="text-sm font-semibold text-[#06B6D4] hover:text-[#06B6D4]/80 flex items-center gap-1 transition-colors"
+            className="text-sm font-semibold text-[#2dbcfe] hover:text-[#2dbcfe]/80 flex items-center gap-1 transition-colors"
           >
             Manage Fees →
           </Link>
         </div>
         <div
           style={glassCardStyle}
-          className="p-6 overflow-x-auto hover:border-white/12 transition-all duration-300"
+          className="p-6 overflow-x-auto hover:border-[#2dbcfe] transition-all duration-300"
         >
-          <table className="w-full border-collapse text-left text-sm text-[#F8FAFC]">
+          <table className="w-full border-collapse text-left text-sm text-[#1E3A52]">
             <thead>
-              <tr className="border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+              <tr className="border-b border-[#7FB3E8] text-xs font-semibold uppercase tracking-wider text-[#42576E]">
                 <th className="pb-3 pr-4">Student</th>
                 <th className="pb-3 px-4">Enrollment ID</th>
                 <th className="pb-3 px-4">Amount Due</th>
@@ -417,27 +416,27 @@ export default function AdminDashboard() {
                 <th className="pb-3 pl-4">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#7FB3E8]/50">
               {fees.map((fee) => {
                 const statusColors = {
-                  paid: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-                  partial: "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20",
-                  due: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+                  paid: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
+                  partial: "bg-[#F59E0B]/10 text-[#D97706] border-[#F59E0B]/20",
+                  due: "bg-rose-500/10 text-rose-700 border-rose-500/20",
                 };
                 return (
                   <tr
                     key={fee.id}
-                    className="hover:bg-white/5 transition-colors"
+                    className="hover:bg-[#9FC7F0]/20 transition-colors"
                   >
                     <td className="py-3.5 pr-4 font-medium">
                       {fee.students?.name || "N/A"}
                     </td>
-                    <td className="py-3.5 px-4 text-[#94A3B8]">
+                    <td className="py-3.5 px-4 text-[#42576E]">
                       {fee.students?.enrollment_id || "N/A"}
                     </td>
                     <td className="py-3.5 px-4">₹{fee.total_amount}</td>
                     <td className="py-3.5 px-4">₹{fee.paid_amount}</td>
-                    <td className="py-3.5 px-4 text-[#94A3B8]">
+                    <td className="py-3.5 px-4 text-[#42576E]">
                       {new Date(fee.due_date).toLocaleDateString()}
                     </td>
                     <td className="py-3.5 pl-4">
@@ -456,7 +455,7 @@ export default function AdminDashboard() {
               })}
               {fees.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-4 text-center text-[#94A3B8]">
+                  <td colSpan={6} className="py-4 text-center text-[#42576E]">
                     No fee records found.
                   </td>
                 </tr>
@@ -469,55 +468,55 @@ export default function AdminDashboard() {
       {/* 6. Scores Section */}
       <section id="scores" className="scroll-mt-24 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold tracking-tight text-[#F8FAFC]">
+          <h2 className="text-xl font-bold tracking-tight text-[#003358]">
             Scores
           </h2>
           <Link
             href="/admin/scores"
-            className="text-sm font-semibold text-[#06B6D4] hover:text-[#06B6D4]/80 flex items-center gap-1 transition-colors"
+            className="text-sm font-semibold text-[#2dbcfe] hover:text-[#2dbcfe]/80 flex items-center gap-1 transition-colors"
           >
             Manage Scores →
           </Link>
         </div>
         <div
           style={glassCardStyle}
-          className="p-6 overflow-x-auto hover:border-white/12 transition-all duration-300"
+          className="p-6 overflow-x-auto hover:border-[#2dbcfe] transition-all duration-300"
         >
-          <table className="w-full border-collapse text-left text-sm text-[#F8FAFC]">
+          <table className="w-full border-collapse text-left text-sm text-[#1E3A52]">
             <thead>
-              <tr className="border-b border-white/10 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+              <tr className="border-b border-[#7FB3E8] text-xs font-semibold uppercase tracking-wider text-[#42576E]">
                 <th className="pb-3 pr-4">Student</th>
                 <th className="pb-3 px-4">Subject</th>
                 <th className="pb-3 px-4">Score</th>
                 <th className="pb-3 pl-4">Test Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#7FB3E8]/50">
               {scores.map((score) => (
                 <tr
                   key={score.id}
-                  className="hover:bg-white/5 transition-colors"
+                  className="hover:bg-[#9FC7F0]/20 transition-colors"
                 >
                   <td className="py-3.5 pr-4 font-medium">
                     {score.students?.name || "N/A"}
                   </td>
-                  <td className="py-3.5 px-4 text-[#94A3B8]">
+                  <td className="py-3.5 px-4 text-[#42576E]">
                     {score.subject}
                   </td>
                   <td className="py-3.5 px-4">
-                    <span className="font-semibold text-[#06B6D4]">
+                    <span className="font-semibold text-[#003358]">
                       {score.score}
                     </span>{" "}
                     / {score.total}
                   </td>
-                  <td className="py-3.5 pl-4 text-[#94A3B8]">
+                  <td className="py-3.5 pl-4 text-[#42576E]">
                     {new Date(score.test_date).toLocaleDateString()}
                   </td>
                 </tr>
               ))}
               {scores.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-[#94A3B8]">
+                  <td colSpan={4} className="py-4 text-center text-[#42576E]">
                     No score records found.
                   </td>
                 </tr>

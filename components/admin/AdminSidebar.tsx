@@ -66,28 +66,27 @@ export default function AdminSidebar({
   });
   const pageTitle = currentItem ? currentItem.label : "Admin Panel";
 
-  const sidebarGlassStyle = {
-    background: "rgba(255,255,255,0.03)",
-    backdropFilter: "blur(20px)",
-    borderRight: "1px solid rgba(255,255,255,0.08)",
+  const sidebarStyle = {
+    background: "#B8D9F5",
+    borderRight: "1px solid #7FB3E8",
   };
 
   return (
     <div
-      className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] flex ${poppins.className}`}
+      className={`min-h-screen bg-[#F7FAFD] text-[#003358] flex ${poppins.className}`}
     >
       {/* Fixed Sidebar */}
       <aside
-        style={sidebarGlassStyle}
+        style={sidebarStyle}
         className="w-[260px] h-screen sticky top-0 flex flex-col justify-between p-6 shrink-0 z-30"
       >
         {/* Top Branding */}
         <div className="space-y-8">
           <div>
-            <h1 className="text-xl font-bold text-[#06B6D4] tracking-tight">
+            <h1 className="text-xl font-bold text-[#003358] tracking-tight">
               Brainstorm Academy
             </h1>
-            <p className="text-xs text-[#94A3B8] font-medium tracking-widest uppercase mt-1">
+            <p className="text-xs text-[#42576E] font-medium tracking-widest uppercase mt-1">
               Admin Panel
             </p>
           </div>
@@ -111,8 +110,8 @@ export default function AdminSidebar({
                   href={item.href}
                   className={`flex items-center gap-3.5 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
                     isActive
-                      ? "bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20 shadow-[0_0_15px_rgba(6,182,212,0.05)]"
-                      : "text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/5 border border-transparent"
+                      ? "bg-[#2dbcfe] text-[#003358] border border-[#7FB3E8] shadow-sm"
+                      : "text-[#42576E] hover:text-[#003358] hover:bg-[#9FC7F0] border border-transparent"
                   }`}
                 >
                   <span className="text-lg leading-none">{item.icon}</span>
@@ -135,7 +134,7 @@ export default function AdminSidebar({
               }
               router.push("/");
             }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all duration-300 shadow-md"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-red-500/10 text-red-700 border border-red-500/20 hover:bg-red-500/20 transition-all duration-300 shadow-sm cursor-pointer"
           >
             <span>🚪</span>
             <span>Logout</span>
@@ -146,13 +145,13 @@ export default function AdminSidebar({
       {/* Main Content Area */}
       <div className="flex-grow flex flex-col min-h-screen overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="px-8 py-5 border-b border-white/5 bg-[#0F172A]/40 backdrop-blur-sm flex items-center justify-between sticky top-0 z-20">
-          <h2 className="text-lg font-bold text-[#F8FAFC] tracking-tight">
+        <header className="px-8 py-5 border-b border-[#7FB3E8] bg-[#F7FAFD] flex items-center justify-between sticky top-0 z-20">
+          <h2 className="text-lg font-bold text-[#003358] tracking-tight">
             {pageTitle}
           </h2>
           <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-xs text-[#94A3B8] font-semibold tracking-wider uppercase">
+            <span className="text-xs text-[#42576E] font-semibold tracking-wider uppercase">
               Live Portal
             </span>
           </div>
