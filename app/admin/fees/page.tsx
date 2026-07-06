@@ -194,9 +194,8 @@ export default function AdminFeesPage() {
 
   // ─── Shared styles ────────────────────────────────────────────────────────
   const tableContainerStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.02)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
@@ -211,10 +210,10 @@ export default function AdminFeesPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">
+          <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
             Manage Fees
           </h1>
-          <p className="text-sm text-[#94A3B8] mt-1">
+          <p className="text-sm text-[#42576E] mt-1">
             {loading
               ? "Loading…"
               : `${fees.length} fee record${fees.length !== 1 ? "s" : ""}`}
@@ -225,7 +224,7 @@ export default function AdminFeesPage() {
             setError(null);
             setIsModalOpen(true);
           }}
-          className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
+          className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none shrink-0"
         >
           + Add Fee Record
         </Button>
@@ -235,8 +234,8 @@ export default function AdminFeesPage() {
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-[#94A3B8] animate-pulse">
+            <div className="w-10 h-10 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-[#42576E] animate-pulse">
               Fetching records…
             </p>
           </div>
@@ -250,15 +249,15 @@ export default function AdminFeesPage() {
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
           <span className="text-5xl">💰</span>
-          <p className="text-[#F8FAFC] font-semibold text-lg">
+          <p className="text-[#003358] font-semibold text-lg">
             No fee records found
           </p>
-          <p className="text-[#94A3B8] text-sm">
+          <p className="text-[#42576E] text-sm">
             Add a new fee record to get started.
           </p>
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none mt-2"
+            className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
           >
             + Add Fee Record
           </Button>
@@ -268,9 +267,9 @@ export default function AdminFeesPage() {
       {/* ─── Table ─── */}
       {!loading && fees.length > 0 && (
         <div style={tableContainerStyle} className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-sm text-[#F8FAFC]">
+          <table className="w-full text-left border-collapse text-sm text-[#1E3A52]">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-[#06B6D4] font-semibold">
+              <tr className="border-b border-[#7FB3E8] bg-[#9FC7F0]/30 text-xs uppercase tracking-wider text-[#003358] font-semibold">
                 <th className="px-5 py-4">Student</th>
                 <th className="px-5 py-4">Total</th>
                 <th className="px-5 py-4">Paid</th>
@@ -279,29 +278,29 @@ export default function AdminFeesPage() {
                 <th className="px-5 py-4 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#7FB3E8]/50">
               {fees.map((fee) => {
                 const isPaid = fee.status === "paid";
                 return (
                   <tr
                     key={fee.id}
-                    className="hover:bg-white/5 transition-colors duration-150"
+                    className="hover:bg-[#9FC7F0]/20 transition-colors duration-150"
                   >
                     <td className="px-5 py-4 font-medium">
                       <div className="flex flex-col">
                         <span>{fee.students?.name || "N/A"}</span>
-                        <span className="text-xs text-[#06B6D4] font-mono mt-0.5">
+                        <span className="text-xs text-[#003358] font-mono mt-0.5">
                           {fee.students?.enrollment_id || ""}
                         </span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-[#94A3B8]">
+                    <td className="px-5 py-4 text-[#42576E]">
                       ₹{fee.total_amount}
                     </td>
-                    <td className="px-5 py-4 text-[#94A3B8]">
+                    <td className="px-5 py-4 text-[#42576E]">
                       ₹{fee.paid_amount}
                     </td>
-                    <td className="px-5 py-4 text-[#94A3B8]">
+                    <td className="px-5 py-4 text-[#42576E]">
                       {new Date(fee.due_date).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",
@@ -312,10 +311,10 @@ export default function AdminFeesPage() {
                       <span
                         className={`inline-block px-3 py-1 rounded-full text-xs font-bold border tracking-wide uppercase ${
                           fee.status === "paid"
-                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
                             : fee.status === "partial"
-                              ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20"
-                              : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              ? "bg-[#F59E0B]/10 text-[#D97706] border-[#F59E0B]/20"
+                              : "bg-rose-500/10 text-rose-700 border-rose-500/20"
                         }`}
                       >
                         {fee.status}
@@ -328,12 +327,12 @@ export default function AdminFeesPage() {
                             handleMarkPaid(fee.id, fee.total_amount)
                           }
                           disabled={actionId === fee.id}
-                          className="font-semibold text-xs px-3 py-1.5 rounded-lg bg-[#06B6D4]/10 text-[#06B6D4] hover:bg-[#06B6D4]/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="font-semibold text-xs px-3 py-1.5 rounded-lg bg-[#2dbcfe]/20 text-[#003358] hover:bg-[#2dbcfe]/40 border border-[#7FB3E8] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         >
                           Mark Paid
                         </button>
                       ) : (
-                        <span className="text-xs text-emerald-400/50 font-semibold px-3 py-1.5 inline-block cursor-default">
+                        <span className="text-xs text-emerald-700/60 font-semibold px-3 py-1.5 inline-block cursor-default">
                           Cleared
                         </span>
                       )}
@@ -341,7 +340,7 @@ export default function AdminFeesPage() {
                       <button
                         onClick={() => handleDelete(fee.id)}
                         disabled={actionId === fee.id}
-                        className="text-rose-400 hover:text-rose-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-400/10 hover:bg-rose-400/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="text-rose-700 hover:text-rose-600 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         aria-label="Delete fee record"
                       >
                         Delete
@@ -383,7 +382,7 @@ export default function AdminFeesPage() {
               type="submit"
               form="add-fee-form"
               isLoading={submitting}
-              className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none"
+              className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none"
             >
               Add Record
             </Button>
@@ -409,14 +408,14 @@ export default function AdminFeesPage() {
               onChange={(e) => setForm({ ...form, student_id: e.target.value })}
               className={inputClass}
             >
-              <option value="" disabled className="bg-[#0F172A] text-[#94A3B8]">
+              <option value="" disabled className="bg-[#B8D9F5] text-[#42576E]">
                 -- Select a student --
               </option>
               {studentsList.map((s) => (
                 <option
                   key={s.id}
                   value={s.id}
-                  className="bg-[#0F172A] text-[#F8FAFC]"
+                  className="bg-[#B8D9F5] text-[#003358]"
                 >
                   {s.name} ({s.enrollment_id})
                 </option>

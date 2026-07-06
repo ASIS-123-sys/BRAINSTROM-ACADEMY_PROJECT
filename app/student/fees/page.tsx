@@ -58,42 +58,44 @@ export default function StudentFees() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <p className="text-[#94A3B8] text-lg">Loading fees...</p>
+      <div className="min-h-screen bg-[#F7FAFD] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+          <p className="text-[#42576E] text-lg">Loading fees...</p>
+        </div>
       </div>
     );
   }
 
   const glassCard = {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    backdropFilter: "blur(20px)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
   return (
     <div
-      className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] ${poppins.className}`}
+      className={`min-h-screen bg-[#F7FAFD] text-[#003358] ${poppins.className}`}
     >
       {/* Navbar */}
-      <nav className="sticky top-0 z-40 bg-[#0F172A]/90 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <div className="font-bold text-lg">Brainstorm Academy</div>
+      <nav className="sticky top-0 z-40 bg-[#F7FAFD]/95 backdrop-blur-sm border-b border-[#7FB3E8] px-6 py-4 flex items-center justify-between">
+        <div className="font-bold text-lg text-[#003358]">Brainstorm Academy</div>
         <div className="flex gap-6">
           <a
             href="/student/dashboard"
-            className="text-[#94A3B8] hover:text-white font-semibold text-sm"
+            className="text-[#42576E] hover:text-[#003358] font-semibold text-sm transition-colors"
           >
             Dashboard
           </a>
           <a
             href="/student/academics"
-            className="text-[#94A3B8] hover:text-white font-semibold text-sm"
+            className="text-[#42576E] hover:text-[#003358] font-semibold text-sm transition-colors"
           >
             Academics
           </a>
           <a
             href="/student/fees"
-            className="text-[#06B6D4] font-semibold text-sm"
+            className="text-[#2dbcfe] font-semibold text-sm border-b-2 border-[#2dbcfe] pb-0.5"
           >
             Fees
           </a>
@@ -101,23 +103,23 @@ export default function StudentFees() {
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 py-12 space-y-8">
-        <h1 className="text-3xl font-bold">Fee Status</h1>
+        <h1 className="text-3xl font-bold text-[#003358]">Fee Status</h1>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 gap-6">
           <div style={glassCard} className="p-6 text-center">
-            <p className="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold mb-2">
+            <p className="text-xs text-[#42576E] uppercase tracking-wider font-semibold mb-2">
               Total Paid
             </p>
-            <p className="text-3xl font-extrabold text-green-400">
+            <p className="text-3xl font-extrabold text-emerald-700">
               Rs. {totalPaid.toLocaleString()}
             </p>
           </div>
           <div style={glassCard} className="p-6 text-center">
-            <p className="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold mb-2">
+            <p className="text-xs text-[#42576E] uppercase tracking-wider font-semibold mb-2">
               Total Due
             </p>
-            <p className="text-3xl font-extrabold text-red-400">
+            <p className="text-3xl font-extrabold text-rose-700">
               Rs. {totalDue.toLocaleString()}
             </p>
           </div>
@@ -129,10 +131,10 @@ export default function StudentFees() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
                 activeTab === tab
-                  ? "bg-[#06B6D4] text-[#0F172A]"
-                  : "bg-white/5 text-[#94A3B8] hover:text-white border border-white/10"
+                  ? "bg-[#2dbcfe] text-[#003358]"
+                  : "bg-[#9FC7F0]/30 text-[#42576E] hover:text-[#003358] border border-[#7FB3E8]"
               }`}
             >
               {tab.toUpperCase()}
@@ -142,15 +144,12 @@ export default function StudentFees() {
 
         {/* Fees Table */}
         <div
-          className="overflow-x-auto rounded-2xl border border-white/10"
-          style={{
-            background: "rgba(255,255,255,0.02)",
-            backdropFilter: "blur(20px)",
-          }}
+          className="overflow-x-auto rounded-2xl border border-[#7FB3E8]"
+          style={{ background: "#B8D9F5" }}
         >
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-[#06B6D4] font-semibold">
+              <tr className="border-b border-[#7FB3E8] bg-[#9FC7F0]/30 text-xs uppercase tracking-wider text-[#003358] font-semibold">
                 <th className="p-4">Due Date</th>
                 <th className="p-4">Total</th>
                 <th className="p-4">Paid</th>
@@ -158,10 +157,10 @@ export default function StudentFees() {
                 <th className="p-4">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-sm text-[#F8FAFC]">
+            <tbody className="divide-y divide-[#7FB3E8]/50 text-sm text-[#1E3A52]">
               {filteredFees.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-[#94A3B8]">
+                  <td colSpan={5} className="p-8 text-center text-[#42576E]">
                     No fee records found.
                   </td>
                 </tr>
@@ -169,22 +168,22 @@ export default function StudentFees() {
                 filteredFees.map((fee) => (
                   <tr
                     key={fee.id}
-                    className="hover:bg-white/5 transition-colors"
+                    className="hover:bg-[#9FC7F0]/20 transition-colors"
                   >
-                    <td className="p-4 text-[#94A3B8]">
+                    <td className="p-4 text-[#42576E]">
                       {new Date(fee.due_date).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
                       })}
                     </td>
-                    <td className="p-4 font-mono">
+                    <td className="p-4 font-mono text-[#1E3A52]">
                       Rs. {fee.total_amount.toLocaleString()}
                     </td>
-                    <td className="p-4 font-mono text-green-400">
+                    <td className="p-4 font-mono text-emerald-700">
                       Rs. {fee.paid_amount.toLocaleString()}
                     </td>
-                    <td className="p-4 font-mono text-red-400">
+                    <td className="p-4 font-mono text-rose-700">
                       Rs.{" "}
                       {(fee.total_amount - fee.paid_amount).toLocaleString()}
                     </td>
@@ -192,10 +191,10 @@ export default function StudentFees() {
                       <span
                         className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                           fee.status === "paid"
-                            ? "bg-green-500/15 text-green-400"
+                            ? "bg-green-500/15 text-green-700"
                             : fee.status === "partial"
-                              ? "bg-yellow-500/15 text-yellow-400"
-                              : "bg-red-500/15 text-red-400"
+                              ? "bg-yellow-500/15 text-yellow-700"
+                              : "bg-red-500/15 text-red-700"
                         }`}
                       >
                         {fee.status.toUpperCase()}

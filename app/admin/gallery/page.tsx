@@ -107,9 +107,8 @@ export default function AdminGalleryPage() {
 
   // ─── Shared styles ────────────────────────────────────────────────────────
   const glassStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.02)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
@@ -124,10 +123,10 @@ export default function AdminGalleryPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">
+          <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
             Manage Gallery
           </h1>
-          <p className="text-sm text-[#94A3B8] mt-1">
+          <p className="text-sm text-[#42576E] mt-1">
             {loading
               ? "Loading…"
               : `${images.length} image${images.length !== 1 ? "s" : ""}`}
@@ -138,7 +137,7 @@ export default function AdminGalleryPage() {
             setError(null);
             setIsModalOpen(true);
           }}
-          className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
+          className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none shrink-0"
         >
           + Add Image
         </Button>
@@ -148,8 +147,8 @@ export default function AdminGalleryPage() {
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-[#94A3B8] animate-pulse">
+            <div className="w-10 h-10 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-[#42576E] animate-pulse">
               Fetching gallery…
             </p>
           </div>
@@ -163,15 +162,15 @@ export default function AdminGalleryPage() {
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
           <span className="text-5xl">🖼️</span>
-          <p className="text-[#F8FAFC] font-semibold text-lg">
+          <p className="text-[#003358] font-semibold text-lg">
             No images found
           </p>
-          <p className="text-[#94A3B8] text-sm">
+          <p className="text-[#42576E] text-sm">
             Add your first image to the gallery.
           </p>
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none mt-2"
+            className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
           >
             + Add Image
           </Button>
@@ -185,7 +184,7 @@ export default function AdminGalleryPage() {
             {images.map((img) => (
               <div
                 key={img.id}
-                className="group relative rounded-xl aspect-square overflow-hidden bg-white/5 border border-white/5"
+                className="group relative rounded-xl aspect-square overflow-hidden bg-[#9FC7F0]/30 border border-[#7FB3E8]"
               >
                 {/* Image */}
                 <img
@@ -202,7 +201,7 @@ export default function AdminGalleryPage() {
                   <button
                     onClick={() => handleDelete(img.id)}
                     disabled={deletingId === img.id}
-                    className="text-rose-400 hover:text-rose-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-400/20 hover:bg-rose-400/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-rose-700 hover:text-rose-600 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {deletingId === img.id ? "Deleting…" : "Delete"}
                   </button>
@@ -241,7 +240,7 @@ export default function AdminGalleryPage() {
               type="submit"
               form="add-image-form"
               isLoading={submitting}
-              className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none"
+              className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none"
             >
               Add Image
             </Button>

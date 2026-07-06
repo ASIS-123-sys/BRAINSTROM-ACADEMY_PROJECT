@@ -99,42 +99,44 @@ export default function StudentAcademics() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
-        <p className="text-[#94A3B8] text-lg">Loading academics...</p>
+      <div className="min-h-screen bg-[#F7FAFD] flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+          <p className="text-[#42576E] text-lg">Loading academics...</p>
+        </div>
       </div>
     );
   }
 
   const glassCard = {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    backdropFilter: "blur(20px)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
   return (
     <div
-      className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] ${poppins.className}`}
+      className={`min-h-screen bg-[#F7FAFD] text-[#003358] ${poppins.className}`}
     >
       {/* Navbar */}
-      <nav className="sticky top-0 z-40 bg-[#0F172A]/90 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <div className="font-bold text-lg">Brainstorm Academy</div>
+      <nav className="sticky top-0 z-40 bg-[#F7FAFD]/95 backdrop-blur-sm border-b border-[#7FB3E8] px-6 py-4 flex items-center justify-between">
+        <div className="font-bold text-lg text-[#003358]">Brainstorm Academy</div>
         <div className="flex gap-6">
           <a
             href="/student/dashboard"
-            className="text-[#94A3B8] hover:text-white font-semibold text-sm"
+            className="text-[#42576E] hover:text-[#003358] font-semibold text-sm transition-colors"
           >
             Dashboard
           </a>
           <a
             href="/student/academics"
-            className="text-[#06B6D4] font-semibold text-sm"
+            className="text-[#2dbcfe] font-semibold text-sm border-b-2 border-[#2dbcfe] pb-0.5"
           >
             Academics
           </a>
           <a
             href="/student/fees"
-            className="text-[#94A3B8] hover:text-white font-semibold text-sm"
+            className="text-[#42576E] hover:text-[#003358] font-semibold text-sm transition-colors"
           >
             Fees
           </a>
@@ -142,33 +144,33 @@ export default function StudentAcademics() {
       </nav>
 
       <main className="max-w-5xl mx-auto px-6 py-12 space-y-10">
-        <h1 className="text-3xl font-bold">Academic Overview</h1>
+        <h1 className="text-3xl font-bold text-[#003358]">Academic Overview</h1>
 
         {/* Subject Average Graph */}
         {subjectAverages.length > 0 && (
           <div style={glassCard} className="p-6">
-            <h2 className="text-lg font-bold mb-6 text-[#94A3B8] uppercase tracking-wider text-sm">
+            <h2 className="text-xs font-bold mb-6 text-[#42576E] uppercase tracking-wider">
               Subject Performance
             </h2>
             <div className="space-y-4">
               {subjectAverages.map((item) => (
                 <div key={item.subject}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-semibold text-[#F8FAFC]">
+                    <span className="text-sm font-semibold text-[#1E3A52]">
                       {item.subject}
                     </span>
-                    <span className="text-sm font-bold text-[#06B6D4]">
+                    <span className="text-sm font-bold text-[#003358]">
                       {item.average}%
                     </span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-3">
+                  <div className="w-full bg-[#9FC7F0]/40 rounded-full h-3">
                     <div
                       className="h-3 rounded-full transition-all duration-500"
                       style={{
                         width: `${item.average}%`,
                         background:
                           item.average >= 75
-                            ? "linear-gradient(90deg, #06B6D4, #0891B2)"
+                            ? "linear-gradient(90deg, #2dbcfe, #0ea5e9)"
                             : item.average >= 50
                               ? "linear-gradient(90deg, #F59E0B, #D97706)"
                               : "linear-gradient(90deg, #EF4444, #DC2626)",
@@ -183,18 +185,18 @@ export default function StudentAcademics() {
 
         {/* Filters */}
         <div style={glassCard} className="p-6">
-          <h2 className="text-lg font-bold mb-4 text-[#94A3B8] uppercase tracking-wider text-sm">
+          <h2 className="text-xs font-bold mb-4 text-[#42576E] uppercase tracking-wider">
             Filter Marks
           </h2>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-xs text-[#94A3B8] font-semibold uppercase tracking-wider mb-2">
+              <label className="block text-xs text-[#42576E] font-semibold uppercase tracking-wider mb-2">
                 Year
               </label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="w-full bg-[#0F172A] border border-white/10 text-white rounded-xl px-4 py-2.5 outline-none text-sm focus:border-[#06B6D4]"
+                className="w-full bg-white/60 border border-[#7FB3E8] text-[#1E3A52] rounded-xl px-4 py-2.5 outline-none text-sm focus:border-[#2dbcfe] transition-colors"
               >
                 <option value="all">All Years</option>
                 {years.map((year) => (
@@ -205,13 +207,13 @@ export default function StudentAcademics() {
               </select>
             </div>
             <div className="flex-1">
-              <label className="block text-xs text-[#94A3B8] font-semibold uppercase tracking-wider mb-2">
+              <label className="block text-xs text-[#42576E] font-semibold uppercase tracking-wider mb-2">
                 Month
               </label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="w-full bg-[#0F172A] border border-white/10 text-white rounded-xl px-4 py-2.5 outline-none text-sm focus:border-[#06B6D4]"
+                className="w-full bg-white/60 border border-[#7FB3E8] text-[#1E3A52] rounded-xl px-4 py-2.5 outline-none text-sm focus:border-[#2dbcfe] transition-colors"
               >
                 <option value="all">All Months</option>
                 {months.map((m) => (
@@ -226,29 +228,26 @@ export default function StudentAcademics() {
 
         {/* Marks Table */}
         <div>
-          <h2 className="text-lg font-bold mb-4 text-[#94A3B8] uppercase tracking-wider text-sm">
+          <h2 className="text-xs font-bold mb-4 text-[#42576E] uppercase tracking-wider">
             Individual Marks ({filteredScores.length} records)
           </h2>
           <div
-            className="overflow-x-auto rounded-2xl border border-white/10"
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              backdropFilter: "blur(20px)",
-            }}
+            className="overflow-x-auto rounded-2xl border border-[#7FB3E8]"
+            style={{ background: "#B8D9F5" }}
           >
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wider text-[#06B6D4] font-semibold">
+                <tr className="border-b border-[#7FB3E8] bg-[#9FC7F0]/30 text-xs uppercase tracking-wider text-[#003358] font-semibold">
                   <th className="p-4">Subject</th>
                   <th className="p-4 text-center">Score</th>
                   <th className="p-4 text-center">Percentage</th>
                   <th className="p-4 text-right">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-sm text-[#F8FAFC]">
+              <tbody className="divide-y divide-[#7FB3E8]/50 text-sm text-[#1E3A52]">
                 {filteredScores.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="p-8 text-center text-[#94A3B8]">
+                    <td colSpan={4} className="p-8 text-center text-[#42576E]">
                       No marks found for selected period.
                     </td>
                   </tr>
@@ -260,26 +259,26 @@ export default function StudentAcademics() {
                     return (
                       <tr
                         key={score.id}
-                        className="hover:bg-white/5 transition-colors"
+                        className="hover:bg-[#9FC7F0]/20 transition-colors"
                       >
                         <td className="p-4 font-medium">{score.subject}</td>
-                        <td className="p-4 text-center font-mono text-[#F59E0B] font-bold">
+                        <td className="p-4 text-center font-mono text-[#003358] font-bold">
                           {score.score}/{score.total}
                         </td>
                         <td className="p-4 text-center">
                           <span
                             className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                               percentage >= 75
-                                ? "bg-green-500/15 text-green-400"
+                                ? "bg-green-500/15 text-green-700"
                                 : percentage >= 50
-                                  ? "bg-yellow-500/15 text-yellow-400"
-                                  : "bg-red-500/15 text-red-400"
+                                  ? "bg-yellow-500/15 text-yellow-700"
+                                  : "bg-red-500/15 text-red-700"
                             }`}
                           >
                             {percentage}%
                           </span>
                         </td>
-                        <td className="p-4 text-right text-[#94A3B8]">
+                        <td className="p-4 text-right text-[#42576E]">
                           {new Date(score.test_date).toLocaleDateString(
                             "en-IN",
                             {

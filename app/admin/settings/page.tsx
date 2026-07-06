@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
@@ -40,17 +40,16 @@ export default function AdminSettingsPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const glassCardStyle = {
-    background: "rgba(255,255,255,0.05)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
   const inputStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "rgba(255,255,255,0.4)",
+    border: "1px solid #7FB3E8",
     borderRadius: "10px",
-    color: "#F8FAFC",
+    color: "#1E3A52",
     outline: "none",
     width: "100%",
     padding: "10px 14px",
@@ -132,20 +131,20 @@ export default function AdminSettingsPage() {
   ];
 
   return (
-    <div className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] ${poppins.className}`}>
+    <div className={`min-h-screen bg-[#F7FAFD] text-[#003358] ${poppins.className}`}>
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
 
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">
+            <h1 className="text-2xl font-bold text-[#003358] tracking-tight">
               Academy Settings
             </h1>
-            <p className="text-sm text-[#94A3B8] mt-1">
+            <p className="text-sm text-[#42576E] mt-1">
               Manage contact details and general academy information
             </p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/20 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-[#9FC7F0] border border-[#7FB3E8] flex items-center justify-center text-xl">
             ⚙️
           </div>
         </div>
@@ -156,8 +155,8 @@ export default function AdminSettingsPage() {
             style={glassCardStyle}
             className="p-12 flex flex-col items-center justify-center gap-4"
           >
-            <div className="w-8 h-8 border-2 border-[#06B6D4] border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-[#94A3B8]">Loading settings…</p>
+            <div className="w-8 h-8 border-2 border-[#2dbcfe] border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-[#42576E]">Loading settings…</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -166,9 +165,9 @@ export default function AdminSettingsPage() {
             {fieldGroups.map((group) => (
               <div key={group.title} style={glassCardStyle} className="p-6 space-y-5">
                 {/* Group Header */}
-                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
+                <div className="flex items-center gap-2 pb-3 border-b border-[#7FB3E8]/50">
                   <span className="text-lg">{group.icon}</span>
-                  <h2 className="text-sm font-bold text-[#06B6D4] uppercase tracking-widest">
+                  <h2 className="text-sm font-bold text-[#003358] uppercase tracking-widest">
                     {group.title}
                   </h2>
                 </div>
@@ -182,7 +181,7 @@ export default function AdminSettingsPage() {
                     >
                       <label
                         htmlFor={field.name}
-                        className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider"
+                        className="text-xs font-semibold text-[#42576E] uppercase tracking-wider"
                       >
                         {field.label}
                       </label>
@@ -194,8 +193,8 @@ export default function AdminSettingsPage() {
                         value={settings[field.name as keyof Settings]}
                         onChange={handleChange}
                         style={inputStyle}
-                        onFocus={(e) => (e.currentTarget.style.borderColor = "#06B6D4")}
-                        onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+                        onFocus={(e) => (e.currentTarget.style.borderColor = "#2dbcfe")}
+                        onBlur={(e) => (e.currentTarget.style.borderColor = "#7FB3E8")}
                       />
                     </div>
                   ))}
@@ -205,16 +204,16 @@ export default function AdminSettingsPage() {
 
             {/* About Text — full-width card */}
             <div style={glassCardStyle} className="p-6 space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-white/5">
+              <div className="flex items-center gap-2 pb-3 border-b border-[#7FB3E8]/50">
                 <span className="text-lg">📝</span>
-                <h2 className="text-sm font-bold text-[#06B6D4] uppercase tracking-widest">
+                <h2 className="text-sm font-bold text-[#003358] uppercase tracking-widest">
                   About Text
                 </h2>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label
                   htmlFor="about_text"
-                  className="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider"
+                  className="text-xs font-semibold text-[#42576E] uppercase tracking-wider"
                 >
                   About the Academy
                 </label>
@@ -226,21 +225,21 @@ export default function AdminSettingsPage() {
                   value={settings.about_text}
                   onChange={handleChange}
                   style={{ ...inputStyle, resize: "vertical" }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "#06B6D4")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = "#2dbcfe")}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = "#7FB3E8")}
                 />
               </div>
             </div>
 
             {/* Status Messages */}
             {successMsg && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-semibold">
+              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-700 text-sm font-semibold">
                 <span>✅</span>
                 {successMsg}
               </div>
             )}
             {errorMsg && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold">
+              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 text-sm font-semibold">
                 <span>❌</span>
                 {errorMsg}
               </div>
@@ -251,11 +250,11 @@ export default function AdminSettingsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm bg-[#F59E0B] text-[#0F172A] hover:bg-[#D97706] active:scale-95 transition-all duration-200 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm bg-[#2dbcfe] text-[#003358] hover:bg-[#20a8e8] active:scale-95 transition-all duration-200 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               >
                 {saving ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-[#0F172A] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[#003358] border-t-transparent rounded-full animate-spin" />
                     Saving…
                   </>
                 ) : (
