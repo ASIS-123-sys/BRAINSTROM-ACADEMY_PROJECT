@@ -39,6 +39,7 @@ type StudentRow = {
 
 const defaultForm = {
   name: "",
+  email: "",
   phone: "",
   course: COURSE_OPTIONS[0],
   batch: "",
@@ -85,6 +86,7 @@ export default function AdminStudentsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
+          email: form.email.trim(),
           phone: form.phone,
           batch: form.batch,
           course: form.course,
@@ -318,6 +320,21 @@ export default function AdminStudentsPage() {
               placeholder="e.g. Priya Sharma"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
+          {/* Email for password reset */}
+          <div>
+            <label htmlFor="student-email" className={labelClass}>
+              Password Reset Email
+            </label>
+            <input
+              id="student-email"
+              type="email"
+              placeholder="e.g. student@example.com"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               className={inputClass}
             />
           </div>

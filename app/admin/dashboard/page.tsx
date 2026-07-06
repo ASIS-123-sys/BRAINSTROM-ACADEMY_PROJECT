@@ -129,7 +129,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div
-        className={`flex items-center justify-center min-h-[300px] ${poppins.className}`}
+        className={`flex min-h-75 items-center justify-center ${poppins.className}`}
       >
         <div className="text-center space-y-3">
           <div className="w-12 h-12 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto"></div>
@@ -210,7 +210,9 @@ export default function AdminDashboard() {
                   <td className="p-4 font-mono text-[#003358]">
                     {student.enrollment_id}
                   </td>
-                  <td className="p-4 font-medium text-[#1E3A52]">{student.name}</td>
+                  <td className="p-4 font-medium text-[#1E3A52]">
+                    {student.name}
+                  </td>
                   <td className="p-4 text-[#42576E]">
                     {(student as Student & { course?: string }).course ?? "-"}
                   </td>
@@ -265,7 +267,10 @@ export default function AdminDashboard() {
             </thead>
             <tbody className="divide-y divide-[#7FB3E8]/50">
               {faculty.map((fac) => (
-                <tr key={fac.id} className="hover:bg-[#9FC7F0]/20 transition-colors">
+                <tr
+                  key={fac.id}
+                  className="hover:bg-[#9FC7F0]/20 transition-colors"
+                >
                   <td className="py-3.5 pr-4 font-medium flex items-center gap-2">
                     {fac.pic_url ? (
                       <img

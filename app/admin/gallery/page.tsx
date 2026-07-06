@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -30,17 +29,19 @@ export default function AdminGalleryPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // ─── Fetch all images ─────────────────────────────────────────────────────
+  // ─── Fetch all images via API route (uses service-role client) ──────────
   useEffect(() => {
     async function fetchGallery() {
       setLoading(true);
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("gallery")
-        .select("*")
-        .order("event_name");
-      if (!error && data) setImages(data as GalleryRow[]);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/admin/gallery");
+        const json = await res.json();
+        if (json.data) setImages(json.data as GalleryRow[]);
+      } catch {
+        setError("Failed to load gallery");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchGallery();
   }, []);
@@ -105,11 +106,10 @@ export default function AdminGalleryPage() {
     }
   }
 
-  // ─── Shared styles ────────────────────────────────────────────────────────
-  const glassStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.02)",
-    backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.1)",
+  // ─── Shared styles (light theme to match admin layout) ──────────────────
+  const tableContainerStyle: React.CSSProperties = {
+    background: "#B8D9F5",
+    border: "1px solid #7FB3E8",
     borderRadius: "16px",
   };
 
@@ -124,10 +124,10 @@ export default function AdminGalleryPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#F8FAFC]">
+          <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
             Manage Gallery
           </h1>
-          <p className="text-sm text-[#94A3B8] mt-1">
+          <p className="text-sm text-[#42576E] mt-1">
             {loading
               ? "Loading…"
               : `${images.length} image${images.length !== 1 ? "s" : ""}`}
@@ -138,7 +138,7 @@ export default function AdminGalleryPage() {
             setError(null);
             setIsModalOpen(true);
           }}
-          className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none shrink-0"
+          className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none shrink-0"
         >
           + Add Image
         </Button>
@@ -148,8 +148,8 @@ export default function AdminGalleryPage() {
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin mx-auto" />
-            <p className="text-sm text-[#94A3B8] animate-pulse">
+            <div className="w-10 h-10 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-[#42576E] animate-pulse">
               Fetching gallery…
             </p>
           </div>
@@ -159,19 +159,19 @@ export default function AdminGalleryPage() {
       {/* ─── Empty state ─── */}
       {!loading && images.length === 0 && (
         <div
-          style={glassStyle}
+          style={tableContainerStyle}
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
           <span className="text-5xl">🖼️</span>
-          <p className="text-[#F8FAFC] font-semibold text-lg">
+          <p className="text-[#003358] font-semibold text-lg">
             No images found
           </p>
-          <p className="text-[#94A3B8] text-sm">
+          <p className="text-[#42576E] text-sm">
             Add your first image to the gallery.
           </p>
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none mt-2"
+            className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
           >
             + Add Image
           </Button>
@@ -180,12 +180,12 @@ export default function AdminGalleryPage() {
 
       {/* ─── Gallery Grid ─── */}
       {!loading && images.length > 0 && (
-        <div style={glassStyle} className="p-6">
+        <div style={tableContainerStyle} className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {images.map((img) => (
               <div
                 key={img.id}
-                className="group relative rounded-xl aspect-square overflow-hidden bg-white/5 border border-white/5"
+                className="group relative rounded-xl aspect-square overflow-hidden border border-[#7FB3E8] bg-[#9FC7F0]/30"
               >
                 {/* Image */}
                 <img
@@ -195,14 +195,14 @@ export default function AdminGalleryPage() {
                 />
 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
-                  <span className="text-sm font-semibold text-[#F8FAFC] mb-3 leading-snug">
+                <div className="absolute inset-0 bg-[#003358]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
+                  <span className="text-sm font-semibold text-white mb-3 leading-snug">
                     {img.event_name}
                   </span>
                   <button
                     onClick={() => handleDelete(img.id)}
                     disabled={deletingId === img.id}
-                    className="text-rose-400 hover:text-rose-300 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-400/20 hover:bg-rose-400/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-rose-300 hover:text-rose-200 font-semibold text-xs px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {deletingId === img.id ? "Deleting…" : "Delete"}
                   </button>
@@ -241,7 +241,7 @@ export default function AdminGalleryPage() {
               type="submit"
               form="add-image-form"
               isLoading={submitting}
-              className="bg-[#F59E0B] text-[#0F172A] hover:bg-[#F59E0B]/90 font-bold border-none"
+              className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none"
             >
               Add Image
             </Button>

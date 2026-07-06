@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Poppins } from "next/font/google";
+import { getSettings } from "@/lib/api/settings";
 
 const AcademyMap = dynamic(() => import("@/components/public/Map"), {
   ssr: false,
@@ -29,11 +30,19 @@ const poppins = Poppins({
 });
 
 export default function ContactPage() {
+  const [settings, setSettings] = useState<any>(null);
   const scrollRef = useRef<
     (HTMLDivElement | HTMLElement | HTMLHeadingElement)[]
   >([]);
 
   useEffect(() => {
+    async function loadSettings() {
+      const { data } = await getSettings();
+      setSettings(data);
+    }
+
+    loadSettings();
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -102,7 +111,7 @@ export default function ContactPage() {
             <div
               ref={addToRefs}
               style={cardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300"
+              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
             >
               <div className="text-2xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl">
                 <svg
@@ -127,18 +136,17 @@ export default function ContactPage() {
                   Call us directly during office hours
                 </p>
                 <div className="flex flex-col gap-1 pt-2">
-                  <a
-                    href="tel:+919933825835"
-                    className="text-[#00658d] font-semibold hover:underline w-fit"
-                  >
-                    +91 99338 25835
-                  </a>
-                  <a
-                    href="tel:+912008548156"
-                    className="text-[#00658d] font-semibold hover:underline w-fit"
-                  >
-                    +91 20085 48156
-                  </a>
+                  {(settings?.phone1 ? [settings.phone1] : [])
+                    .concat(settings?.phone2 ? [settings.phone2] : [])
+                    .map((phone) => (
+                      <a
+                        key={phone}
+                        href={`tel:${phone.replace(/\s+/g, "")}`}
+                        className="text-[#00658d] font-semibold hover:underline w-fit"
+                      >
+                        {phone}
+                      </a>
+                    ))}
                 </div>
               </div>
             </div>
@@ -147,7 +155,7 @@ export default function ContactPage() {
             <div
               ref={addToRefs}
               style={cardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300"
+              className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
             >
               <div className="text-2xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl">
                 <svg
@@ -172,18 +180,17 @@ export default function ContactPage() {
                   Send us your queries anytime
                 </p>
                 <div className="flex flex-col gap-1 pt-2">
-                  <a
-                    href="mailto:avisdasw4@gmail.com"
-                    className="text-[#00658d] font-semibold hover:underline w-fit break-all"
-                  >
-                    avisdasw4@gmail.com
-                  </a>
-                  <a
-                    href="mailto:brainstormdplusacademy@gmail.com"
-                    className="text-[#00658d] font-semibold hover:underline w-fit break-all"
-                  >
-                    brainstormdplusacademy@gmail.com
-                  </a>
+                  {(settings?.email1 ? [settings.email1] : [])
+                    .concat(settings?.email2 ? [settings.email2] : [])
+                    .map((email) => (
+                      <a
+                        key={email}
+                        href={`mailto:${email}`}
+                        className="text-[#00658d] font-semibold hover:underline w-fit break-all"
+                      >
+                        {email}
+                      </a>
+                    ))}
                 </div>
               </div>
             </div>
@@ -192,7 +199,7 @@ export default function ContactPage() {
             <div
               ref={addToRefs}
               style={cardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300"
+              className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
             >
               <div className="text-2xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl">
                 <svg
@@ -223,9 +230,8 @@ export default function ContactPage() {
                   Come visit us
                 </p>
                 <p className="text-[#42576E] font-semibold pt-2 text-sm leading-relaxed">
-                  Near Radio Station, Berhampur,
-                  <br />
-                  Odisha, India
+                  {settings?.address ||
+                    "Near Radio Station, Berhampur, Odisha, India"}
                 </p>
               </div>
             </div>
@@ -235,7 +241,7 @@ export default function ContactPage() {
           <div
             ref={addToRefs}
             style={cardStyle}
-            className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out p-6 md:p-8 flex flex-col justify-between hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300 h-full"
+            className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out p-6 md:p-8 flex flex-col justify-between hover:border-[#2dbcfe] hover:shadow-md h-full"
           >
             <div className="flex flex-col items-center text-center mb-6">
               <div className="text-3xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-4 rounded-full mb-3 shadow-md">
@@ -263,7 +269,8 @@ export default function ContactPage() {
                 Brainstorm Academy
               </h3>
               <p className="text-sm text-[#42576E] mt-1">
-                Near Radio Station, Berhampur, Odisha, India
+                {settings?.address ||
+                  "Near Radio Station, Berhampur, Odisha, India"}
               </p>
 
               <a
@@ -276,7 +283,7 @@ export default function ContactPage() {
               </a>
             </div>
 
-            <div className="w-full relative overflow-hidden rounded-xl border border-[#7FB3E8] flex-grow min-h-[250px] lg:min-h-0 flex items-stretch">
+            <div className="w-full relative overflow-hidden rounded-xl border border-[#7FB3E8] grow min-h-62.5 lg:min-h-0 flex items-stretch">
               <AcademyMap />
             </div>
           </div>
@@ -305,7 +312,7 @@ export default function ContactPage() {
             <div
               key={item.day}
               ref={addToRefs}
-              className={`opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 text-center flex flex-col justify-center items-center hover:border-[#2dbcfe] transition-all duration-300 ${
+              className={`opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 text-center flex flex-col justify-center items-center hover:border-[#2dbcfe] ${
                 item.active ? "border-l-4 border-l-[#2dbcfe]" : ""
               }`}
               style={{ ...cardStyle, transitionDelay: `${index * 100}ms` }}

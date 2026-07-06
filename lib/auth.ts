@@ -1,8 +1,10 @@
 import { createClient } from "./supabase";
 
-export async function loginStudent(enrollmentId: string, password: string) {
+export async function loginStudent(identifier: string, password: string) {
   const supabase = createClient();
-  const email = `${enrollmentId}@brainstorm.local`;
+  const email = identifier.includes("@")
+    ? identifier
+    : `${identifier}@brainstorm.local`;
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,

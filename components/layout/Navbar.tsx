@@ -45,11 +45,6 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  const isAdmin =
-    user?.user_metadata?.role === "admin" ||
-    user?.email?.endsWith("@brainstorm-admin.local");
-  const dashboardHref = isAdmin ? "/admin/dashboard" : "/student/dashboard";
-
   return (
     <header className="sticky top-0 z-50 bg-[#F7FAFD] shadow-sm border-b border-[#7FB3E8] text-[#111c2d]">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,19 +90,7 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center">
-            {user ? (
-              <Link
-                href={dashboardHref}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#2dbcfe] text-[#003358] text-sm font-bold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-sm border border-[#003358]"
-              >
-                <div className="w-6 h-6 rounded-full bg-[#003358] text-white flex items-center justify-center text-xs uppercase">
-                  {user.user_metadata?.full_name?.charAt(0) ||
-                    user.email?.charAt(0) ||
-                    "S"}
-                </div>
-                Dashboard
-              </Link>
-            ) : (
+            {!user && (
               <Link
                 href="/auth/student-login"
                 className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#2dbcfe] text-[#003358] text-sm font-bold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-sm"
@@ -195,20 +178,7 @@ export default function Navbar() {
               ))}
               {/* Mobile Student Login */}
               <li className="mt-2 px-4">
-                {user ? (
-                  <Link
-                    href={dashboardHref}
-                    onClick={closeMenu}
-                    className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-full bg-[#2dbcfe] text-[#003358] text-sm font-bold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-sm border border-[#003358]"
-                  >
-                    <div className="w-5 h-5 rounded-full bg-[#003358] text-white flex items-center justify-center text-xs uppercase">
-                      {user.user_metadata?.full_name?.charAt(0) ||
-                        user.email?.charAt(0) ||
-                        "S"}
-                    </div>
-                    Dashboard
-                  </Link>
-                ) : (
+                {!user && (
                   <Link
                     href="/auth/student-login"
                     onClick={closeMenu}
