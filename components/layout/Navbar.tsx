@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 
 const navLinks = [
@@ -15,17 +15,20 @@ const navLinks = [
   { label: "Course", href: "/course" },
 ];
 
+type SessionUser = {
+  email?: string | null;
+  user_metadata?: { full_name?: string; role?: string } | null;
+};
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  type SupabaseUser = {
-    user_metadata?: { full_name?: string; role?: string } | null;
-    email?: string | null;
-  };
-  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const supabase = createClient();
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
@@ -44,6 +47,45 @@ export default function Navbar() {
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  // Determine role — stored in user_metadata.role
+  const role = user?.user_metadata?.role ?? "student";
+  const isAdmin = role === "admin";
+
+  // Avatar initial: admin → "A", student → first letter of name or email
+  const avatarInitial = isAdmin
+    ? "A"
+    : (
+        user?.user_metadata?.full_name?.charAt(0) ||
+        user?.email?.charAt(0) ||
+        "S"
+      ).toUpperCase();
+
+  const dashboardHref = isAdmin ? "/admin/dashboard" : "/student/dashboard";
+
+  const handleAvatarClick = () => {
+    closeMenu();
+    router.push(dashboardHref);
+  };
+
+  /* ── Avatar button (desktop + mobile reused) ── */
+  const AvatarButton = () => (
+    <button
+      type="button"
+      onClick={handleAvatarClick}
+      title={isAdmin ? "Admin Dashboard" : "Student Dashboard"}
+      className="
+        w-9 h-9 rounded-full flex items-center justify-center
+        bg-[#003358] text-white text-sm font-extrabold
+        ring-2 ring-[#2dbcfe] ring-offset-1
+        hover:bg-[#00497a] hover:ring-offset-2
+        active:scale-95 transition-all duration-200
+        shadow-md cursor-pointer select-none
+      "
+    >
+      {avatarInitial}
+    </button>
+  );
 
   return (
     <header className="sticky top-0 z-50 bg-[#F7FAFD] shadow-sm border-b border-[#7FB3E8] text-[#111c2d]">
@@ -88,9 +130,11 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA — Login button OR Avatar */}
           <div className="hidden lg:flex items-center">
-            {!user && (
+            {user ? (
+              <AvatarButton />
+            ) : (
               <Link
                 href="/auth/student-login"
                 className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#2dbcfe] text-[#003358] text-sm font-bold hover:opacity-90 active:scale-95 transition-all duration-200 shadow-sm"
@@ -176,9 +220,21 @@ export default function Navbar() {
                   </Link>
                 </li>
               ))}
-              {/* Mobile Student Login */}
+
+              {/* Mobile: Login button OR Avatar */}
               <li className="mt-2 px-4">
-                {!user && (
+                {user ? (
+                  <button
+                    type="button"
+                    onClick={handleAvatarClick}
+                    className="flex items-center gap-3 w-full px-4 py-2.5 rounded-full bg-[#003358] text-white text-sm font-bold hover:bg-[#00497a] active:scale-95 transition-all duration-200 shadow-sm"
+                  >
+                    <span className="w-7 h-7 rounded-full bg-[#2dbcfe] text-[#003358] text-xs font-extrabold flex items-center justify-center flex-shrink-0">
+                      {avatarInitial}
+                    </span>
+                    {isAdmin ? "Go to Admin Dashboard" : "Go to Dashboard"}
+                  </button>
+                ) : (
                   <Link
                     href="/auth/student-login"
                     onClick={closeMenu}

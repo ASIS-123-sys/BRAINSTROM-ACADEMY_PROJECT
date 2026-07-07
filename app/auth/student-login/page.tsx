@@ -341,14 +341,7 @@ export default function StudentLoginPage() {
         </div>
 
         {/* Bottom Text */}
-        <div className="mt-8 text-center">
-          <Link
-            href="/auth/admin-login"
-            className="text-sm font-medium text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
-          >
-            Admin? Login here
-          </Link>
-        </div>
+        
       </div>
     </div>
   );
