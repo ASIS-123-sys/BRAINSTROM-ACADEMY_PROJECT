@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -192,7 +191,7 @@ export default function AdminFeesPage() {
     }
   }
 
-  // ─── Shared styles ────────────────────────────────────────────────────────
+  // ─── Shared styles (light theme to match admin layout) ──────────────────
   const tableContainerStyle: React.CSSProperties = {
     background: "#B8D9F5",
     border: "1px solid #7FB3E8",

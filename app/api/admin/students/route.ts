@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   try {
     const supabase = createAdminClient();
     const body = await request.json();
-    const { name, phone, batch, enrollment_id, course } = body;
+    const { name, phone, batch, enrollment_id, course, email } = body;
 
     if (!name || !enrollment_id) {
       return NextResponse.json(
@@ -25,15 +25,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const email = `${enrollment_id}@brainstorm.local`;
+    const loginEmail = email?.trim() || `${enrollment_id}@brainstorm.local`;
     const defaultPassword = `BS@${enrollment_id}`;
 
     // step 1 - create auth user
     const { data: authData, error: authError } =
       await supabase.auth.admin.createUser({
-        email,
+        email: loginEmail,
         password: defaultPassword,
         email_confirm: true,
+        user_metadata: { enrollment_id, role: "student" },
       });
 
     if (authError) {

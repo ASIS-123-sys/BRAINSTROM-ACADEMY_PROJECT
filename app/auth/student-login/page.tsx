@@ -36,7 +36,7 @@ export default function StudentLoginPage() {
     if (!enrollmentId || !password) {
       setState({
         loading: false,
-        error: "Please enter your Enrollment ID and password",
+        error: "Please enter your Enrollment ID/Email and password",
         success: "",
       });
       return;
@@ -160,7 +160,7 @@ export default function StudentLoginPage() {
                   value={enrollmentId}
                   onChange={(e) => setEnrollmentId(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                  placeholder="Enrollment ID"
+                  placeholder="Enrollment ID or Email"
                   className={inputClass}
                   autoComplete="off"
                 />
@@ -221,7 +221,7 @@ export default function StudentLoginPage() {
                   Reset Password
                 </h1>
                 <p className="text-sm text-[#94A3B8]">
-                  Enter your registered email to receive an OTP
+                  Enter the email linked to your student account
                 </p>
               </div>
 

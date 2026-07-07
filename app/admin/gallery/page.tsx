@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -30,17 +29,19 @@ export default function AdminGalleryPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // ─── Fetch all images ─────────────────────────────────────────────────────
+  // ─── Fetch all images via API route (uses service-role client) ──────────
   useEffect(() => {
     async function fetchGallery() {
       setLoading(true);
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("gallery")
-        .select("*")
-        .order("event_name");
-      if (!error && data) setImages(data as GalleryRow[]);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/admin/gallery");
+        const json = await res.json();
+        if (json.data) setImages(json.data as GalleryRow[]);
+      } catch {
+        setError("Failed to load gallery");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchGallery();
   }, []);
@@ -194,8 +195,8 @@ export default function AdminGalleryPage() {
                 />
 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
-                  <span className="text-sm font-semibold text-[#F8FAFC] mb-3 leading-snug">
+                <div className="absolute inset-0 bg-[#003358]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
+                  <span className="text-sm font-semibold text-white mb-3 leading-snug">
                     {img.event_name}
                   </span>
                   <button
@@ -290,3 +291,4 @@ export default function AdminGalleryPage() {
     </div>
   );
 }
+ 

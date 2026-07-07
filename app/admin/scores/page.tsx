@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -53,29 +52,26 @@ export default function AdminScoresPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // ─── Fetch data ───────────────────────────────────────────────────────────
+  // ─── Fetch data via API routes (uses service-role client) ───────────────
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const supabase = createClient();
+      try {
+        const [scoresRes, studentsRes] = await Promise.all([
+          fetch("/api/admin/scores"),
+          fetch("/api/admin/students"),
+        ]);
 
-      const [scoresRes, studentsRes] = await Promise.all([
-        supabase
-          .from("scores")
-          .select("*, students(name, enrollment_id)")
-          .order("test_date", { ascending: false }),
-        supabase
-          .from("students")
-          .select("id, name, enrollment_id")
-          .order("name"),
-      ]);
+        const scoresJson = await scoresRes.json();
+        const studentsJson = await studentsRes.json();
 
-      if (!scoresRes.error && scoresRes.data)
-        setScores(scoresRes.data as ScoreRow[]);
-      if (!studentsRes.error && studentsRes.data)
-        setStudentsList(studentsRes.data as StudentReference[]);
-
-      setLoading(false);
+        if (scoresJson.data) setScores(scoresJson.data);
+        if (studentsJson.data) setStudentsList(studentsJson.data);
+      } catch {
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
@@ -176,7 +172,7 @@ export default function AdminScoresPage() {
     }
   }
 
-  // ─── Shared styles ────────────────────────────────────────────────────────
+  // ─── Shared styles (light theme to match admin layout) ──────────────────
   const tableContainerStyle: React.CSSProperties = {
     background: "#B8D9F5",
     border: "1px solid #7FB3E8",

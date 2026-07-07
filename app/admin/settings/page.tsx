@@ -40,20 +40,22 @@ export default function AdminSettingsPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const glassCardStyle = {
-    background: "#B8D9F5",
-    border: "1px solid #7FB3E8",
+    background: "rgba(255,255,255,0.05)",
+    backdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.08)",
     borderRadius: "16px",
   };
 
   const inputStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.4)",
-    border: "1px solid #7FB3E8",
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: "10px",
-    color: "#1E3A52",
+    color: "#F8FAFC",
     outline: "none",
     width: "100%",
     padding: "10px 14px",
     fontSize: "14px",
+    background: "#F7FAFD",
     transition: "border-color 0.2s",
   };
 
@@ -76,7 +78,7 @@ export default function AdminSettingsPage() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setSettings((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setSuccessMsg("");
@@ -112,26 +114,66 @@ export default function AdminSettingsPage() {
       title: "Contact Information",
       icon: "📞",
       fields: [
-        { label: "Phone 1", name: "phone1", type: "text", placeholder: "+91 99338 25835" },
-        { label: "Phone 2", name: "phone2", type: "text", placeholder: "+91 20085 48156" },
-        { label: "Email 1", name: "email1", type: "email", placeholder: "info@brainstormacademy.in" },
-        { label: "Email 2", name: "email2", type: "email", placeholder: "admissions@brainstormacademy.in" },
-        { label: "Address", name: "address", type: "text", placeholder: "Near Radio Station, Berhampur, Odisha" },
+        {
+          label: "Phone 1",
+          name: "phone1",
+          type: "text",
+          placeholder: "+91 99338 25835",
+        },
+        {
+          label: "Phone 2",
+          name: "phone2",
+          type: "text",
+          placeholder: "+91 20085 48156",
+        },
+        {
+          label: "Email 1",
+          name: "email1",
+          type: "email",
+          placeholder: "info@brainstormacademy.in",
+        },
+        {
+          label: "Email 2",
+          name: "email2",
+          type: "email",
+          placeholder: "admissions@brainstormacademy.in",
+        },
+        {
+          label: "Address",
+          name: "address",
+          type: "text",
+          placeholder: "Near Radio Station, Berhampur, Odisha",
+        },
       ],
     },
     {
       title: "Academy Information",
       icon: "🏫",
       fields: [
-        { label: "Year Established", name: "year_established", type: "text", placeholder: "2010" },
-        { label: "Owner Name", name: "owner_name", type: "text", placeholder: "Mr. Asis Kumar" },
-        { label: "Owner Title", name: "owner_title", type: "text", placeholder: "Founder and Director" },
+        {
+          label: "Year Established",
+          name: "year_established",
+          type: "text",
+          placeholder: "2010",
+        },
+        {
+          label: "Owner Name",
+          name: "owner_name",
+          type: "text",
+          placeholder: "Mr. Asis Kumar",
+        },
+        {
+          label: "Owner Title",
+          name: "owner_title",
+          type: "text",
+          placeholder: "Founder and Director",
+        },
       ],
     },
   ];
 
   return (
-    <div className={`min-h-screen bg-[#F7FAFD] text-[#003358] ${poppins.className}`}>
+    <div className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] ${poppins.className}`}>
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
 
         {/* Page Header */}
@@ -144,7 +186,7 @@ export default function AdminSettingsPage() {
               Manage contact details and general academy information
             </p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-[#9FC7F0] border border-[#7FB3E8] flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/20 flex items-center justify-center text-xl">
             ⚙️
           </div>
         </div>
@@ -152,7 +194,7 @@ export default function AdminSettingsPage() {
         {/* Loading State */}
         {loading ? (
           <div
-            style={glassCardStyle}
+            style={cardStyle}
             className="p-12 flex flex-col items-center justify-center gap-4"
           >
             <div className="w-8 h-8 border-2 border-[#2dbcfe] border-t-transparent rounded-full animate-spin" />
@@ -160,12 +202,15 @@ export default function AdminSettingsPage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
-
             {/* Field Groups */}
             {fieldGroups.map((group) => (
-              <div key={group.title} style={glassCardStyle} className="p-6 space-y-5">
+              <div
+                key={group.title}
+                style={cardStyle}
+                className="p-6 space-y-5"
+              >
                 {/* Group Header */}
-                <div className="flex items-center gap-2 pb-3 border-b border-[#7FB3E8]/50">
+                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                   <span className="text-lg">{group.icon}</span>
                   <h2 className="text-sm font-bold text-[#003358] uppercase tracking-widest">
                     {group.title}
@@ -193,8 +238,8 @@ export default function AdminSettingsPage() {
                         value={settings[field.name as keyof Settings]}
                         onChange={handleChange}
                         style={inputStyle}
-                        onFocus={(e) => (e.currentTarget.style.borderColor = "#2dbcfe")}
-                        onBlur={(e) => (e.currentTarget.style.borderColor = "#7FB3E8")}
+                        onFocus={(e) => (e.currentTarget.style.borderColor = "#06B6D4")}
+                        onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
                       />
                     </div>
                   ))}
@@ -204,7 +249,7 @@ export default function AdminSettingsPage() {
 
             {/* About Text — full-width card */}
             <div style={glassCardStyle} className="p-6 space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-[#7FB3E8]/50">
+              <div className="flex items-center gap-2 pb-3 border-b border-white/5">
                 <span className="text-lg">📝</span>
                 <h2 className="text-sm font-bold text-[#003358] uppercase tracking-widest">
                   About Text
@@ -225,21 +270,21 @@ export default function AdminSettingsPage() {
                   value={settings.about_text}
                   onChange={handleChange}
                   style={{ ...inputStyle, resize: "vertical" }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "#2dbcfe")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "#7FB3E8")}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = "#06B6D4")}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
                 />
               </div>
             </div>
 
             {/* Status Messages */}
             {successMsg && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-700 text-sm font-semibold">
+              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-semibold">
                 <span>✅</span>
                 {successMsg}
               </div>
             )}
             {errorMsg && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 text-sm font-semibold">
+              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold">
                 <span>❌</span>
                 {errorMsg}
               </div>
@@ -250,7 +295,7 @@ export default function AdminSettingsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm bg-[#2dbcfe] text-[#003358] hover:bg-[#20a8e8] active:scale-95 transition-all duration-200 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-sm bg-[#F59E0B] text-[#0F172A] hover:bg-[#D97706] active:scale-95 transition-all duration-200 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {saving ? (
                   <>
@@ -265,7 +310,6 @@ export default function AdminSettingsPage() {
                 )}
               </button>
             </div>
-
           </form>
         )}
       </div>

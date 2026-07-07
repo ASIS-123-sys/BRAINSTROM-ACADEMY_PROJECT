@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -32,17 +31,19 @@ export default function AdminNoticesPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // ─── Fetch all notices (newest first) ────────────────────────────────────
+  // ─── Fetch all notices via API route (uses service-role client) ─────────
   useEffect(() => {
     async function fetchNotices() {
       setLoading(true);
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("notices")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (!error && data) setNotices(data as NoticeRow[]);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/admin/notices");
+        const json = await res.json();
+        if (json.data) setNotices(json.data as NoticeRow[]);
+      } catch {
+        setError("Failed to load notices");
+      } finally {
+        setLoading(false);
+      }
     }
     fetchNotices();
   }, []);

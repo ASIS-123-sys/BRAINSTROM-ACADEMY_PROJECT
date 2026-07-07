@@ -5,8 +5,9 @@ export async function GET() {
   const supabase = createAdminClient();
   const { data, error } = await supabase.from("settings").select("*").limit(1);
 
-  if (error)
+  if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
+  }
 
   return NextResponse.json({ data: data?.[0] ?? null });
 }
