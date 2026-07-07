@@ -55,7 +55,7 @@ export default function AdminSettingsPage() {
     width: "100%",
     padding: "10px 14px",
     fontSize: "14px",
-    background: "#F7FAFD",
+    
     transition: "border-color 0.2s",
   };
 
@@ -194,7 +194,7 @@ export default function AdminSettingsPage() {
         {/* Loading State */}
         {loading ? (
           <div
-            style={cardStyle}
+            style={glassCardStyle}
             className="p-12 flex flex-col items-center justify-center gap-4"
           >
             <div className="w-8 h-8 border-2 border-[#2dbcfe] border-t-transparent rounded-full animate-spin" />
@@ -206,7 +206,7 @@ export default function AdminSettingsPage() {
             {fieldGroups.map((group) => (
               <div
                 key={group.title}
-                style={cardStyle}
+                style={glassCardStyle}
                 className="p-6 space-y-5"
               >
                 {/* Group Header */}
