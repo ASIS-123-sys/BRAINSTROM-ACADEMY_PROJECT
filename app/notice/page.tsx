@@ -36,11 +36,11 @@ export default function NoticePage() {
 
   return (
     <div
-      className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] ${poppins.className}`}
+      className={`min-h-screen bg-[#789ec4] text-[#F8FAFC] ${poppins.className}`}
     >
       <main className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-4xl font-bold mb-2">Notice Board</h1>
-        <p className="text-[#94A3B8] mb-10 text-sm">
+        <p className="text-[#20385a] mb-10 text-sm">
           Latest announcements from Brainstorm Academy
         </p>
 
@@ -51,7 +51,7 @@ export default function NoticePage() {
         )}
 
         {!loading && notices.length === 0 && (
-          <div className="text-center py-20 text-[#94A3B8]">
+          <div className="text-center py-20 text-[#2d3b50]">
             No notices at this time. Check back later.
           </div>
         )}
@@ -61,8 +61,8 @@ export default function NoticePage() {
             <div
               key={notice.id}
               style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "rgba(300,300,300,0.01)",
+                border: "1px solid rgba(300,300,300,0.08)",
                 backdropFilter: "blur(20px)",
                 borderRadius: "16px",
               }}
@@ -70,19 +70,19 @@ export default function NoticePage() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
-                  <span className="text-xs font-bold text-[#0F172A] bg-[#06B6D4] rounded-full w-7 h-7 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-xs font-bold text-[#0F172A] bg-[#029bb6] rounded-full w-7 h-7 flex items-center justify-center shrink-0 mt-0.5">
                     {index === 0 ? "NEW" : index + 1}
                   </span>
                   <div>
-                    <h3 className="font-bold text-lg text-[#F8FAFC] mb-1">
+                    <h3 className="font-bold text-lg text-[#282b2e] mb-1">
                       {notice.title}
                     </h3>
-                    <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    <p className="text-[#29384c] text-sm leading-relaxed">
                       {notice.content}
                     </p>
                   </div>
                 </div>
-                <span className="text-xs text-[#94A3B8] shrink-0 mt-1">
+                <span className="text-xs text-[#32425a] shrink-0 mt-1">
                   {new Date(notice.created_at).toLocaleDateString("en-IN", {
                     day: "numeric",
                     month: "short",

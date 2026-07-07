@@ -246,11 +246,9 @@ export default function AboutPage() {
 
           <div className="space-y-4 text-center md:text-left flex-grow">
             <div>
-              <h3 className="text-2xl font-bold text-[#003358]">
-                Mr. Asis Kumar
-              </h3>
+              <h3 className="text-2xl font-bold text-[#003358]">K ASIS DAS</h3>
               <p className="text-[#00658d] font-medium text-sm">
-                Founder & Director, Brainstorm Academy
+                Founder & Managing Director, Brainstorm Academy
               </p>
             </div>
 
@@ -263,7 +261,7 @@ export default function AboutPage() {
             {/* ISO Badge */}
             <div className="pt-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#9FC7F0] text-[#003358] border border-[#7FB3E8]">
-                ⭐ ISO 9001:2015 Certified
+                ISO 9001:2015 Certified
               </span>
             </div>
           </div>

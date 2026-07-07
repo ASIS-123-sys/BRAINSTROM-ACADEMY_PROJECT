@@ -56,14 +56,11 @@ export default function Home() {
     transition: "all 0.3s ease",
     boxShadow: "0 4px 12px rgba(0,53,88,0.08)",
   };
-
-  // Notices ticker content
+  //Notices ticker content
   const notices = [
-    "Monthly Test — June 30",
-    "Sunday Special Class",
-    "ADCA Admission Open",
-    "Fee Reminder — June",
-    "Holiday Notice",
+    "Welcome TO BrainStorm Academy",
+    "ISO 9001:2015 Certified",
+    "Berhampur, Odisha",
   ];
 
   type TopScorer = {
@@ -195,7 +192,7 @@ export default function Home() {
               {/* Stats Row */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-2xl">
                 {[
-                  { val: "10+", label: "Years Experience" },
+                  { val: "9+", label: "Years Experience" },
                   { val: "98%", label: "Pass Rate" },
                   { val: "ISO", label: "9001:2015" },
                 ].map((stat, i) => (
@@ -235,8 +232,8 @@ export default function Home() {
       <section className="bg-[#DCE9F9] py-4 flex items-center overflow-hidden z-20 relative border-t border-b border-[#B8D4F0]">
         <div className="pl-6 pr-4 border-r border-[#B8D4F0] flex-shrink-0 z-10 bg-[#DCE9F9]">
           <span className="text-[#003358] font-bold text-xs sm:text-sm tracking-widest uppercase flex items-center gap-1.5">
-            <span>📢</span>
-            <span>Notices:</span>
+            <span></span>
+            <span></span>
           </span>
         </div>
         <div className="flex-1 ticker-container py-1">
@@ -434,7 +431,7 @@ export default function Home() {
               {/* Streams details */}
               <div className="flex flex-wrap gap-1.5 mb-6">
                 {[
-                  "Science (Caring Soul)",
+                  "Science (Coming Soon)",
                   "Commerce (All Subjects)",
                   "Arts (All Subjects)",
                 ].map((s) => (
@@ -665,7 +662,7 @@ export default function Home() {
                 At Brainstorm Academy, we are dedicated to transforming learning
                 into a journey of discovery and success. Strategically situated
                 in Berhampur, Odisha, our academy has been a trusted guide for
-                academic success since 2010. We specialize in building robust
+                academic success since 2017. We specialize in building robust
                 concepts, sharpening technical expertise, and equipping students
                 with the confidence to excel in high school, higher secondary,
                 and IT skill sets.
@@ -706,10 +703,10 @@ export default function Home() {
                   </div>
                   <div>
                     <h5 className="font-bold text-[#003358] text-sm">
-                      Mr. Asis Kumar
+                      K ASIS DAS
                     </h5>
                     <p className="text-xs text-[#111c2d]/80 font-medium">
-                      Founder and Director
+                      Founder and Managing Director
                     </p>
                   </div>
                 </div>
@@ -781,16 +778,16 @@ export default function Home() {
                   </h4>
                   <div className="flex flex-col gap-1">
                     <a
-                      href="tel:+919933825835"
+                      href="tel:+919938828835"
                       className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base"
                     >
-                      +91 99338 25835
+                      +91 9938828835
                     </a>
                     <a
-                      href="tel:+912008548156"
+                      href="tel:+917008546156"
                       className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base"
                     >
-                      +91 20085 48156
+                      +91 7008546156
                     </a>
                   </div>
                 </div>
@@ -837,13 +834,13 @@ export default function Home() {
                       href="mailto:avisdasw4@gmail.com"
                       className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base break-all"
                     >
-                      avisdasw4@gmail.com
+                      asisdas1994@gmail.com
                     </a>
                     <a
                       href="mailto:brainstormdplusacademy@gmail.com"
                       className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base break-all"
                     >
-                      brainstormdplusacademy@gmail.com
+                      brainstormcomputeracademy@gmail.com
                     </a>
                   </div>
                 </div>
