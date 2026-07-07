@@ -25,6 +25,7 @@ const navItems: NavItem[] = [
   { label: "Gallery", href: "/admin/dashboard#gallery", icon: "🖼️" },
   { label: "Fees", href: "/admin/dashboard#fees", icon: "💰" },
   { label: "Scores", href: "/admin/dashboard#scores", icon: "📝" },
+  { label: "Top Scorers", href: "/admin/top-scorers", icon: "🏆" },
   { label: "Settings", href: "/admin/settings", icon: "⚙️" },
 ];
 

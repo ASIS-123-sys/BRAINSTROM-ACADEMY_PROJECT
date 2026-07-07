@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 
@@ -57,6 +57,7 @@ export default function Home() {
     boxShadow: "0 4px 12px rgba(0,53,88,0.08)",
   };
 
+  // Notices ticker content
   const notices = [
     "Monthly Test — June 30",
     "Sunday Special Class",
@@ -65,43 +66,46 @@ export default function Home() {
     "Holiday Notice",
   ];
 
-  const performers = [
-    {
-      name: "Aditya Patra",
-      batch: "Class 12th Science",
-      percentage: "98.2%",
-      rank: "Rank 1",
-      initials: "AP",
-    },
-    {
-      name: "Subhashree Jena",
-      batch: "Class 12th Commerce",
-      percentage: "97.6%",
-      rank: "Rank 2",
-      initials: "SJ",
-    },
-    {
-      name: "Rohan Kumar Sahu",
-      batch: "Class 10th Board",
-      percentage: "96.8%",
-      rank: "Rank 5",
-      initials: "RS",
-    },
-    {
-      name: "Priyanka Maharana",
-      batch: "PGDCA Computer",
-      percentage: "95.5%",
-      rank: "A+ Grade",
-      initials: "PM",
-    },
-    {
-      name: "Sourav K. Mohanty",
-      batch: "Class 10th Board",
-      percentage: "95.2%",
-      rank: "Rank 10",
-      initials: "SM",
-    },
-  ];
+  type TopScorer = {
+    id: string;
+    name: string;
+    batch: string;
+    rank: string;
+    percentage: string;
+    profile_pic_url?: string;
+  };
+
+  const [topScorers, setTopScorers] = useState<TopScorer[]>([]);
+  const [loadingTopScorers, setLoadingTopScorers] = useState(true);
+
+  useEffect(() => {
+    async function fetchTopScorers() {
+      try {
+        const res = await fetch("/api/top-scorers");
+        const json = await res.json();
+        if (json.data) setTopScorers(json.data);
+      } catch {
+        // silently fail — section just stays empty
+      } finally {
+        setLoadingTopScorers(false);
+      }
+    }
+
+    fetchTopScorers();
+  }, []);
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+
+  const performers = topScorers.map((student) => ({
+    ...student,
+    initials: getInitials(student.name),
+  }));
 
   return (
     <div
@@ -594,43 +598,57 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {performers.map((student) => (
-              <div
-                key={student.name}
-                style={cardStyle}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className="p-6 flex flex-col items-center text-center hover:border-[#2dbcfe]"
-              >
-                {/* Initials circle in cyan */}
-                <div className="w-16 h-16 rounded-full bg-[#F7FAFD] border border-[#D6E4F5] text-[#00658d] flex items-center justify-center mb-4 font-bold text-lg">
-                  {student.initials}
+          {loadingTopScorers && (
+            <div className="text-center py-12">
+              <div className="w-8 h-8 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+            </div>
+          )}
+
+          {!loadingTopScorers && performers.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-[#111c2d]/70">Top scorers coming soon.</p>
+            </div>
+          )}
+
+          {!loadingTopScorers && performers.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {performers.map((student) => (
+                <div
+                  key={student.id}
+                  style={cardStyle}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  className="p-6 flex flex-col items-center text-center hover:border-[#2dbcfe]"
+                >
+                  {/* Initials circle in cyan */}
+                  <div className="w-16 h-16 rounded-full bg-[#F7FAFD] border border-[#D6E4F5] text-[#00658d] flex items-center justify-center mb-4 font-bold text-lg">
+                    {student.initials}
+                  </div>
+
+                  <h4 className="font-bold text-[#003358] text-base leading-tight mb-1">
+                    {student.name}
+                  </h4>
+                  <p className="text-[10px] text-[#111c2d]/80 uppercase font-bold tracking-wider mb-4">
+                    {student.batch}
+                  </p>
+
+                  <div className="border-t border-[#D6E4F5] w-full my-3"></div>
+
+                  {/* Big percentage */}
+                  <div className="text-3xl font-bold text-[#2dbcfe] tracking-tight my-2">
+                    {student.percentage}
+                  </div>
+
+                  {/* Rank badge */}
+                  <div className="mt-2">
+                    <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#F7FAFD] text-[#003358] border border-[#B8D4F0] tracking-wider">
+                      {student.rank}
+                    </span>
+                  </div>
                 </div>
-
-                <h4 className="font-bold text-[#003358] text-base leading-tight mb-1">
-                  {student.name}
-                </h4>
-                <p className="text-[10px] text-[#111c2d]/80 uppercase font-bold tracking-wider mb-4">
-                  {student.batch}
-                </p>
-
-                <div className="border-t border-[#D6E4F5] w-full my-3"></div>
-
-                {/* Big percentage */}
-                <div className="text-3xl font-bold text-[#2dbcfe] tracking-tight my-2">
-                  {student.percentage}
-                </div>
-
-                {/* Rank badge */}
-                <div className="mt-2">
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#F7FAFD] text-[#003358] border border-[#B8D4F0] tracking-wider">
-                    {student.rank}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
