@@ -70,7 +70,7 @@ type StreamCard = {
 const streams: StreamCard[] = [
   {
     stream: "Science",
-    tagline: "Caring Soul stream",
+    tagline: "Coming soon",
     subjects: ["Physics", "Chemistry", "Mathematics", "Biology"],
   },
   {
