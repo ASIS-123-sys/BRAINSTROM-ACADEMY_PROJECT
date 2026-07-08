@@ -16,15 +16,15 @@ type GalleryItem = {
 };
 
 const galleryItems: GalleryItem[] = [
-  { id: 1, title: "Annual Function", category: "Events", src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" },
-  { id: 2, title: "Sports Day", category: "Events", src: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600" },
-  { id: 3, title: "Science Exhibition", category: "Events", src: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600" },
-  { id: 4, title: "Computer Lab", category: "Classes", src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600" },
-  { id: 5, title: "Maths Class", category: "Classes", src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600" },
-  { id: 6, title: "Study Session", category: "Classes", src: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600" },
-  { id: 7, title: "Toppers Felicitation", category: "Achievements", src: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600" },
-  { id: 8, title: "Certificate Distribution", category: "Achievements", src: "https://images.unsplash.com/photo-1627556704302-624286467c65?w=600" },
-  { id: 9, title: "Trophy Ceremony", category: "Achievements", src: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600" },
+  { id: 1, title: "Functions", category: "Events", src: "/images/celebration .jpeg" },
+  { id: 2, title: "Festival Day", category: "Events", src: "/images/celebration2.jpeg" },
+  { id: 3, title: "National Festival Days", category: "Events", src: "/images/cele.jpeg" },
+  { id: 4, title: "Computer Lab", category: "Classes", src: "/images/comp.jpeg" },
+  { id: 5, title: "Classes", category: "Classes", src: "/images/labs.jpeg" },
+  { id: 6, title: "Study Session", category: "Classes", src: "/images/study.jpeg" },
+  { id: 7, title: "Certificate Distribution", category: "Achievements", src: "/images/certification.jpeg" },
+  { id: 8, title: "Exam and Tests", category: "Achievements", src: "/images/exam.jpeg" },
+  { id: 9, title: "Office room ", category: "Achievements", src: "/images/office .jpeg" },
 ];
 
 const categories = ["All", "Events", "Classes", "Achievements"];
