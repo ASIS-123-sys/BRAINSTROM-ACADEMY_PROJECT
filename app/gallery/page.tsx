@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Poppins } from "next/font/google";
+import { getGallery } from "@/lib/api/gallery";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -9,7 +10,7 @@ const poppins = Poppins({
 });
 
 type GalleryItem = {
-  id: number;
+  id: number | string;
   title: string;
   category: string;
   src: string;
@@ -29,10 +30,69 @@ const galleryItems: GalleryItem[] = [
 
 const categories = ["All", "Events", "Classes", "Achievements"];
 
+function getCategoryFromEventName(eventName: string): string {
+  const name = eventName.toLowerCase();
+  if (
+    name.includes("class") ||
+    name.includes("lab") ||
+    name.includes("study") ||
+    name.includes("lecture") ||
+    name.includes("session") ||
+    name.includes("course") ||
+    name.includes("learn") ||
+    name.includes("teach") ||
+    name.includes("student") ||
+    name.includes("batch")
+  ) {
+    return "Classes";
+  }
+  if (
+    name.includes("cert") ||
+    name.includes("achieve") ||
+    name.includes("award") ||
+    name.includes("exam") ||
+    name.includes("test") ||
+    name.includes("score") ||
+    name.includes("win") ||
+    name.includes("first") ||
+    name.includes("rank") ||
+    name.includes("result") ||
+    name.includes("topper") ||
+    name.includes("office")
+  ) {
+    return "Achievements";
+  }
+  return "Events";
+}
+
 export default function PhotoGallery() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [dbItems, setDbItems] = useState<GalleryItem[]>([]);
   const scrollRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Load database images
+  useEffect(() => {
+    async function loadDbImages() {
+      try {
+        const { data, error } = await getGallery();
+        if (!error && data) {
+          const items: GalleryItem[] = data.map((img: any) => ({
+            id: img.id,
+            title: img.event_name,
+            category: getCategoryFromEventName(img.event_name),
+            src: img.image_url,
+          }));
+          setDbItems(items);
+        }
+      } catch (err) {
+        console.error("Error loading gallery from DB:", err);
+      }
+    }
+    loadDbImages();
+  }, []);
+
+  const combinedItems = [...galleryItems, ...dbItems];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,7 +112,7 @@ export default function PhotoGallery() {
     });
 
     return () => observer.disconnect();
-  }, [activeFilter]); // Re-run when filter changes to animate new items
+  }, [activeFilter, dbItems]); // Re-run when filter or dbItems change to animate items
 
   const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !scrollRef.current.includes(el)) {
@@ -61,8 +121,8 @@ export default function PhotoGallery() {
   };
 
   const filteredItems = activeFilter === "All"
-    ? galleryItems
-    : galleryItems.filter(item => item.category === activeFilter);
+    ? combinedItems
+    : combinedItems.filter(item => item.category === activeFilter);
 
   const cardStyle = {
     background: "#B8D9F5",
