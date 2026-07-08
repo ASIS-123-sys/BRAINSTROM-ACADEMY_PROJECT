@@ -711,233 +711,29 @@ export default function Home() {
       </section>
 
       {/* SECTION 6 — CONTACT */}
-      <section className="py-20 bg-[#111c2d] relative overflow-hidden section-animate">
+      <section className="py-20 bg-[#F2F7FC] relative overflow-hidden section-animate">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#ffffff]">
+          <div
+            style={{
+              background: "#B8D9F5",
+              border: "1px solid #7FB3E8",
+              borderRadius: "20px",
+              boxShadow: "0 4px 12px rgba(0,53,88,0.08)",
+            }}
+            className="max-w-2xl mx-auto text-center px-8 py-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-[#003358] mb-3">
               Get In Touch
             </h2>
-            <p className="mt-4 text-[#ffffff]/70 text-sm sm:text-base font-medium">
-              Reach out to our team or navigate directly to our office campus.
+            <p className="text-[#42576E] text-sm sm:text-base font-medium mb-8">
+              Visit our contact page for phone numbers, emails and directions
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left Column — 3 stacked cards */}
-            <div className="lg:col-span-6 flex flex-col gap-6">
-              {/* Phone card */}
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "16px",
-                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#2dbcfe";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                }}
-                className="p-6 flex items-start gap-4 flex-1 hover:border-[#2dbcfe]"
-              >
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-base mb-1">
-                    Phone Numbers
-                  </h4>
-                  <div className="flex flex-col gap-1">
-                    <a
-                      href="tel:+919933825835"
-                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base"
-                    >
-                      +91 99338 25835
-                    </a>
-                    <a
-                      href="tel:+912008548156"
-                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base"
-                    >
-                      +91 20085 48156
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Email card */}
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "16px",
-                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#2dbcfe";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                }}
-                className="p-6 flex items-start gap-4 flex-1 hover:border-[#2dbcfe]"
-              >
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-base mb-1">
-                    Email Addresses
-                  </h4>
-                  <div className="flex flex-col gap-1">
-                    <a
-                      href="mailto:avisdasw4@gmail.com"
-                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base break-all"
-                    >
-                      avisdasw4@gmail.com
-                    </a>
-                    <a
-                      href="mailto:brainstormdplusacademy@gmail.com"
-                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base break-all"
-                    >
-                      brainstormdplusacademy@gmail.com
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Location card */}
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "16px",
-                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#2dbcfe";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                }}
-                className="p-6 flex items-start gap-4 flex-1 hover:border-[#2dbcfe]"
-              >
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-base mb-1">
-                    Location
-                  </h4>
-                  <span className="text-sm text-[#ffffff]/70 font-semibold">
-                    Near Radio Station, Berhampur, Odisha
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column — Large glass box with location pin and button */}
-            <div className="lg:col-span-6 flex">
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "16px",
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                }}
-                className="p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group w-full min-h-[350px]"
-              >
-                {/* Visual grid overlay */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_28px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_80%,transparent_100%)] pointer-events-none"></div>
-
-                <div className="relative z-10 flex flex-col items-center">
-                  <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
-                    <svg
-                      className="w-8 h-8"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z"
-                      />
-                    </svg>
-                  </div>
-
-                  <h4 className="font-extrabold text-white text-lg tracking-wide">
-                    Interactive Campus Map
-                  </h4>
-                  <p className="text-sm text-[#ffffff]/70 mt-2 max-w-xs leading-relaxed font-medium">
-                    Brainstorm Academy, Radio Station Road, Berhampur, Odisha,
-                    India
-                  </p>
-
-                  <div className="mt-8">
-                    <a
-                      href="https://maps.google.com/?q=Brainstorm+Academy+Radio+Station+Berhampur+Odisha"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block"
-                    >
-                      <button className="px-8 py-4 rounded-full bg-[#2dbcfe] text-[#003358] font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:bg-[#20a8e8] hover:scale-105 active:scale-98 shadow-md cursor-pointer">
-                        GET DIRECTIONS
-                      </button>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#2dbcfe] text-[#003358] font-bold text-sm tracking-wide hover:bg-[#20a8e8] hover:scale-105 active:scale-95 transition-all duration-200 shadow-md"
+            >
+              Contact Us →
+            </Link>
           </div>
         </div>
       </section>

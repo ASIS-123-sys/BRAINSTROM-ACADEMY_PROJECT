@@ -104,147 +104,148 @@ export default function ContactPage() {
 
       {/* Section 2 — Contact Grid */}
       <section className="max-w-6xl mx-auto px-6 mb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          {/* Left Column — 3 Stacked Cards */}
-          <div className="space-y-6 flex flex-col justify-between">
-            {/* Phone Card */}
-            <div
-              ref={addToRefs}
-              style={cardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
-            >
-              <div className="text-2xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-[#003358]">
-                  Phone Numbers
-                </h3>
-                <p className="text-xs text-[#42576E] font-medium">
-                  Call us directly during office hours
-                </p>
-                <div className="flex flex-col gap-1 pt-2">
-                  {(settings?.phone1 ? [settings.phone1] : [])
-                    .concat(settings?.phone2 ? [settings.phone2] : [])
-                    .map((phone) => (
-                      <a
-                        key={phone}
-                        href={`tel:${phone.replace(/\s+/g, "")}`}
-                        className="text-[#00658d] font-semibold hover:underline w-fit"
-                      >
-                        {phone}
-                      </a>
-                    ))}
-                </div>
-              </div>
+        {/* Top row: Phone + Email */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Phone Card */}
+          <div
+            ref={addToRefs}
+            style={cardStyle}
+            className="opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
+          >
+            <div className="text-2xl text-[#2dbcfe] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl flex-shrink-0">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                />
+              </svg>
             </div>
-
-            {/* Email Card */}
-            <div
-              ref={addToRefs}
-              style={cardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
-            >
-              <div className="text-2xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-[#003358]">
-                  Email Addresses
-                </h3>
-                <p className="text-xs text-[#42576E] font-medium">
-                  Send us your queries anytime
-                </p>
-                <div className="flex flex-col gap-1 pt-2">
-                  {(settings?.email1 ? [settings.email1] : [])
-                    .concat(settings?.email2 ? [settings.email2] : [])
-                    .map((email) => (
-                      <a
-                        key={email}
-                        href={`mailto:${email}`}
-                        className="text-[#00658d] font-semibold hover:underline w-fit break-all"
-                      >
-                        {email}
-                      </a>
-                    ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Location Card */}
-            <div
-              ref={addToRefs}
-              style={cardStyle}
-              className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
-            >
-              <div className="text-2xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-[#003358]">
-                  Institute Location
-                </h3>
-                <p className="text-xs text-[#42576E] font-medium">
-                  Come visit us
-                </p>
-                <p className="text-[#42576E] font-semibold pt-2 text-sm leading-relaxed">
-                  {settings?.address ||
-                    "Near Radio Station, Berhampur, Odisha, India"}
-                </p>
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-[#003358]">
+                Phone Numbers
+              </h3>
+              <p className="text-xs text-[#42576E] font-medium">
+                Call us directly during office hours
+              </p>
+              <div className="flex flex-col gap-1 pt-2">
+                {(settings?.phone1 ? [settings.phone1] : [])
+                  .concat(settings?.phone2 ? [settings.phone2] : [])
+                  .map((phone) => (
+                    <a
+                      key={phone}
+                      href={`tel:${phone.replace(/\s+/g, "")}`}
+                      className="text-[#00658d] font-semibold hover:underline w-fit"
+                    >
+                      {phone}
+                    </a>
+                  ))}
               </div>
             </div>
           </div>
 
-          {/* Right Column — Map Card */}
+          {/* Email Card */}
           <div
             ref={addToRefs}
             style={cardStyle}
-            className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out p-6 md:p-8 flex flex-col justify-between hover:border-[#2dbcfe] hover:shadow-md h-full"
+            className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
           >
-            <div className="flex flex-col items-center text-center mb-6">
-              <div className="text-3xl text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8] p-4 rounded-full mb-3 shadow-md">
+            <div className="text-2xl text-[#2dbcfe] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl flex-shrink-0">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-[#003358]">
+                Email Addresses
+              </h3>
+              <p className="text-xs text-[#42576E] font-medium">
+                Send us your queries anytime
+              </p>
+              <div className="flex flex-col gap-1 pt-2">
+                {(settings?.email1 ? [settings.email1] : [])
+                  .concat(settings?.email2 ? [settings.email2] : [])
+                  .map((email) => (
+                    <a
+                      key={email}
+                      href={`mailto:${email}`}
+                      className="text-[#00658d] font-semibold hover:underline w-fit break-all"
+                    >
+                      {email}
+                    </a>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom row: Location + Map */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Location Card */}
+          <div
+            ref={addToRefs}
+            style={cardStyle}
+            className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out p-6 flex items-start gap-4 hover:border-[#2dbcfe] hover:shadow-md"
+          >
+            <div className="text-2xl text-[#2dbcfe] bg-[#9FC7F0] border border-[#7FB3E8] p-3 rounded-xl flex-shrink-0">
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-[#003358]">
+                Institute Location
+              </h3>
+              <p className="text-xs text-[#42576E] font-medium">
+                Come visit us
+              </p>
+              <p className="text-[#42576E] font-semibold pt-2 text-sm leading-relaxed">
+                {settings?.address ||
+                  "Near Radio Station, Berhampur, Odisha, India"}
+              </p>
+            </div>
+          </div>
+
+          {/* Google Map Card */}
+          <div
+            ref={addToRefs}
+            style={cardStyle}
+            className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out p-6 flex flex-col justify-between hover:border-[#2dbcfe] hover:shadow-md"
+          >
+            <div className="flex flex-col items-center text-center mb-4">
+              <div className="text-[#2dbcfe] bg-[#9FC7F0] border border-[#7FB3E8] p-4 rounded-full mb-3 shadow-md">
                 <svg
                   className="w-8 h-8"
                   fill="none"
@@ -265,25 +266,23 @@ export default function ContactPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-[#003358]">
+              <h3 className="text-xl font-bold text-[#003358]">
                 Brainstorm Academy
               </h3>
               <p className="text-sm text-[#42576E] mt-1">
                 {settings?.address ||
                   "Near Radio Station, Berhampur, Odisha, India"}
               </p>
-
               <a
                 href="https://maps.google.com/?q=Brainstorm+Academy+Radio+Station+Berhampur+Odisha"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 px-6 py-2.5 bg-[#2dbcfe] text-[#003358] font-bold rounded-full text-xs uppercase tracking-wider hover:opacity-90 shadow-md transition-all duration-300"
+                className="mt-4 px-6 py-2.5 bg-[#2dbcfe] text-[#003358] font-bold rounded-full text-xs uppercase tracking-wider hover:opacity-90 shadow-md transition-all duration-300"
               >
                 Get Directions
               </a>
             </div>
-
-            <div className="w-full relative overflow-hidden rounded-xl border border-[#7FB3E8] grow min-h-62.5 lg:min-h-0 flex items-stretch">
+            <div className="w-full relative overflow-hidden rounded-xl border border-[#7FB3E8] grow min-h-[200px] flex items-stretch">
               <AcademyMap />
             </div>
           </div>
