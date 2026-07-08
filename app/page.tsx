@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 
@@ -56,52 +56,53 @@ export default function Home() {
     transition: "all 0.3s ease",
     boxShadow: "0 4px 12px rgba(0,53,88,0.08)",
   };
-
+  //Notices ticker content
   const notices = [
-    "Monthly Test — June 30",
-    "Sunday Special Class",
-    "ADCA Admission Open",
-    "Fee Reminder — June",
-    "Holiday Notice",
+    "Welcome TO BrainStorm Academy",
+    "ISO 9001:2015 Certified",
+    "Berhampur, Odisha",
   ];
 
-  const performers = [
-    {
-      name: "Aditya Patra",
-      batch: "Class 12th Science",
-      percentage: "98.2%",
-      rank: "Rank 1",
-      initials: "AP",
-    },
-    {
-      name: "Subhashree Jena",
-      batch: "Class 12th Commerce",
-      percentage: "97.6%",
-      rank: "Rank 2",
-      initials: "SJ",
-    },
-    {
-      name: "Rohan Kumar Sahu",
-      batch: "Class 10th Board",
-      percentage: "96.8%",
-      rank: "Rank 5",
-      initials: "RS",
-    },
-    {
-      name: "Priyanka Maharana",
-      batch: "PGDCA Computer",
-      percentage: "95.5%",
-      rank: "A+ Grade",
-      initials: "PM",
-    },
-    {
-      name: "Sourav K. Mohanty",
-      batch: "Class 10th Board",
-      percentage: "95.2%",
-      rank: "Rank 10",
-      initials: "SM",
-    },
-  ];
+  type TopScorer = {
+    id: string;
+    name: string;
+    batch: string;
+    rank: string;
+    percentage: string;
+    profile_pic_url?: string;
+  };
+
+  const [topScorers, setTopScorers] = useState<TopScorer[]>([]);
+  const [loadingTopScorers, setLoadingTopScorers] = useState(true);
+
+  useEffect(() => {
+    async function fetchTopScorers() {
+      try {
+        const res = await fetch("/api/top-scorers");
+        const json = await res.json();
+        if (json.data) setTopScorers(json.data);
+      } catch {
+        // silently fail — section just stays empty
+      } finally {
+        setLoadingTopScorers(false);
+      }
+    }
+
+    fetchTopScorers();
+  }, []);
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+
+  const performers = topScorers.map((student) => ({
+    ...student,
+    initials: getInitials(student.name),
+  }));
 
   return (
     <div
@@ -191,7 +192,7 @@ export default function Home() {
               {/* Stats Row */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-2xl">
                 {[
-                  { val: "10+", label: "Years Experience" },
+                  { val: "9+", label: "Years Experience" },
                   { val: "98%", label: "Pass Rate" },
                   { val: "ISO", label: "9001:2015" },
                 ].map((stat, i) => (
@@ -231,8 +232,8 @@ export default function Home() {
       <section className="bg-[#DCE9F9] py-4 flex items-center overflow-hidden z-20 relative border-t border-b border-[#B8D4F0]">
         <div className="pl-6 pr-4 border-r border-[#B8D4F0] flex-shrink-0 z-10 bg-[#DCE9F9]">
           <span className="text-[#003358] font-bold text-xs sm:text-sm tracking-widest uppercase flex items-center gap-1.5">
-            <span>📢</span>
-            <span>Notices:</span>
+            <span></span>
+            <span></span>
           </span>
         </div>
         <div className="flex-1 ticker-container py-1">
@@ -430,7 +431,7 @@ export default function Home() {
               {/* Streams details */}
               <div className="flex flex-wrap gap-1.5 mb-6">
                 {[
-                  "Science (Caring Soul)",
+                  "Science (Coming Soon)",
                   "Commerce (All Subjects)",
                   "Arts (All Subjects)",
                 ].map((s) => (
@@ -594,43 +595,57 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {performers.map((student) => (
-              <div
-                key={student.name}
-                style={cardStyle}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className="p-6 flex flex-col items-center text-center hover:border-[#2dbcfe]"
-              >
-                {/* Initials circle in cyan */}
-                <div className="w-16 h-16 rounded-full bg-[#F7FAFD] border border-[#D6E4F5] text-[#00658d] flex items-center justify-center mb-4 font-bold text-lg">
-                  {student.initials}
+          {loadingTopScorers && (
+            <div className="text-center py-12">
+              <div className="w-8 h-8 border-4 border-[#2dbcfe]/30 border-t-[#2dbcfe] rounded-full animate-spin mx-auto" />
+            </div>
+          )}
+
+          {!loadingTopScorers && performers.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-[#111c2d]/70">Top scorers coming soon.</p>
+            </div>
+          )}
+
+          {!loadingTopScorers && performers.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {performers.map((student) => (
+                <div
+                  key={student.id}
+                  style={cardStyle}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  className="p-6 flex flex-col items-center text-center hover:border-[#2dbcfe]"
+                >
+                  {/* Initials circle in cyan */}
+                  <div className="w-16 h-16 rounded-full bg-[#F7FAFD] border border-[#D6E4F5] text-[#00658d] flex items-center justify-center mb-4 font-bold text-lg">
+                    {student.initials}
+                  </div>
+
+                  <h4 className="font-bold text-[#003358] text-base leading-tight mb-1">
+                    {student.name}
+                  </h4>
+                  <p className="text-[10px] text-[#111c2d]/80 uppercase font-bold tracking-wider mb-4">
+                    {student.batch}
+                  </p>
+
+                  <div className="border-t border-[#D6E4F5] w-full my-3"></div>
+
+                  {/* Big percentage */}
+                  <div className="text-3xl font-bold text-[#2dbcfe] tracking-tight my-2">
+                    {student.percentage}
+                  </div>
+
+                  {/* Rank badge */}
+                  <div className="mt-2">
+                    <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#F7FAFD] text-[#003358] border border-[#B8D4F0] tracking-wider">
+                      {student.rank}
+                    </span>
+                  </div>
                 </div>
-
-                <h4 className="font-bold text-[#003358] text-base leading-tight mb-1">
-                  {student.name}
-                </h4>
-                <p className="text-[10px] text-[#111c2d]/80 uppercase font-bold tracking-wider mb-4">
-                  {student.batch}
-                </p>
-
-                <div className="border-t border-[#D6E4F5] w-full my-3"></div>
-
-                {/* Big percentage */}
-                <div className="text-3xl font-bold text-[#2dbcfe] tracking-tight my-2">
-                  {student.percentage}
-                </div>
-
-                {/* Rank badge */}
-                <div className="mt-2">
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#F7FAFD] text-[#003358] border border-[#B8D4F0] tracking-wider">
-                    {student.rank}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -647,7 +662,7 @@ export default function Home() {
                 At Brainstorm Academy, we are dedicated to transforming learning
                 into a journey of discovery and success. Strategically situated
                 in Berhampur, Odisha, our academy has been a trusted guide for
-                academic success since 2010. We specialize in building robust
+                academic success since 2017. We specialize in building robust
                 concepts, sharpening technical expertise, and equipping students
                 with the confidence to excel in high school, higher secondary,
                 and IT skill sets.
@@ -688,10 +703,10 @@ export default function Home() {
                   </div>
                   <div>
                     <h5 className="font-bold text-[#003358] text-sm">
-                      Mr. Asis Kumar
+                      K ASIS DAS
                     </h5>
                     <p className="text-xs text-[#111c2d]/80 font-medium">
-                      Founder and Director
+                      Founder and Managing Director
                     </p>
                   </div>
                 </div>
@@ -728,12 +743,233 @@ export default function Home() {
             <p className="text-[#42576E] text-sm sm:text-base font-medium mb-8">
               Visit our contact page for phone numbers, emails and directions
             </p>
+<<<<<<< HEAD
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#2dbcfe] text-[#003358] font-bold text-sm tracking-wide hover:bg-[#20a8e8] hover:scale-105 active:scale-95 transition-all duration-200 shadow-md"
             >
               Contact Us →
             </Link>
+=======
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Left Column — 3 stacked cards */}
+            <div className="lg:col-span-6 flex flex-col gap-6">
+              {/* Phone card */}
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "16px",
+                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "#2dbcfe";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                }}
+                className="p-6 flex items-start gap-4 flex-1 hover:border-[#2dbcfe]"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-base mb-1">
+                    Phone Numbers
+                  </h4>
+                  <div className="flex flex-col gap-1">
+                    <a
+                      href="tel:+919938828835"
+                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base"
+                    >
+                      +91 9938828835
+                    </a>
+                    <a
+                      href="tel:+917008546156"
+                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base"
+                    >
+                      +91 7008546156
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email card */}
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "16px",
+                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "#2dbcfe";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                }}
+                className="p-6 flex items-start gap-4 flex-1 hover:border-[#2dbcfe]"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-base mb-1">
+                    Email Addresses
+                  </h4>
+                  <div className="flex flex-col gap-1">
+                    <a
+                      href="mailto:avisdasw4@gmail.com"
+                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base break-all"
+                    >
+                      asisdas1994@gmail.com
+                    </a>
+                    <a
+                      href="mailto:brainstormdplusacademy@gmail.com"
+                      className="text-[#2dbcfe] hover:underline font-semibold text-sm sm:text-base break-all"
+                    >
+                      brainstormcomputeracademy@gmail.com
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Location card */}
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "16px",
+                  transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "#2dbcfe";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                }}
+                className="p-6 flex items-start gap-4 flex-1 hover:border-[#2dbcfe]"
+              >
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-base mb-1">
+                    Location
+                  </h4>
+                  <span className="text-sm text-[#ffffff]/70 font-semibold">
+                    Near Radio Station, Berhampur, Odisha
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column — Large glass box with location pin and button */}
+            <div className="lg:col-span-6 flex">
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "16px",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                }}
+                className="p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group w-full min-h-[350px]"
+              >
+                {/* Visual grid overlay */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_28px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_80%,transparent_100%)] pointer-events-none"></div>
+
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 text-[#2dbcfe] flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                    <svg
+                      className="w-8 h-8"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z"
+                      />
+                    </svg>
+                  </div>
+
+                  <h4 className="font-extrabold text-white text-lg tracking-wide">
+                    Interactive Campus Map
+                  </h4>
+                  <p className="text-sm text-[#ffffff]/70 mt-2 max-w-xs leading-relaxed font-medium">
+                    Brainstorm Academy, Radio Station Road, Berhampur, Odisha,
+                    India
+                  </p>
+
+                  <div className="mt-8">
+                    <a
+                      href="https://maps.google.com/?q=Brainstorm+Academy+Radio+Station+Berhampur+Odisha"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block"
+                    >
+                      <button className="px-8 py-4 rounded-full bg-[#2dbcfe] text-[#003358] font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:bg-[#20a8e8] hover:scale-105 active:scale-98 shadow-md cursor-pointer">
+                        GET DIRECTIONS
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+>>>>>>> ddd2f9e82951259cc2dcb6fcfda7865c76e0de48
           </div>
         </div>
       </section>

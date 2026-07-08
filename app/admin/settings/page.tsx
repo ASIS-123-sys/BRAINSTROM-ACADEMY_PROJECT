@@ -39,23 +39,25 @@ export default function AdminSettingsPage() {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Updated to look good on a light background
   const glassCardStyle = {
-    background: "rgba(255,255,255,0.05)",
+    background: "rgba(255, 255, 255, 0.8)",
     backdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    border: "1px solid rgba(0, 0, 0, 0.08)",
     borderRadius: "16px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.02)",
   };
 
+  // Updated to have dark text and a visible border
   const inputStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    background: "#FFFFFF",
+    border: "1px solid rgba(0, 0, 0, 0.15)",
     borderRadius: "10px",
-    color: "#F8FAFC",
+    color: "#0F172A", // Dark text so typing is visible
     outline: "none",
     width: "100%",
     padding: "10px 14px",
     fontSize: "14px",
-    
     transition: "border-color 0.2s",
   };
 
@@ -173,9 +175,11 @@ export default function AdminSettingsPage() {
   ];
 
   return (
-    <div className={`min-h-screen bg-[#0F172A] text-[#F8FAFC] ${poppins.className}`}>
+    // Changed overall text color to a dark slate (#0F172A) for better visibility
+    <div
+      className={`min-h-screen bg-[#f7fafd] text-[#0F172A] ${poppins.className}`}
+    >
       <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
-
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -210,7 +214,7 @@ export default function AdminSettingsPage() {
                 className="p-6 space-y-5"
               >
                 {/* Group Header */}
-                <div className="flex items-center gap-2 pb-3 border-b border-white/5">
+                <div className="flex items-center gap-2 pb-3 border-b border-black/5">
                   <span className="text-lg">{group.icon}</span>
                   <h2 className="text-sm font-bold text-[#003358] uppercase tracking-widest">
                     {group.title}
@@ -238,8 +242,13 @@ export default function AdminSettingsPage() {
                         value={settings[field.name as keyof Settings]}
                         onChange={handleChange}
                         style={inputStyle}
-                        onFocus={(e) => (e.currentTarget.style.borderColor = "#06B6D4")}
-                        onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+                        onFocus={(e) =>
+                          (e.currentTarget.style.borderColor = "#06B6D4")
+                        }
+                        onBlur={(e) =>
+                          (e.currentTarget.style.borderColor =
+                            "rgba(0,0,0,0.15)")
+                        }
                       />
                     </div>
                   ))}
@@ -249,7 +258,7 @@ export default function AdminSettingsPage() {
 
             {/* About Text — full-width card */}
             <div style={glassCardStyle} className="p-6 space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-white/5">
+              <div className="flex items-center gap-2 pb-3 border-b border-black/5">
                 <span className="text-lg">📝</span>
                 <h2 className="text-sm font-bold text-[#003358] uppercase tracking-widest">
                   About Text
@@ -270,21 +279,25 @@ export default function AdminSettingsPage() {
                   value={settings.about_text}
                   onChange={handleChange}
                   style={{ ...inputStyle, resize: "vertical" }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "#06B6D4")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+                  onFocus={(e) =>
+                    (e.currentTarget.style.borderColor = "#06B6D4")
+                  }
+                  onBlur={(e) =>
+                    (e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)")
+                  }
                 />
               </div>
             </div>
 
-            {/* Status Messages */}
+            {/* Status Messages - Updated to be readable on light background */}
             {successMsg && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-semibold">
+              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-green-100 border border-green-200 text-green-800 text-sm font-semibold">
                 <span>✅</span>
                 {successMsg}
               </div>
             )}
             {errorMsg && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold">
+              <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-red-100 border border-red-200 text-red-800 text-sm font-semibold">
                 <span>❌</span>
                 {errorMsg}
               </div>

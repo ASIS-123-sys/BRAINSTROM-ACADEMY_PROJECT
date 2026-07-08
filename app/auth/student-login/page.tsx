@@ -57,27 +57,32 @@ export default function StudentLoginPage() {
   }
 
   async function handleSendOTP() {
-    if (!otpEmail) {
+    if (!enrollmentId) {
       setState({
         loading: false,
-        error: "Please enter your email",
+        error: "Please enter your Enrollment ID",
         success: "",
       });
       return;
     }
+
+    // OTP always goes to the academy support email
+    const SUPPORT_EMAIL = "brainstormcomputeracademy@gmail.com";
+
     setState({ loading: true, error: "", success: "" });
-    const { error } = await sendOTP(otpEmail);
+    const { error } = await sendOTP(SUPPORT_EMAIL);
     if (error) {
       setState({
         loading: false,
-        error: "Could not send OTP. Check your email and try again.",
+        error: "Could not send OTP. Try again.",
         success: "",
       });
     } else {
+      setOtpEmail(SUPPORT_EMAIL);
       setState({
         loading: false,
         error: "",
-        success: "OTP sent to your email",
+        success: "OTP sent to academy email. Contact admin to get the code.",
       });
       setScreen("otp");
     }
@@ -212,57 +217,51 @@ export default function StudentLoginPage() {
 
           {/* FORGOT PASSWORD SCREEN */}
           {screen === "forgot" && (
-            <div className="space-y-6">
-              <div className="text-center space-y-2">
-                <div className="w-16 h-16 bg-[#F59E0B]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#F59E0B]/20">
-                  <span className="text-3xl">🔑</span>
-                </div>
-                <h1 className="text-2xl font-bold text-[#F8FAFC] tracking-tight">
-                  Reset Password
-                </h1>
-                <p className="text-sm text-[#94A3B8]">
-                  Enter the email linked to your student account
-                </p>
-              </div>
+            <div>
+              <h1>Forgot Password</h1>
+              <p style={{ color: "#94A3B8", fontSize: 14, marginBottom: 16 }}>
+                Enter your Enrollment ID. OTP will be sent to the academy email
+                to reset your password.
+              </p>
 
-              <div className="space-y-4">
-                <input
-                  type="email"
-                  value={otpEmail}
-                  onChange={(e) => setOtpEmail(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendOTP()}
-                  placeholder="Enter your email"
-                  className={inputClass}
-                />
-              </div>
+              <input
+                type="text"
+                value={enrollmentId}
+                onChange={(e) => setEnrollmentId(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendOTP()}
+                placeholder="Enter your Enrollment ID"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  marginBottom: 12,
+                  padding: 8,
+                }}
+              />
 
-              {state.error && (
-                <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs px-3 py-2 rounded-lg text-center font-medium">
-                  {state.error}
-                </div>
-              )}
+              {state.error && <p style={{ color: "red" }}>{state.error}</p>}
 
-              <div className="space-y-4 pt-2">
-                <button
-                  onClick={handleSendOTP}
-                  disabled={state.loading}
-                  className={buttonClass}
-                >
-                  {state.loading ? "Sending OTP..." : "Send OTP"}
-                </button>
+              <button
+                onClick={handleSendOTP}
+                disabled={state.loading}
+                style={{ width: "100%", padding: 10, marginBottom: 12 }}
+              >
+                {state.loading ? "Sending..." : "Send OTP"}
+              </button>
 
-                <div className="text-center">
-                  <button
-                    onClick={() => {
-                      setScreen("login");
-                      setState({ loading: false, error: "", success: "" });
-                    }}
-                    className="text-xs font-semibold text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
-                  >
-                    ← Back to Login
-                  </button>
-                </div>
-              </div>
+              <button
+                onClick={() => {
+                  setScreen("login");
+                  setState({ loading: false, error: "", success: "" });
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "blue",
+                  cursor: "pointer",
+                }}
+              >
+                Back to Login
+              </button>
             </div>
           )}
 
@@ -341,7 +340,6 @@ export default function StudentLoginPage() {
         </div>
 
         {/* Bottom Text */}
-        
       </div>
     </div>
   );

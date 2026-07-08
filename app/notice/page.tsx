@@ -1,195 +1,99 @@
 "use client";
-
-import React, { useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
+import { createClient } from "@/lib/supabase";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const notices = [
-  {
-    id: 1,
-    title: "Monthly Test scheduled for June 30",
-    description: "All students of Class 10 and 12 must appear. Syllabus covers full portion.",
-    date: "June 28, 2025",
-    isLatest: true,
-  },
-  {
-    id: 2,
-    title: "Sunday Special Class this weekend",
-    description: "Extra doubt clearing session for Science students.",
-    date: "June 25, 2025",
-    isLatest: false,
-  },
-  {
-    id: 3,
-    title: "ADCA Admission Open",
-    description: "Admission for new batch starting July 2025. Limited seats available.",
-    date: "June 22, 2025",
-    isLatest: false,
-  },
-  {
-    id: 4,
-    title: "Fee Reminder for June month",
-    description: "Please clear dues before June 30 to avoid late charges.",
-    date: "June 20, 2025",
-    isLatest: false,
-  },
-  {
-    id: 5,
-    title: "Holiday Notice",
-    description: "Institute will remain closed on June 29 for local festival.",
-    date: "June 18, 2025",
-    isLatest: false,
-  },
-];
+type Notice = {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+};
 
-export default function NoticeBoard() {
-  const scrollRef = useRef<(HTMLDivElement | null)[]>([]);
+export default function NoticePage() {
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0");
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    async function fetchNotices() {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("notices")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(5);
 
-    scrollRef.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+      if (!error && data) setNotices(data);
+      setLoading(false);
+    }
+    fetchNotices();
   }, []);
 
-  const addToRefs = (el: HTMLDivElement | null) => {
-    if (el && !scrollRef.current.includes(el)) {
-      scrollRef.current.push(el);
-    }
-  };
-
-  const cardStyle = {
-    background: "#B8D9F5",
-    border: "1px solid #7FB3E8",
-    borderRadius: "16px",
-  };
-
-  const tickerAnimation = `
-    @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-ticker {
-      animation: ticker 30s linear infinite;
-    }
-    .animate-ticker:hover {
-      animation-play-state: paused;
-    }
-  `;
-
   return (
-    <div className={`min-h-screen bg-[#F7FAFD] text-[#42576E] overflow-x-hidden ${poppins.className}`}>
-      <style>{tickerAnimation}</style>
-      
-      {/* Top Section */}
-      <section className="pt-24 pb-12 px-6 flex flex-col items-center justify-center text-center">
-        <div
-          ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 ease-out mb-4 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#003358] bg-[#9FC7F0] border border-[#7FB3E8]"
-        >
-          STAY UPDATED
-        </div>
-        <h1
-          ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 delay-100 ease-out text-4xl md:text-5xl font-bold mb-4 tracking-tight text-[#003358]"
-        >
-          Notice Board
-        </h1>
-        <p
-          ref={addToRefs}
-          className="opacity-0 translate-y-10 transition-all duration-700 delay-200 ease-out text-lg text-[#42576E] max-w-xl mx-auto"
-        >
-          Latest announcements and updates from Brainstorm Academy
+    <div
+      className={`min-h-screen bg-[#789ec4] text-[#F8FAFC] ${poppins.className}`}
+    >
+      <main className="max-w-3xl mx-auto px-6 py-16">
+        <h1 className="text-4xl font-bold mb-2">Notice Board</h1>
+        <p className="text-[#20385a] mb-10 text-sm">
+          Latest announcements from Brainstorm Academy
         </p>
-      </section>
 
-      {/* Notice Ticker Strip */}
-      <div 
-        ref={addToRefs}
-        className="opacity-0 translate-y-10 transition-all duration-700 delay-300 ease-out w-full border-l-4 border-[#2dbcfe] bg-[#F2F7FC] border-y border-y-[#7FB3E8] overflow-hidden py-3 mb-16 relative flex"
-      >
-        <div className="flex animate-ticker whitespace-nowrap min-w-max hover:cursor-pointer">
-          {[...notices, ...notices].map((notice, i) => (
-            <div key={i} className="flex items-center px-8">
-               <span className="text-[#00658d] font-semibold text-sm mr-3">[{notice.date}]</span>
-               <span className="text-[#003358]">{notice.title} - {notice.description}</span>
-               <span className="mx-8 text-[#7FB3E8]">|</span>
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <div className="w-10 h-10 border-4 border-[#06B6D4]/30 border-t-[#06B6D4] rounded-full animate-spin" />
+          </div>
+        )}
+
+        {!loading && notices.length === 0 && (
+          <div className="text-center py-20 text-[#2d3b50]">
+            No notices at this time. Check back later.
+          </div>
+        )}
+
+        <div className="space-y-4">
+          {notices.map((notice, index) => (
+            <div
+              key={notice.id}
+              style={{
+                background: "rgba(300,300,300,0.01)",
+                border: "1px solid rgba(300,300,300,0.08)",
+                backdropFilter: "blur(20px)",
+                borderRadius: "16px",
+              }}
+              className="p-6"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <span className="text-xs font-bold text-[#0F172A] bg-[#029bb6] rounded-full w-7 h-7 flex items-center justify-center shrink-0 mt-0.5">
+                    {index === 0 ? "NEW" : index + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-bold text-lg text-[#282b2e] mb-1">
+                      {notice.title}
+                    </h3>
+                    <p className="text-[#29384c] text-sm leading-relaxed">
+                      {notice.content}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xs text-[#32425a] shrink-0 mt-1">
+                  {new Date(notice.created_at).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Notice Cards Grid */}
-      <section className="max-w-6xl mx-auto px-6 pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {notices.map((notice, index) => {
-            const isFirst = index === 0;
-            return (
-              <div
-                key={notice.id}
-                ref={addToRefs}
-                className={`opacity-0 translate-y-10 transition-all duration-700 ease-out p-6 md:p-8 flex flex-col hover:border-[#2dbcfe] hover:shadow-md transition-all duration-300 ${
-                  isFirst ? "md:col-span-2 border-l-4 border-l-[#2dbcfe]" : ""
-                }`}
-                style={{
-                   ...cardStyle,
-                   transitionDelay: `${index * 100}ms`
-                }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full border border-[#7FB3E8] ${
-                      notice.isLatest
-                        ? "bg-[#2dbcfe] text-[#003358]"
-                        : "bg-[#9FC7F0] text-[#003358]"
-                    }`}
-                  >
-                    {notice.isLatest ? "LATEST" : "NOTICE"}
-                  </span>
-                  <span className="text-sm font-medium text-[#42576E]">{notice.date}</span>
-                </div>
-                
-                <h3 className={`font-semibold text-[#003358] mb-3 ${isFirst ? 'text-2xl' : 'text-xl'}`}>
-                  {notice.title}
-                </h3>
-                
-                <p className="text-[#42576E] mb-6 flex-grow leading-relaxed">
-                  {notice.description}
-                </p>
-                
-                <div className="mt-auto">
-                  <a
-                    href="#"
-                    className="inline-flex items-center text-[#00658d] font-bold text-sm hover:text-[#2dbcfe] transition-colors group"
-                  >
-                    Read More 
-                    <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      </main>
     </div>
   );
 }
