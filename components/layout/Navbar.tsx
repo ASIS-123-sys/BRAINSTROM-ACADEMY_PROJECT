@@ -48,9 +48,9 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  // Determine role — stored in user_metadata.role
+  // Determine role — stored in user_metadata.role or check email domain
   const role = user?.user_metadata?.role ?? "student";
-  const isAdmin = role === "admin";
+  const isAdmin = role === "admin" || !!user?.email?.endsWith("@brainstorm-admin.local");
 
   // Avatar initial: admin → "A", student → first letter of name or email
   const avatarInitial = isAdmin

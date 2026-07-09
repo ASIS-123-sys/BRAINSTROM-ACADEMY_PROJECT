@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Poppins } from "next/font/google";
+import { getGallery } from "@/lib/api/gallery";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -9,30 +10,89 @@ const poppins = Poppins({
 });
 
 type GalleryItem = {
-  id: number;
+  id: number | string;
   title: string;
   category: string;
   src: string;
 };
 
 const galleryItems: GalleryItem[] = [
-  { id: 1, title: "Annual Function", category: "Events", src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" },
-  { id: 2, title: "Sports Day", category: "Events", src: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600" },
-  { id: 3, title: "Science Exhibition", category: "Events", src: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600" },
-  { id: 4, title: "Computer Lab", category: "Classes", src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600" },
-  { id: 5, title: "Maths Class", category: "Classes", src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600" },
-  { id: 6, title: "Study Session", category: "Classes", src: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600" },
-  { id: 7, title: "Toppers Felicitation", category: "Achievements", src: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600" },
-  { id: 8, title: "Certificate Distribution", category: "Achievements", src: "https://images.unsplash.com/photo-1627556704302-624286467c65?w=600" },
-  { id: 9, title: "Trophy Ceremony", category: "Achievements", src: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600" },
+  { id: 1, title: "Functions", category: "Events", src: "/images/celebration .jpeg" },
+  { id: 2, title: "Festival Day", category: "Events", src: "/images/celebration2.jpeg" },
+  { id: 3, title: "National Festival Days", category: "Events", src: "/images/cele.jpeg" },
+  { id: 4, title: "Computer Lab", category: "Classes", src: "/images/comp.jpeg" },
+  { id: 5, title: "Classes", category: "Classes", src: "/images/labs.jpeg" },
+  { id: 6, title: "Study Session", category: "Classes", src: "/images/study.jpeg" },
+  { id: 7, title: "Certificate Distribution", category: "Achievements", src: "/images/certification.jpeg" },
+  { id: 8, title: "Exam and Tests", category: "Achievements", src: "/images/exam.jpeg" },
+  { id: 9, title: "Office room ", category: "Achievements", src: "/images/office .jpeg" },
 ];
 
 const categories = ["All", "Events", "Classes", "Achievements"];
 
+function getCategoryFromEventName(eventName: string): string {
+  const name = eventName.toLowerCase();
+  if (
+    name.includes("class") ||
+    name.includes("lab") ||
+    name.includes("study") ||
+    name.includes("lecture") ||
+    name.includes("session") ||
+    name.includes("course") ||
+    name.includes("learn") ||
+    name.includes("teach") ||
+    name.includes("student") ||
+    name.includes("batch")
+  ) {
+    return "Classes";
+  }
+  if (
+    name.includes("cert") ||
+    name.includes("achieve") ||
+    name.includes("award") ||
+    name.includes("exam") ||
+    name.includes("test") ||
+    name.includes("score") ||
+    name.includes("win") ||
+    name.includes("first") ||
+    name.includes("rank") ||
+    name.includes("result") ||
+    name.includes("topper") ||
+    name.includes("office")
+  ) {
+    return "Achievements";
+  }
+  return "Events";
+}
+
 export default function PhotoGallery() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [dbItems, setDbItems] = useState<GalleryItem[]>([]);
   const scrollRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Load database images
+  useEffect(() => {
+    async function loadDbImages() {
+      try {
+        const { data, error } = await getGallery();
+        if (!error && data) {
+          const items: GalleryItem[] = data.map((img: any) => ({
+            id: img.id,
+            title: img.event_name,
+            category: getCategoryFromEventName(img.event_name),
+            src: img.image_url,
+          }));
+          setDbItems(items);
+        }
+      } catch (err) {
+        console.error("Error loading gallery from DB:", err);
+      }
+    }
+    loadDbImages();
+  }, []);
+
+  const combinedItems = [...galleryItems, ...dbItems];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,7 +112,7 @@ export default function PhotoGallery() {
     });
 
     return () => observer.disconnect();
-  }, [activeFilter]); // Re-run when filter changes to animate new items
+  }, [activeFilter, dbItems]); // Re-run when filter or dbItems change to animate items
 
   const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !scrollRef.current.includes(el)) {
@@ -61,8 +121,8 @@ export default function PhotoGallery() {
   };
 
   const filteredItems = activeFilter === "All"
-    ? galleryItems
-    : galleryItems.filter(item => item.category === activeFilter);
+    ? combinedItems
+    : combinedItems.filter(item => item.category === activeFilter);
 
   const cardStyle = {
     background: "#B8D9F5",
