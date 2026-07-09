@@ -40,6 +40,7 @@ export default function AdminFacultyPage() {
   const [error, setError] = useState<string | null>(null);
 
   // ─── Fetch all faculty ────────────────────────────────────────────────────
+
   useEffect(() => {
     async function fetchFaculty() {
       setLoading(true);
@@ -55,7 +56,6 @@ export default function AdminFacultyPage() {
     }
     fetchFaculty();
   }, []);
-
   // ─── Add faculty ──────────────────────────────────────────────────────────
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();

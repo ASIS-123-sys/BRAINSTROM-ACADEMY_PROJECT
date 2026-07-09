@@ -1,4 +1,4 @@
-﻿import { createAdminClient } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
@@ -16,10 +16,10 @@ export async function GET() {
 
     const adminSupabase = createAdminClient();
     const { data, error } = await adminSupabase
-      .from("fees")
+      .from("students")
       .select("*")
-      .eq("student_id", user.id)
-      .order("due_date", { ascending: false });
+      .eq("id", user.id)
+      .single();
 
     if (error)
       return NextResponse.json({ error: error.message }, { status: 400 });

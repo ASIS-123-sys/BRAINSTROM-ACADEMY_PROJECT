@@ -26,8 +26,9 @@ export default function StudentAcademics() {
 
   useEffect(() => {
     async function loadScores() {
+      // Session check only — actual scores now come from the server-side
+      // API route, which safely fetches only this student's own records.
       const supabase = createClient();
-
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -36,14 +37,15 @@ export default function StudentAcademics() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("scores")
-        .select("*")
-        .eq("student_id", session.user.id)
-        .order("test_date", { ascending: false });
-
-      if (!error && data) setScores(data);
-      setLoading(false);
+      try {
+        const res = await fetch("/api/student/scores");
+        const json = await res.json();
+        if (json.data) setScores(json.data);
+      } catch {
+        // leave scores empty on failure
+      } finally {
+        setLoading(false);
+      }
     }
     loadScores();
   }, []);
@@ -120,7 +122,9 @@ export default function StudentAcademics() {
     >
       {/* Navbar */}
       <nav className="sticky top-0 z-40 bg-[#F7FAFD]/95 backdrop-blur-sm border-b border-[#7FB3E8] px-6 py-4 flex items-center justify-between">
-        <div className="font-bold text-lg text-[#003358]">Brainstorm Academy</div>
+        <div className="font-bold text-lg text-[#003358]">
+          Brainstorm Academy
+        </div>
         <div className="flex gap-6">
           <a
             href="/student/dashboard"

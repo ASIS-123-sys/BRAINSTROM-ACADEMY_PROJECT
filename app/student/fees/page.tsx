@@ -25,28 +25,22 @@ export default function StudentFees() {
 
   useEffect(() => {
     async function loadFees() {
-      const supabase = createClient();
-
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session || !session.user) {
+      try {
+        const res = await fetch("/api/student/fees");
+        const json = await res.json();
+        if (json.error) {
+          router.push("/auth/student-login");
+          return;
+        }
+        if (json.data) setFees(json.data);
+      } catch {
         router.push("/auth/student-login");
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      const { data, error } = await supabase
-        .from("fees")
-        .select("*")
-        .eq("student_id", session.user.id)
-        .order("due_date", { ascending: false });
-
-      if (!error && data) setFees(data);
-      setLoading(false);
     }
     loadFees();
   }, []);
-
   const filteredFees =
     activeTab === "all" ? fees : fees.filter((f) => f.status === activeTab);
 
@@ -79,7 +73,9 @@ export default function StudentFees() {
     >
       {/* Navbar */}
       <nav className="sticky top-0 z-40 bg-[#F7FAFD]/95 backdrop-blur-sm border-b border-[#7FB3E8] px-6 py-4 flex items-center justify-between">
-        <div className="font-bold text-lg text-[#003358]">Brainstorm Academy</div>
+        <div className="font-bold text-lg text-[#003358]">
+          Brainstorm Academy
+        </div>
         <div className="flex gap-6">
           <a
             href="/student/dashboard"
