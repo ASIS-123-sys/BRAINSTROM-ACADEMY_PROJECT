@@ -25,8 +25,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const loginEmail = email?.trim() || `${enrollment_id}@brainstorm.local`;
-    const defaultPassword = `BS@${enrollment_id}`;
+    // Login email is always enrollment-ID based, so students can always log
+    // in with their Enrollment ID + password. The "email" field (if provided)
+    // is kept only as contact metadata, not used for login.
+    const loginEmail = `${enrollment_id}@brainstorm.local`;
+    const defaultPassword = `BA@${enrollment_id}`;
 
     // step 1 - create auth user
     const { data: authData, error: authError } =

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Poppins } from "next/font/google";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
@@ -10,7 +10,6 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
-// Local row type
 type GalleryRow = {
   id: string;
   event_name: string;
@@ -18,51 +17,88 @@ type GalleryRow = {
   created_at: string;
 };
 
-const defaultForm = { event_name: "", image_url: "" };
-
 export default function AdminGalleryPage() {
   const [images, setImages] = useState<GalleryRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form, setForm] = useState(defaultForm);
+  const [eventName, setEventName] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // ─── Fetch all images via API route (uses service-role client) ──────────
   useEffect(() => {
-    async function fetchGallery() {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/admin/gallery");
-        const json = await res.json();
-        if (json.data) setImages(json.data as GalleryRow[]);
-      } catch {
-        setError("Failed to load gallery");
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchGallery();
   }, []);
 
-  // ─── Add image ────────────────────────────────────────────────────────────
+  async function fetchGallery() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/gallery");
+      const json = await res.json();
+      if (json.data) setImages(json.data as GalleryRow[]);
+    } catch {
+      setError("Failed to load gallery");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleFileChosen(file: File | null) {
+    setError(null);
+    if (!file) {
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      setError("Image must be smaller than 8MB.");
+      return;
+    }
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  }
+
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleFileChosen(file);
+  }
+
+  function resetForm() {
+    setEventName("");
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!form.event_name.trim() || !form.image_url.trim()) {
-      setError("Event Name and Image URL are required.");
+
+    if (!eventName.trim() || !selectedFile) {
+      setError("Event name and an image file are required.");
       return;
     }
+
     setSubmitting(true);
     try {
+      const formData = new FormData();
+      formData.append("event_name", eventName.trim());
+      formData.append("file", selectedFile);
+
       const res = await fetch("/api/admin/gallery", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event_name: form.event_name,
-          image_url: form.image_url,
-        }),
+        body: formData,
       });
       const json = await res.json();
       if (json.error) {
@@ -74,7 +110,7 @@ export default function AdminGalleryPage() {
           a.event_name.localeCompare(b.event_name),
         ),
       );
-      setForm(defaultForm);
+      resetForm();
       setIsModalOpen(false);
     } catch {
       setError("Unexpected error. Please try again.");
@@ -83,7 +119,6 @@ export default function AdminGalleryPage() {
     }
   }
 
-  // ─── Delete image ─────────────────────────────────────────────────────────
   async function handleDelete(id: string) {
     if (!confirm("Delete this image? This action cannot be undone.")) return;
     setDeletingId(id);
@@ -106,7 +141,6 @@ export default function AdminGalleryPage() {
     }
   }
 
-  // ─── Shared styles ────────────────────────────────────────────────────────
   const glassStyle: React.CSSProperties = {
     background: "#B8D9F5",
     border: "1px solid #7FB3E8",
@@ -118,10 +152,8 @@ export default function AdminGalleryPage() {
   const inputClass =
     "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
-  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className={`space-y-8 ${poppins.className}`}>
-      {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
@@ -135,7 +167,7 @@ export default function AdminGalleryPage() {
         </div>
         <Button
           onClick={() => {
-            setError(null);
+            resetForm();
             setIsModalOpen(true);
           }}
           className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none shrink-0"
@@ -144,7 +176,6 @@ export default function AdminGalleryPage() {
         </Button>
       </div>
 
-      {/* ─── Loading state ─── */}
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
@@ -156,7 +187,6 @@ export default function AdminGalleryPage() {
         </div>
       )}
 
-      {/* ─── Empty state ─── */}
       {!loading && images.length === 0 && (
         <div
           style={glassStyle}
@@ -170,7 +200,10 @@ export default function AdminGalleryPage() {
             Add your first image to the gallery.
           </p>
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              resetForm();
+              setIsModalOpen(true);
+            }}
             className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
           >
             + Add Image
@@ -178,7 +211,6 @@ export default function AdminGalleryPage() {
         </div>
       )}
 
-      {/* ─── Gallery Grid ─── */}
       {!loading && images.length > 0 && (
         <div style={glassStyle} className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -187,14 +219,11 @@ export default function AdminGalleryPage() {
                 key={img.id}
                 className="group relative rounded-xl aspect-square overflow-hidden bg-[#9FC7F0]/30 border border-[#7FB3E8]"
               >
-                {/* Image */}
                 <img
                   src={img.image_url}
                   alt={img.event_name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-
-                {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-[#003358]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
                   <span className="text-sm font-semibold text-white mb-3 leading-snug">
                     {img.event_name}
@@ -213,13 +242,11 @@ export default function AdminGalleryPage() {
         </div>
       )}
 
-      {/* ─── Add Image Modal ─── */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
-          setError(null);
-          setForm(defaultForm);
+          resetForm();
         }}
         title="Add New Image"
         size="md"
@@ -230,8 +257,7 @@ export default function AdminGalleryPage() {
               variant="ghost"
               onClick={() => {
                 setIsModalOpen(false);
-                setError(null);
-                setForm(defaultForm);
+                resetForm();
               }}
               disabled={submitting}
             >
@@ -255,7 +281,6 @@ export default function AdminGalleryPage() {
             </div>
           )}
 
-          {/* Event Name */}
           <div>
             <label htmlFor="image-event-name" className={labelClass}>
               Event Name <span className="text-rose-400">*</span>
@@ -265,30 +290,65 @@ export default function AdminGalleryPage() {
               type="text"
               required
               placeholder="e.g. Annual Sports Day"
-              value={form.event_name}
-              onChange={(e) => setForm({ ...form, event_name: e.target.value })}
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
               className={inputClass}
             />
           </div>
 
-          {/* Image URL */}
           <div>
-            <label htmlFor="image-url" className={labelClass}>
-              Image URL <span className="text-rose-400">*</span>
+            <label className={labelClass}>
+              Image <span className="text-rose-400">*</span>
             </label>
-            <input
-              id="image-url"
-              type="url"
-              required
-              placeholder="https://example.com/image.jpg"
-              value={form.image_url}
-              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-              className={inputClass}
-            />
+
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+                isDragging
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-300 bg-white hover:border-blue-400"
+              }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFileChosen(e.target.files?.[0] || null)}
+              />
+
+              {previewUrl ? (
+                <div className="flex flex-col items-center gap-3">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="max-h-48 rounded-lg object-contain"
+                  />
+                  <p className="text-xs text-gray-500">
+                    {selectedFile?.name} — click or drop to replace
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 py-6">
+                  <span className="text-3xl">📤</span>
+                  <p className="text-sm font-semibold text-gray-700">
+                    Click to browse or drag an image here
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    PNG, JPG, or WEBP up to 8MB
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </form>
       </Modal>
     </div>
   );
 }
- 

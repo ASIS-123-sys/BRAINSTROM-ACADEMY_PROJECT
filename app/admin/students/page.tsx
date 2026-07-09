@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
-import { createClient } from "@/lib/supabase";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
@@ -24,7 +23,6 @@ const COURSE_OPTIONS = [
   "School Section",
 ];
 
-// Extends the base Student shape with the `course` column the DB/API stores
 type StudentRow = {
   id: string;
   enrollment_id: string;
@@ -53,6 +51,7 @@ export default function AdminStudentsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [resettingPasswords, setResettingPasswords] = useState(false);
 
   // ─── Fetch all students ───────────────────────────────────────────────────
   useEffect(() => {
@@ -134,6 +133,36 @@ export default function AdminStudentsPage() {
     }
   }
 
+  // ─── Bulk reset all passwords ───────────────────────────────────────────
+  async function handleResetAllPasswords() {
+    if (
+      !confirm(
+        "Reset EVERY student's password to BS@<their enrollment ID>? This cannot be undone.",
+      )
+    )
+      return;
+    setResettingPasswords(true);
+    try {
+      const res = await fetch("/api/admin/reset-passwords", {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (json.failed && json.failed.length > 0) {
+        alert(
+          `Updated ${json.updated}/${json.total}. Failed: ${json.failed
+            .map((f: any) => f.enrollment_id)
+            .join(", ")}`,
+        );
+      } else {
+        alert(`Successfully reset ${json.updated} student password(s).`);
+      }
+    } catch {
+      alert("Unexpected error. Please try again.");
+    } finally {
+      setResettingPasswords(false);
+    }
+  }
+
   // ─── Shared styles ────────────────────────────────────────────────────────
   const tableContainerStyle: React.CSSProperties = {
     background: "#B8D9F5",
@@ -161,15 +190,24 @@ export default function AdminStudentsPage() {
               : `${students.length} student${students.length !== 1 ? "s" : ""} enrolled`}
           </p>
         </div>
-        <Button
-          onClick={() => {
-            setError(null);
-            setIsModalOpen(true);
-          }}
-          className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none shrink-0"
-        >
-          + Add Student
-        </Button>
+        <div className="flex gap-3 shrink-0">
+          <Button
+            onClick={handleResetAllPasswords}
+            isLoading={resettingPasswords}
+            className="bg-white text-[#0f7fcf] hover:bg-gray-50 font-bold border border-[#7FB3E8]"
+          >
+            🔑 Reset All Passwords
+          </Button>
+          <Button
+            onClick={() => {
+              setError(null);
+              setIsModalOpen(true);
+            }}
+            className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none"
+          >
+            + Add Student
+          </Button>
+        </div>
       </div>
 
       {/* ─── Loading state ─── */}
@@ -190,7 +228,7 @@ export default function AdminStudentsPage() {
           style={tableContainerStyle}
           className="flex flex-col items-center justify-center py-20 gap-4 text-center"
         >
-          <span className="text-5xl">👥</span>
+          <span className="text-5xl">🎓</span>
           <p className="text-[#003358] font-semibold text-lg">
             No students found
           </p>
@@ -198,7 +236,10 @@ export default function AdminStudentsPage() {
             Add your first student to get started.
           </p>
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setError(null);
+              setIsModalOpen(true);
+            }}
             className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
           >
             + Add Student
