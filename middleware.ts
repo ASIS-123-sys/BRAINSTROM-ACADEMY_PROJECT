@@ -25,12 +25,10 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If not logged in and trying to access student pages → redirect home
   if (!user && request.nextUrl.pathname.startsWith("/student")) {
     return NextResponse.redirect(new URL("/auth/student-login", request.url));
   }
 
-  // If not logged in and trying to access admin pages → redirect to admin login
   if (!user && request.nextUrl.pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/auth/admin-login", request.url));
   }

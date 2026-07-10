@@ -1,9 +1,10 @@
-﻿import { createServerSupabaseClient } from "@/lib/supabase-server";
+﻿export const dynamic = "force-dynamic";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   const supabase = await createServerSupabaseClient();
-  
+
   // Get current logged in user
   const {
     data: { user },
@@ -23,7 +24,7 @@ export async function GET() {
   if (studentError || !student) {
     return NextResponse.json(
       { error: "Student record not found" },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
