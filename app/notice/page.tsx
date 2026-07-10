@@ -57,7 +57,7 @@ export default function NoticePage() {
             src="/images/notice-board.JPG"
             alt="Notice Board"
             fill
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: "cover" }}
             priority
           />
 
