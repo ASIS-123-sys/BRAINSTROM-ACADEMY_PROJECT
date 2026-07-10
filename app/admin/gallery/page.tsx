@@ -1,5 +1,7 @@
 "use client";
+
 export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect, useRef } from "react";
 import { Poppins } from "next/font/google";
 import Modal from "@/components/ui/Modal";
@@ -30,22 +32,32 @@ export default function AdminGalleryPage() {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Moved fetchGallery INSIDE the useEffect to fix the ESLint error
   useEffect(() => {
+    async function fetchGallery() {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/admin/gallery");
+        const json = await res.json();
+        if (json.data) setImages(json.data as GalleryRow[]);
+      } catch {
+        setError("Failed to load gallery");
+      } finally {
+        setLoading(false);
+      }
+    }
+
     fetchGallery();
   }, []);
 
-  async function fetchGallery() {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/admin/gallery");
-      const json = await res.json();
-      if (json.data) setImages(json.data as GalleryRow[]);
-    } catch {
-      setError("Failed to load gallery");
-    } finally {
-      setLoading(false);
-    }
-  }
+  // Cleanup object URL to prevent memory leaks when component unmounts or preview changes
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   function handleFileChosen(file: File | null) {
     setError(null);
@@ -76,6 +88,9 @@ export default function AdminGalleryPage() {
   function resetForm() {
     setEventName("");
     setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setPreviewUrl(null);
     setError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -219,6 +234,7 @@ export default function AdminGalleryPage() {
                 key={img.id}
                 className="group relative rounded-xl aspect-square overflow-hidden bg-[#9FC7F0]/30 border border-[#7FB3E8]"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={img.image_url}
                   alt={img.event_name}
@@ -325,6 +341,7 @@ export default function AdminGalleryPage() {
 
               {previewUrl ? (
                 <div className="flex flex-col items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={previewUrl}
                     alt="Preview"
