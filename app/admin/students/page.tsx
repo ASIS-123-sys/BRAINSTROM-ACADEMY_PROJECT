@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
 import Modal from "@/components/ui/Modal";
@@ -141,6 +143,7 @@ export default function AdminStudentsPage() {
       )
     )
       return;
+
     setResettingPasswords(true);
     try {
       const res = await fetch("/api/admin/reset-passwords", {
@@ -150,7 +153,7 @@ export default function AdminStudentsPage() {
       if (json.failed && json.failed.length > 0) {
         alert(
           `Updated ${json.updated}/${json.total}. Failed: ${json.failed
-            .map((f: any) => f.enrollment_id)
+            .map((f: { enrollment_id: string }) => f.enrollment_id)
             .join(", ")}`,
         );
       } else {
@@ -272,6 +275,7 @@ export default function AdminStudentsPage() {
                   <td className="px-5 py-4 font-medium text-[#1E3A52]">
                     <div className="flex items-center gap-3">
                       {student.profile_pic_url ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={student.profile_pic_url}
                           alt={student.name}
