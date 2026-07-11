@@ -1,3 +1,5 @@
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
 import { createAdminClient } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
