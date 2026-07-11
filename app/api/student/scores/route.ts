@@ -1,44 +1,36 @@
 ﻿export const runtime = "edge";
 export const dynamic = "force-dynamic";
+
+import { createAdminClient } from "@/lib/supabase";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const supabase = await createServerSupabaseClient();
+export async function GET(request: Request) {
+  try {
+    const supabase = createServerSupabaseClient(request);
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-  // Get current logged in user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+    const adminSupabase = createAdminClient();
+    const { data, error } = await adminSupabase
+      .from("scores")
+      .select("*")
+      .eq("student_id", user.id)
+      .order("test_date", { ascending: false });
 
-  // Fetch student record to get the student's id
-  const { data: student, error: studentError } = await supabase
-    .from("students")
-    .select("id")
-    .eq("id", user.id)
-    .single();
-
-  if (studentError || !student) {
+    if (error)
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ data });
+  } catch {
     return NextResponse.json(
-      { error: "Student record not found" },
-      { status: 404 },
+      { error: "Something went wrong" },
+      { status: 500 },
     );
   }
-
-  // Fetch scores where student_id matches student.id ordered by test_date descending
-  const { data: scores, error: scoresError } = await supabase
-    .from("scores")
-    .select("*")
-    .eq("student_id", student.id)
-    .order("test_date", { ascending: false });
-
-  if (scoresError) {
-    return NextResponse.json({ error: scoresError.message }, { status: 400 });
-  }
-
-  return NextResponse.json({ data: scores });
 }

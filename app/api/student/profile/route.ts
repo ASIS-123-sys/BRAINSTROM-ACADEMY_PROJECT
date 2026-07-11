@@ -1,12 +1,13 @@
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
+
 import { createAdminClient } from "@/lib/supabase";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createServerSupabaseClient(request);
     const {
       data: { user },
       error: userError,
