@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "start": "next start",
-    "lint": "next lint"
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.1",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
     "leaflet": "^1.9.4",
@@ -34,6 +34,7 @@
     "esbuild@0.28.1": true,
     "sharp@0.34.5": true,
     "unrs-resolver@1.12.2": true,
-    "workerd@1.20260708.1": true
+    "workerd@1.20260708.1": true,
+    "esbuild@0.25.4": true
   }
 }
