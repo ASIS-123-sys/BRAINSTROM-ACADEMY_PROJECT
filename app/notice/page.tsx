@@ -54,10 +54,10 @@ export default function NoticePage() {
         >
           {/* Background image */}
           <Image
-            src="/images/notice-board.jpg"
+            src="/images/notice-board.JPG"
             alt="Notice Board"
             fill
-            style={{ objectFit: "contain" }}
+            style={{ objectFit: "cover" }}
             priority
           />
 

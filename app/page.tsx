@@ -78,13 +78,13 @@ export default function Home() {
 
   // ── Carousel state ──────────────────────────────────────────
   const carouselImages = [
-    "/images/WhatsApp Image 2026-07-08 at 07.58.39.jpeg",
-    "/images/WhatsApp Image 2026-07-08 at 07.58.41 (1).jpeg",
-    "/images/WhatsApp Image 2026-07-08 at 07.58.42 (2).jpeg",
-    "/images/WhatsApp Image 2026-07-08 at 07.58.43 (1).jpeg",
-    "/images/WhatsApp Image 2026-07-08 at 07.58.43 (2).jpeg",
-    "/images/WhatsApp Image 2026-07-08 at 07.58.43.jpeg",
-    "/images/WhatsApp Image 2026-07-08 at 07.58.44 (1).jpeg",
+    "/images/hero-bg.jpg",
+    "/images/festival.jpeg",
+    "/images/poster.jpeg",
+    "/images/labs.jpeg",
+    "/images/celebration .jpeg",
+    "/images/certification.jpeg",
+    "/images/entry.jpeg",
   ];
   const [slideIndex, setSlideIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
