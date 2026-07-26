@@ -76,10 +76,10 @@ export default function StudentDashboard() {
 
   return (
     <div
-      className={`min-h-screen bg-[#F7FAFD] text-[#42576E] flex ${poppins.className}`}
+      className={`flex pt-16 min-h-screen bg-[#F7FAFD] text-[#42576E] ${poppins.className}`}
     >
       {/* Left Sidebar (fixed, ~250px wide) */}
-      <aside className="fixed left-0 top-0 h-screen w-[250px] bg-[#B8D9F5] border-r border-[#7FB3E8] p-6 flex flex-col justify-between z-30">
+      <aside className="sticky top-16 self-start h-[calc(100vh-64px)] w-[250px] bg-[#B8D9F5] border-r border-[#7FB3E8] p-6 flex flex-col justify-between z-30 overflow-y-auto shrink-0">
         <div className="flex flex-col">
           {/* Academy logo + name at top */}
           <div className="flex items-center gap-2 mb-8">
@@ -141,7 +141,7 @@ export default function StudentDashboard() {
       </aside>
 
       {/* Main Content (right side) */}
-      <main className="flex-1 ml-[250px] p-8 min-h-screen bg-[#F7FAFD]">
+      <main className="flex-1 p-8 h-[calc(100vh-64px)] overflow-y-auto bg-[#F7FAFD]">
         {/* Top welcome banner */}
         <div className="p-6 rounded-2xl bg-[#B8D9F5] border border-[#7FB3E8] flex justify-between items-center mb-8">
           <div>
