@@ -71,17 +71,47 @@ const streams: StreamCard[] = [
   {
     stream: "Science",
     tagline: "Coming soon",
-    subjects: ["Physics", "Chemistry", "Mathematics", "Biology"],
+    subjects: ["All the subjects will be available soon."],
   },
   {
     stream: "Commerce",
     tagline: "All Subjects",
-    subjects: ["Accountancy", "Business Studies", "Economics", "Maths"],
+    subjects: [
+      "HEADING:ଆବଶ୍ୟକ (Compulsory) ବିଷୟ",
+      "MIL (ଓଡ଼ିଆ / ହିନ୍ଦୀ / ତେଲୁଗୁ / ଉର୍ଦ୍ଦୁ)",
+      "English",
+      "Environmental Studies (EVS)",
+      "HEADING:ମୁଖ୍ୟ (Commerce) ବିଷୟ",
+      "Accountancy",
+      "Business Studies",
+      "Economics",
+      "Mathematics",
+      "Information Technology (IT)",
+      "Entrepreneurship",
+      "Banking",
+      "Insurance",
+      "Statistics",
+      "Cost Accounting",
+    ],
   },
   {
     stream: "Arts",
     tagline: "All Subjects",
-    subjects: ["History", "Political Science", "Geography", "Odia"],
+    subjects: [
+    "HEADING:ଆବଶ୍ୟକ (Compulsory) ବିଷୟ",
+    "M.I.L. (ଓଡ଼ିଆ)",
+    "English",
+    "Political Science",
+    "History",
+    "Home Science",
+    "Education",
+    "Economics",
+    "HEADING:ବିକଳ୍ପ (Optional) ବିଷୟ",
+    "Logic / Philosophy / Anthropology",
+    "Optional Odia",
+    "IRPM (Indian Rural & Panchayati Raj Management)",
+    "Tourism",
+  ],
   },
 ];
 
@@ -290,14 +320,17 @@ export default function CoursesPage() {
                       Subjects covered:
                     </h4>
                     <ul className="space-y-2">
-                      {item.subjects.map((sub) => (
-                        <li
-                          key={sub}
-                          className="flex items-center text-sm text-[#42576E]"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#2dbcfe] mr-2"></span>
-                          {sub}
-                        </li>
+                     {item.subjects.map((sub) => (
+                        sub.startsWith("HEADING:") ? (
+                          <li key={sub} className="text-sm font-bold text-[#003358] mt-2">
+                            {sub.replace("HEADING:", "")}
+                          </li>
+                        ) : (
+                          <li key={sub} className="flex items-center text-sm text-[#42576E]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#2dbcfe] mr-2"></span>
+                            {sub}
+                          </li>
+                        )
                       ))}
                     </ul>
                   </div>
