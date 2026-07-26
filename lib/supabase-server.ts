@@ -1,7 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-// server client — used in server components and layouts only
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
   return createServerClient(
