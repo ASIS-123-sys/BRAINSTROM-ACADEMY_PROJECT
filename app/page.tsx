@@ -884,13 +884,11 @@ export default function Home() {
               </div>
 
               {/* Classroom Placeholder */}
-              <div
-                className="w-full h-48 sm:h-60 rounded-2xl shadow-lg border border-[#B8D4F0]"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #D8E8FB 0%, #C5DDF5 100%)",
-                }}
-              ></div>
+             <img
+              src="/images/owner.jpeg"
+              alt="Mr. Asis Kumar - Founder & Director"
+              className="w-full h-96 sm:h-[500px] rounded-2xl shadow-lg border border-[#B8D4F0] object-cover object-center"
+            />
             </div>
           </div>
         </div>
