@@ -41,7 +41,7 @@ export async function addStudent(studentData: {
 }) {
   const supabase = createClient();
   const email = `${studentData.enrollment_id}@brainstorm.local`;
-  const defaultPassword = `BS@${studentData.enrollment_id}`;
+  const defaultPassword = `BA@${studentData.enrollment_id}`;
 
   // step 1 - create auth user
   const { data: authData, error: authError } =

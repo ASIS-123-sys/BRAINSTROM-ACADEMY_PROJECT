@@ -25,6 +25,19 @@ const COURSE_OPTIONS = [
   "School Section",
 ];
 
+const COURSE_CODES: Record<string, string> = {
+  ADCA: "ADCA",
+  CCA: "CCA",
+  DCA: "DCA",
+  PGDCA: "PGDCA",
+  "Tally ERP 9": "TALLY",
+  "Spoken English": "SE",
+  "Science (12th)": "SCI",
+  "Commerce (12th)": "COM",
+  "Arts (12th)": "ART",
+  "School Section": "SCH",
+};
+
 type StudentRow = {
   id: string;
   enrollment_id: string;
@@ -43,6 +56,7 @@ const defaultForm = {
   phone: "",
   course: COURSE_OPTIONS[0],
   batch: "",
+  rollNo: "",
 };
 
 export default function AdminStudentsPage() {
@@ -75,9 +89,13 @@ export default function AdminStudentsPage() {
   // ─── Add student ─────────────────────────────────────────────────────────
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.name) return;
+    if (!form.name || !form.rollNo.trim()) {
+      setError("Name and Roll No are required.");
+      return;
+    }
 
-    const enrollment_id = `BS${Date.now()}`;
+    const courseCode = COURSE_CODES[form.course] || "GEN";
+    const enrollment_id = `${courseCode}${form.rollNo.trim()}`;
     setSubmitting(true);
     setError(null);
 
@@ -139,7 +157,7 @@ export default function AdminStudentsPage() {
   async function handleResetAllPasswords() {
     if (
       !confirm(
-        "Reset EVERY student's password to BS@<their enrollment ID>? This cannot be undone.",
+        "Reset EVERY student's password to BA@<their enrollment ID>? This cannot be undone.",
       )
     )
       return;
@@ -437,6 +455,30 @@ export default function AdminStudentsPage() {
               onChange={(e) => setForm({ ...form, batch: e.target.value })}
               className={inputClass}
             />
+          </div>
+
+          {/* Roll No */}
+          <div>
+            <label htmlFor="student-rollno" className={labelClass}>
+              Roll No <span className="text-rose-400">*</span>
+            </label>
+            <input
+              id="student-rollno"
+              type="text"
+              required
+              placeholder="e.g. 01"
+              value={form.rollNo}
+              onChange={(e) => setForm({ ...form, rollNo: e.target.value })}
+              className={inputClass}
+            />
+            <p className="text-xs text-[#42576E] mt-1.5">
+              Login ID will be:{" "}
+              <strong>
+                {COURSE_CODES[form.course] || "GEN"}
+                {form.rollNo || "__"}
+              </strong>{" "}
+              — same roll no. can be reused across different courses.
+            </p>
           </div>
         </form>
       </Modal>

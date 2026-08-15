@@ -21,7 +21,7 @@ export async function POST() {
   let updated = 0;
 
   for (const student of students) {
-    const newPassword = `BS@${student.enrollment_id}`;
+    const newPassword = `BA@${student.enrollment_id}`;
     const { error } = await supabase.auth.admin.updateUserById(student.id, {
       password: newPassword,
     });
