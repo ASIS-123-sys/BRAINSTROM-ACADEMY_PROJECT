@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import React, { useState, useEffect } from "react";
 import { Poppins } from "next/font/google";
 import Modal from "@/components/ui/Modal";
@@ -69,7 +67,6 @@ export default function AdminStudentsPage() {
   const [error, setError] = useState<string | null>(null);
   const [resettingPasswords, setResettingPasswords] = useState(false);
 
-  // ─── Fetch all students ───────────────────────────────────────────────────
   useEffect(() => {
     async function fetchStudents() {
       setLoading(true);
@@ -86,9 +83,9 @@ export default function AdminStudentsPage() {
     fetchStudents();
   }, []);
 
-  // ─── Add student ─────────────────────────────────────────────────────────
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
+
     if (!form.name || !form.rollNo.trim()) {
       setError("Name and Roll No are required.");
       return;
@@ -96,6 +93,7 @@ export default function AdminStudentsPage() {
 
     const courseCode = COURSE_CODES[form.course] || "GEN";
     const enrollment_id = `${courseCode}${form.rollNo.trim()}`;
+
     setSubmitting(true);
     setError(null);
 
@@ -130,7 +128,6 @@ export default function AdminStudentsPage() {
     }
   }
 
-  // ─── Delete student ───────────────────────────────────────────────────────
   async function handleDelete(id: string) {
     if (!confirm("Delete this student? This action cannot be undone.")) return;
     setDeletingId(id);
@@ -153,7 +150,6 @@ export default function AdminStudentsPage() {
     }
   }
 
-  // ─── Bulk reset all passwords ───────────────────────────────────────────
   async function handleResetAllPasswords() {
     if (
       !confirm(
@@ -184,7 +180,6 @@ export default function AdminStudentsPage() {
     }
   }
 
-  // ─── Shared styles ────────────────────────────────────────────────────────
   const tableContainerStyle: React.CSSProperties = {
     background: "#B8D9F5",
     border: "1px solid #7FB3E8",
@@ -196,10 +191,8 @@ export default function AdminStudentsPage() {
   const inputClass =
     "w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition";
 
-  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className={`space-y-8 ${poppins.className}`}>
-      {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-[#003358]">
@@ -215,13 +208,14 @@ export default function AdminStudentsPage() {
           <Button
             onClick={handleResetAllPasswords}
             isLoading={resettingPasswords}
-            className="bg-white text-[#0f7fcf] hover:bg-gray-50 font-bold border border-[#7FB3E8]"
+            className="bg-white text-[#003358] hover:bg-gray-50 font-bold border border-[#7FB3E8]"
           >
             🔑 Reset All Passwords
           </Button>
           <Button
             onClick={() => {
               setError(null);
+              setForm(defaultForm);
               setIsModalOpen(true);
             }}
             className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none"
@@ -231,7 +225,6 @@ export default function AdminStudentsPage() {
         </div>
       </div>
 
-      {/* ─── Loading state ─── */}
       {loading && (
         <div className="flex items-center justify-center min-h-[300px]">
           <div className="text-center space-y-3">
@@ -243,7 +236,6 @@ export default function AdminStudentsPage() {
         </div>
       )}
 
-      {/* ─── Empty state ─── */}
       {!loading && students.length === 0 && (
         <div
           style={tableContainerStyle}
@@ -259,6 +251,7 @@ export default function AdminStudentsPage() {
           <Button
             onClick={() => {
               setError(null);
+              setForm(defaultForm);
               setIsModalOpen(true);
             }}
             className="bg-[#2dbcfe] text-[#003358] hover:opacity-90 font-bold border-none mt-2"
@@ -268,7 +261,6 @@ export default function AdminStudentsPage() {
         </div>
       )}
 
-      {/* ─── Table ─── */}
       {!loading && students.length > 0 && (
         <div style={tableContainerStyle} className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm text-[#1E3A52]">
@@ -293,7 +285,6 @@ export default function AdminStudentsPage() {
                   <td className="px-5 py-4 font-medium text-[#1E3A52]">
                     <div className="flex items-center gap-3">
                       {student.profile_pic_url ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img
                           src={student.profile_pic_url}
                           alt={student.name}
@@ -329,7 +320,6 @@ export default function AdminStudentsPage() {
         </div>
       )}
 
-      {/* ─── Add Student Modal ─── */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => {
@@ -371,7 +361,6 @@ export default function AdminStudentsPage() {
             </div>
           )}
 
-          {/* Name */}
           <div>
             <label htmlFor="student-name" className={labelClass}>
               Full Name <span className="text-rose-400">*</span>
@@ -387,7 +376,6 @@ export default function AdminStudentsPage() {
             />
           </div>
 
-          {/* Email for password reset */}
           <div>
             <label htmlFor="student-email" className={labelClass}>
               Password Reset Email
@@ -402,7 +390,6 @@ export default function AdminStudentsPage() {
             />
           </div>
 
-          {/* Phone */}
           <div>
             <label htmlFor="student-phone" className={labelClass}>
               Phone Number
@@ -417,7 +404,6 @@ export default function AdminStudentsPage() {
             />
           </div>
 
-          {/* Course */}
           <div>
             <label htmlFor="student-course" className={labelClass}>
               Course <span className="text-rose-400">*</span>
@@ -441,7 +427,6 @@ export default function AdminStudentsPage() {
             </select>
           </div>
 
-          {/* Batch */}
           <div>
             <label htmlFor="student-batch" className={labelClass}>
               Batch <span className="text-rose-400">*</span>
@@ -457,7 +442,6 @@ export default function AdminStudentsPage() {
             />
           </div>
 
-          {/* Roll No */}
           <div>
             <label htmlFor="student-rollno" className={labelClass}>
               Roll No <span className="text-rose-400">*</span>
