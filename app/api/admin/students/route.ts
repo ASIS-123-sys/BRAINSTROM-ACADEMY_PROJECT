@@ -32,6 +32,11 @@ export async function POST(request: Request) {
     const loginEmail = `${enrollment_id}@brainstorm.local`;
     const defaultPassword = `BA@${enrollment_id}`;
 
+    // TEMPORARY DEBUG — remove after we fix the login issue
+    console.log("=== CREATING STUDENT ===");
+    console.log("enrollment_id:", JSON.stringify(enrollment_id));
+    console.log("loginEmail:", JSON.stringify(loginEmail));
+    console.log("defaultPassword:", JSON.stringify(defaultPassword));
     // step 1 - create auth user
     const { data: authData, error: authError } =
       await supabase.auth.admin.createUser({
