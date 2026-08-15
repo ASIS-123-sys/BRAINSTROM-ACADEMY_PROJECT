@@ -34,7 +34,10 @@ export default function StudentLoginPage() {
   });
 
   async function handleLogin() {
-    if (!enrollmentId || !password) {
+    const cleanId = enrollmentId.trim();
+    const cleanPassword = password.trim();
+
+    if (!cleanId || !cleanPassword) {
       setState({
         loading: false,
         error: "Please enter your Enrollment ID/Email and password",
@@ -43,7 +46,7 @@ export default function StudentLoginPage() {
       return;
     }
     setState({ loading: true, error: "", success: "" });
-    const { error } = await loginStudent(enrollmentId, password);
+    const { error } = await loginStudent(cleanId, cleanPassword);
     if (error) {
       setState({
         loading: false,
