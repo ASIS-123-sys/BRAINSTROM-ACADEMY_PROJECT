@@ -47,6 +47,37 @@ export default function StudentDashboard() {
     loadProfile();
   }, [router]);
 
+  // ─── Ask for notification permission and subscribe to push ──────────────
+  useEffect(() => {
+    async function setupPush() {
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+        return;
+      }
+      try {
+        const registration = await navigator.serviceWorker.register("/sw.js");
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") return;
+
+        const existingSub = await registration.pushManager.getSubscription();
+        const sub =
+          existingSub ||
+          (await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+          }));
+
+        await fetch("/api/push/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sub),
+        });
+      } catch (err) {
+        console.error("Push subscription failed:", err);
+      }
+    }
+    setupPush();
+  }, []);
+
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -58,7 +89,9 @@ export default function StudentDashboard() {
       <div className="min-h-screen bg-[#F7FAFD] flex items-center justify-center">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-4 border-[#003358]/30 border-t-[#003358] rounded-full animate-spin mx-auto" />
-          <p className="text-[#003358] text-sm font-semibold">Loading your profile...</p>
+          <p className="text-[#003358] text-sm font-semibold">
+            Loading your profile...
+          </p>
         </div>
       </div>
     );
@@ -84,7 +117,9 @@ export default function StudentDashboard() {
           {/* Academy logo + name at top */}
           <div className="flex items-center gap-2 mb-8">
             <span className="text-2xl">🎓</span>
-            <span className="font-bold text-lg text-[#003358]">Brainstorm Academy</span>
+            <span className="font-bold text-lg text-[#003358]">
+              Brainstorm Academy
+            </span>
           </div>
 
           {/* Student avatar circle with initial below logo */}
@@ -103,9 +138,13 @@ export default function StudentDashboard() {
               )}
             </div>
             {/* Student name bold */}
-            <div className="font-bold text-base text-[#003358]">{student.name}</div>
+            <div className="font-bold text-base text-[#003358]">
+              {student.name}
+            </div>
             {/* Student role: 'Student' in muted text */}
-            <div className="text-xs text-[#42576E] opacity-75 mt-0.5">Student</div>
+            <div className="text-xs text-[#42576E] opacity-75 mt-0.5">
+              Student
+            </div>
           </div>
 
           {/* Navigation links below */}
@@ -152,7 +191,10 @@ export default function StudentDashboard() {
               Always stay updated in your student portal
             </p>
           </div>
-          <div className="text-[#003358] font-semibold text-sm" suppressHydrationWarning>
+          <div
+            className="text-[#003358] font-semibold text-sm"
+            suppressHydrationWarning
+          >
             {new Date().toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
@@ -165,9 +207,21 @@ export default function StudentDashboard() {
         {/* Info cards row (3 cards side by side) */}
         <div className="grid grid-cols-3 gap-6 mt-8 mb-8">
           {[
-            { label: "Enrollment ID", value: student.enrollment_id, icon: "🎓" },
-            { label: "Phone", value: student.phone || "Not provided", icon: "📞" },
-            { label: "Batch", value: student.batch || "Not provided", icon: "📅" },
+            {
+              label: "Enrollment ID",
+              value: student.enrollment_id,
+              icon: "🎓",
+            },
+            {
+              label: "Phone",
+              value: student.phone || "Not provided",
+              icon: "📞",
+            },
+            {
+              label: "Batch",
+              value: student.batch || "Not provided",
+              icon: "📅",
+            },
           ].map((card, i) => (
             <div
               key={i}
@@ -177,7 +231,9 @@ export default function StudentDashboard() {
                 <p className="text-xs text-[#42576E] uppercase tracking-wider font-semibold mb-1">
                   {card.label}
                 </p>
-                <p className="text-[#003358] font-bold text-2xl">{card.value}</p>
+                <p className="text-[#003358] font-bold text-2xl">
+                  {card.value}
+                </p>
               </div>
               <span className="text-4xl">{card.icon}</span>
             </div>

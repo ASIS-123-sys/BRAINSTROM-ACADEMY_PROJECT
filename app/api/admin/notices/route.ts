@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 import { createAdminClient } from "@/lib/supabase";
+import { sendPushToAll } from "@/lib/push";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -13,7 +14,7 @@ export async function GET() {
   return NextResponse.json({ data });
 }
 
-// ADD notice
+// ADD notice — pushes a browser notification to every subscribed student
 export async function POST(request: Request) {
   const supabase = createAdminClient();
   const { title, content } = await request.json();
@@ -26,6 +27,14 @@ export async function POST(request: Request) {
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 400 });
+
+  const pushResult = await sendPushToAll({
+    title: `New Notice: ${title}`,
+    body: content,
+    url: "/notice",
+  });
+  console.log("Notice push result:", pushResult);
+
   return NextResponse.json({ data });
 }
 
